@@ -1,0 +1,25 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "nombre": "Franco",
+      "apellido": "Lopez",
+      "email": "franco.lopez@example.com",
+      "contrasena": "password123"
+    },
+    {
+      "id": "e93c",
+      "nombre": "Messi",
+      "apellido": "fdgdgf",
+      "email": "francobrito005@gmail.com",
+      "contrasena": "123456"
+    },
+    {
+      "id": "3fe1",
+      "nombre": "Franco",
+      "apellido": "Brito",
+      "email": "francobrito005@gmail.com",
+      "contrasena": "12312312312"
+    }
+  ]
+}
