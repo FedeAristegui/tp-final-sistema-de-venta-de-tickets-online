@@ -1,6 +1,7 @@
-<h1>Registro de Usuario</h1>
 
-<div class="register-container">
+
+<body class="square2">
+  <div class="register-container">
   <h2>Registrarse</h2>
   <form (ngSubmit)="registrar(registerForm)" #registerForm="ngForm" id="registerForm">
     <input type="text" name="nombre" [(ngModel)]="usuario.nombre" placeholder="Nombre" />
@@ -12,5 +13,8 @@
     <input type="password" name="contrasena" [(ngModel)]="usuario.contrasena" placeholder="Contrasena" />
 
     <button type="submit" [disabled]="registerForm.invalid">Crear cuenta</button>
+    <button type="button">Regresar</button>
   </form>
 </div>
+</body>
+
