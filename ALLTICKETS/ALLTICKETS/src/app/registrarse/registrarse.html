@@ -2,18 +2,14 @@
 
 <div class="register-container">
   <h2>Registrarse</h2>
-  <form (ngSubmit)="registrar()" #registerForm="ngForm">
+  <form (ngSubmit)="registrar(registerForm)" #registerForm="ngForm" id="registerForm">
     <input type="text" name="nombre" [(ngModel)]="usuario.nombre" placeholder="Nombre" />
-    <div class="error" *ngIf="errors['nombre']">{{ errors['nombre'] }}</div>
 
     <input type="text" name="apellido" [(ngModel)]="usuario.apellido" placeholder="Apellido" />
-    <div class="error" *ngIf="errors['apellido']">{{ errors['apellido'] }}</div>
 
     <input type="email" name="email" [(ngModel)]="usuario.email" placeholder="Email" />
-    <div class="error" *ngIf="errors['email']">{{ errors['email'] }}</div>
 
     <input type="password" name="contrasena" [(ngModel)]="usuario.contrasena" placeholder="Contrasena" />
-    <div class="error" *ngIf="errors['contrasena']">{{ errors['contrasena'] }}</div>
 
     <button type="submit" [disabled]="registerForm.invalid">Crear cuenta</button>
   </form>

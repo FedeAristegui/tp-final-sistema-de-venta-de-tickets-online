@@ -13,4 +13,8 @@ export class Autenticador {
   registrarUsuario(usuario: usuario) {
     return this.http.post(this.url, usuario);
   }
+
+  obtenerUsuarios() {
+    return this.http.get<usuario[]>(this.url);
+  }
 }

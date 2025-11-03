@@ -3,6 +3,7 @@ import { usuario } from '../usuario';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Autenticador } from '../autenticador';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-registrarse',
@@ -20,68 +21,80 @@ export class Registrarse {
   };
   
   constructor(private autenticador: Autenticador) {}
-  errors: Record<string, string> = {};
+  
 
 
   validateUsuario(): boolean {
-    this.errors = {};
-
     if (!this.usuario.nombre || this.usuario.nombre.trim().length < 2) {
-      this.errors['nombre'] = 'El nombre debe tener al menos 2 caracteres.';
+      alert('El nombre debe tener al menos 2 caracteres.');
+      return false;
     }
 
     if (!this.usuario.apellido || this.usuario.apellido.trim().length < 2) {
-      this.errors['apellido'] = 'El apellido debe tener al menos 2 caracteres.';
+      alert('El apellido debe tener al menos 2 caracteres.');
+      return false;
     }
 
-        const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
+    const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
     if (!soloLetras.test(this.usuario.nombre || '')) {
-      this.errors['nombre'] = 'El nombre no debe contener números';
+      alert('El nombre no debe contener números');
+      return false;
     }
 
     if (!soloLetras.test(this.usuario.apellido || '')) {
-      this.errors['apellido'] = 'El apellido no debe contener números';
-
+      alert('El apellido no debe contener números');
+      return false;
     }
 
     if (!this.usuario.email) {
-      this.errors['email'] = 'El email es obligatorio.';
+      alert('El email es obligatorio.');
+      return false;
     } else {
       const re = /^\S+@\S+\.\S+$/;
       if (!re.test(this.usuario.email)) {
-        this.errors['email'] = 'El email no tiene un formato válido.';
+        alert('El email no tiene un formato válido.');
+        return false;
       }
-    }
+    } 
 
     if (!this.usuario.contrasena || this.usuario.contrasena.length < 6 || this.usuario.contrasena.length > 20) {
-          this.errors['contrasena'] = 'La contraseña debe tener entre 6 y 20 caracteres.';
+      alert('La contraseña debe tener entre 6 y 20 caracteres.');
+      return false;
     }
 
-    return Object.keys(this.errors).length === 0;
+    return true;
   }
 
-  registrar() {
-    const valid = this.validateUsuario();
-    if (!valid) {
-      console.warn('Errores de validación:', this.errors);
-      return;
+  registrar(form: NgForm) {
+    const formatoValido = this.validateUsuario();
+    
+    if (!formatoValido) {
+      console.warn('Errores de validación, se detuvo.');
+      return; 
     }
 
-    console.log('Registrando usuario válido:', this.usuario);
+    this.autenticador.obtenerUsuarios().subscribe(usuarios => {
+      
+      const emailYaRegistrado = usuarios.some(
+        user => user.email === this.usuario.email
+      );
 
-    this.autenticador.registrarUsuario(this.usuario).subscribe({
-      next: (res) => {
-        console.log('Usuario guardado en el servidor:', res);
-        // reset form model and errors
-        this.usuario = { nombre: '', apellido: '', email: '', contrasena: '' };
-        this.errors = {};
-      },
-      error: (err) => {
-        console.error('Error guardando usuario en el servidor:', err);
-        this.errors['server'] = 'Error al guardar el usuario. Intente más tarde.';
+      if (emailYaRegistrado) {
+        alert('El email ya está registrado.'); 
+        return; 
       }
+      
+      this.autenticador.registrarUsuario(this.usuario).subscribe({
+        next: (res) => {
+          alert('¡Usuario registrado con éxito!');
+          form.resetForm();
+
+        },
+        error: (err) => {
+          console.error('Error guardando usuario en el servidor:', err);
+          alert('Error al guardar el usuario. Causa: ' + err.message); 
+        }
+      });
     });
   }
-
-
 }
