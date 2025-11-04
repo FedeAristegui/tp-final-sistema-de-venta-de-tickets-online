@@ -1,6 +1,12 @@
 import { Routes } from '@angular/router';
+import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
+import { Registrarse } from './registrarse/registrarse';
+import { PaginaPrincipal } from './pagina-principal/pagina-principal';
+
 
 export const routes: Routes = [
-
-    
+  {path: '', component: PaginaPrincipal},
+  { path: 'login', component: IniciarSesion },
+  { path: 'registro', component: Registrarse },
+  { path: '**', redirectTo: '' }  // redirección en caso de ruta no válida
 ];

@@ -21,5 +21,9 @@ export class Autenticador {
   buscarPorCredenciales(email: string, contrasena: string): Observable<usuario[]> {
   return this.http.get<usuario[]>(`http://localhost:3000/usuarios?email=${email}&contrasena=${contrasena}`);
 }
+estaLogueado(): boolean {
+  return !!localStorage.getItem('usuarioLogueado');
+}
+
 
 }

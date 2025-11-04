@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Autenticador } from '../autenticador';
 
@@ -9,7 +9,7 @@ import { Autenticador } from '../autenticador';
 @Component({
   selector: 'app-iniciar-sesion',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './iniciar-sesion.html',
   styleUrls: ['./iniciar-sesion.css']
 })
@@ -54,5 +54,6 @@ iniciarSesion(loginForm: NgForm) {
       this.error = 'Error en el servidor. Intenta más tarde.';
     }
   });
+ 
 }
-    }
+}

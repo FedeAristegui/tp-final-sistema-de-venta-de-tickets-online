@@ -27,6 +27,22 @@
       "apellido": "fdgdgf",
       "email": "hernan@gmail.com",
       "contrasena": "213123123123"
+    },
+    {
+      "id": "667f",
+      "nombre": "sngkgk",
+      "apellido": "vvererveg",
+      "email": "sfvnvkj@gmail.com",
+      "contrasena": "1234567",
+      "rol": "usuario"
+    },
+    {
+      "id": "c2ae",
+      "nombre": "pepi",
+      "apellido": "pepi",
+      "email": "hola@gmail.com",
+      "contrasena": "1234567",
+      "rol": "usuario"
     }
   ]
 }

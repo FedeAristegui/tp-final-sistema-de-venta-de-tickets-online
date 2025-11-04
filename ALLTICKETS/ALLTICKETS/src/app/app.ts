@@ -2,11 +2,13 @@ import { Component, signal } from '@angular/core';
 import { Registrarse } from './registrarse/registrarse';
 import { HttpClientModule } from '@angular/common/http';
 import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
+import { PaginaPrincipal } from './pagina-principal/pagina-principal';
+import { RouterModule } from "@angular/router";
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [Registrarse, HttpClientModule,IniciarSesion],
+  imports: [HttpClientModule, RouterModule],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })

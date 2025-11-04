@@ -1,0 +1,13 @@
+
+<h1>Bienvenido a AllTickets</h1>
+<!-- Mostrar solo si NO hay usuario logueado -->
+<div *ngIf="!usuario">
+  <a routerLink="/login"><button>Iniciar Sesión</button></a>
+  <a routerLink="/registro"><button>Registrarse</button></a>
+</div>
+<div *ngIf="usuario">
+  <p>Bienvenido, {{ usuario.nombre }}</p>
+  <button (click)="cerrarSesion()">Cerrar sesión</button>
+</div>
+
+<!-- ...existing code... -->

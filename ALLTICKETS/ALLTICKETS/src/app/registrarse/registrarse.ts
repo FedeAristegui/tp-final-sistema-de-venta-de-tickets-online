@@ -4,20 +4,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Autenticador } from '../autenticador';
 import { NgForm } from '@angular/forms';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-registrarse',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './registrarse.html',
   styleUrls: ['./registrarse.css'],
 })
 export class Registrarse {
   usuario: usuario = {
+    
     nombre: '',
     apellido: '',
     email: '',
-    contrasena: ''
+    contrasena: '',
+    rol: 'usuario'
   };
   
   constructor(private autenticador: Autenticador) {}
@@ -88,6 +91,7 @@ export class Registrarse {
         next: (res) => {
           alert('¡Usuario registrado con éxito!');
           form.resetForm();
+          this.usuario.rol = 'usuario';
 
         },
         error: (err) => {
