@@ -1,16 +1,21 @@
-<p>iniciar-sesion works!</p>
+<body class="login-body">
+  
+
+<div class="login-container">
 
 <form #loginForm="ngForm" (ngSubmit)="iniciarSesion(loginForm)">
   <div>
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" ngModel required />
+    <input type="email" id="email" name="email" ngModel required placeholder="Email"/>
   </div>
   <div>
     <label for="contrasena">Contraseña:</label>
-    <input type="password" id="contrasena" name="contrasena" ngModel required />
+    <input type="password" id="contrasena" name="contrasena" ngModel required  placeholder="Contraseña"/>
   </div>
   <button type="submit" [disabled]="!loginForm.valid">Iniciar Sesión</button>
 </form>
 <a routerLink=""><button>Volver</button></a>
+</div>
 
 
+</body>

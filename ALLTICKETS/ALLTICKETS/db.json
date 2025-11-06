@@ -42,7 +42,40 @@
       "apellido": "pepi",
       "email": "hola@gmail.com",
       "contrasena": "1234567",
-      "rol": "usuario"
+      "rol": "admin"
+    }
+  ],
+  "eventos": [
+    {
+      "id": "6995",
+      "titulo": "harry potter 2",
+      "fecha": "2025-11-26",
+      "hora": "20:00",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "vip",
+          "capacidad": 100,
+          "precio": 12000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "ffd3",
+      "titulo": "raton perez",
+      "fecha": "2025-11-22",
+      "hora": "15:00",
+      "imagen": "",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "vip",
+          "capacidad": 500,
+          "precio": 1000
+        }
+      ],
+      "butacas": []
     }
   ]
 }

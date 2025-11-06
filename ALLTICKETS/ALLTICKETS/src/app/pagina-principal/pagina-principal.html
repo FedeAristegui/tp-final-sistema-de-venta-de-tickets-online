@@ -1,13 +1,26 @@
+@if (usuario) {
+  <!-- Menú que aparece solo para admin -->
+  @if (usuario.rol === 'admin') {
+    <ul>
+      
+      <li><a routerLink="/eventos">Gestionar Eventos</a></li>
+      <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+    </ul>
+  }
 
-<h1>Bienvenido a AllTickets</h1>
-<!-- Mostrar solo si NO hay usuario logueado -->
-<div *ngIf="!usuario">
-  <a routerLink="/login"><button>Iniciar Sesión</button></a>
-  <a routerLink="/registro"><button>Registrarse</button></a>
-</div>
-<div *ngIf="usuario">
-  <p>Bienvenido, {{ usuario.nombre }}</p>
-  <button (click)="cerrarSesion()">Cerrar sesión</button>
-</div>
-
-<!-- ...existing code... -->
+  <!-- Menú que aparece solo para usuario común -->
+  @if (usuario.rol === 'usuario') {
+    <ul>
+      <li><a routerLink="/perfil">Mi Perfil</a></li>
+      <li><a routerLink="/comprar">Comprar</a></li>
+      <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+    </ul>
+  }
+} @else {
+  <nav>
+    <ul>
+      <li><a routerLink="/login">Iniciar Sesión</a></li>
+      <li><a routerLink="/registro">Registrarse</a></li>
+    </ul>
+  </nav>
+}
