@@ -1,0 +1,112 @@
+<div class="contenedor">
+  <!-- Tabla de eventos -->
+  <div class="tabla-container">
+    <h3>Lista de Eventos</h3>
+
+    @if (eventos.length > 0) {
+      <table class="tabla-eventos">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Lugar</th>
+            <th>Modo Venta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ev of eventos; track ev.id) {
+            <tr>
+             
+              <td>{{ ev.titulo }}</td>
+              <td>{{ ev.fecha | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ ev.hora }}</td>
+              <td>{{ ev.lugar }}</td>
+              <td>{{ ev.modoVenta }}</td>
+              <td>
+                <button (click)="navegarAdetalles(ev.id!)">Ver Detalle</button>
+                <button (click)="seleccionarEvento(ev)">Editar</button>
+                <button (click)="eliminarEvento(ev.id)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p>No hay eventos disponibles.</p>
+    }
+
+    <button routerLink="/menu-principal" class="volver-btn">
+      Volver al Menú Principal
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <div class="formulario-container">
+    <h3>{{ modoEdicion ? 'Editar Evento' : 'Crear Nuevo Evento' }}</h3>
+
+    <form [formGroup]="form" (ngSubmit)="guardarEvento()" class="formulario-evento">
+      <label>Título:</label>
+      <input formControlName="titulo" placeholder="Título del evento" />
+
+      <label>Fecha:</label>
+      <input formControlName="fecha" type="date" />
+
+      <label>Hora:</label>
+      <input formControlName="hora" type="time" />
+
+      <label>Lugar:</label>
+      <input formControlName="lugar" placeholder="Lugar del evento" />
+
+      <label>Imagen (URL):</label>
+      <input formControlName="imagen" placeholder="https://..." />
+
+      <label>Modo de Venta:</label>
+      <select formControlName="modoVenta" (change)="cambiarModoVenta()">
+        <option value="sector">Venta por Sector</option>
+        <option value="butaca">Venta por Butaca</option>
+      </select>
+
+      @if (form.get('modoVenta')?.value === 'sector') {
+        <div class="sectores-block">
+          <h4>Sectores</h4>
+          <button type="button" (click)="agregarSector()">+ Agregar Sector</button>
+          <div formArrayName="sectores">
+            @for (s of sectores.controls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="sector-item">
+                <label>Nombre:</label>
+                <input formControlName="nombre" placeholder="Ej: VIP" />
+                <label>Capacidad:</label>
+                <input formControlName="capacidad" type="number" />
+                <label>Precio:</label>
+                <input formControlName="precio" type="number" />
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="butacas-block">
+          <h4>Butacas</h4>
+          <button type="button" (click)="agregarButaca()">+ Agregar Butaca</button>
+          <div formArrayName="butacas">
+            @for (b of butacas.controls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="butaca-item">
+                <label>Fila:</label>
+                <input formControlName="fila" />
+                <label>Número:</label>
+                <input formControlName="numero" type="number" />
+                <label>Precio:</label>
+                <input formControlName="precio" type="number" />
+                <label>Disponible:</label>
+                <input formControlName="disponible" type="checkbox" />
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <button type="submit">{{ modoEdicion ? 'Actualizar Evento' : 'Guardar Evento' }}</button>
+    </form>
+  </div>
+</div>

@@ -43,36 +43,56 @@
       "email": "hola@gmail.com",
       "contrasena": "1234567",
       "rol": "admin"
+    },
+    {
+      "id": "d227",
+      "nombre": "Agustin Daniel",
+      "apellido": "Demarco",
+      "email": "Agustindemarco32@gmail.com",
+      "contrasena": "hola123",
+      "rol": "usuario"
+    },
+    {
+      "id": "9534",
+      "nombre": "valen",
+      "apellido": "carzon",
+      "email": "valen@gmail.com",
+      "contrasena": "hola123",
+      "rol": "usuario"
     }
   ],
   "eventos": [
     {
-      "id": "6995",
-      "titulo": "harry potter 2",
-      "fecha": "2025-11-26",
+      "id": "a2ba",
+      "titulo": "shrek",
+      "fecha": "2025-11-09",
       "hora": "20:00",
-      "modoVenta": "sector",
-      "sectores": [
+      "lugar": "cine",
+      "imagen": "https://preview.redd.it/i-think-the-shrek-5-trailer-is-just-a-joke-from-dreamworks-v0-255a5xa3egpe1.jpeg?width=1080&crop=smart&auto=webp&s=cf40d68eb14585714d1b768b0d0fb14b61cb51a5",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
         {
-          "nombre": "vip",
-          "capacidad": 100,
-          "precio": 12000
+          "fila": "1",
+          "numero": 1,
+          "precio": 1500,
+          "disponible": true
         }
-      ],
-      "butacas": []
+      ]
     },
     {
-      "id": "ffd3",
-      "titulo": "raton perez",
-      "fecha": "2025-11-22",
+      "id": "d3a8",
+      "titulo": "HarryPOTTER",
+      "fecha": "2025-11-26",
       "hora": "15:00",
-      "imagen": "",
+      "lugar": "cine",
+      "imagen": "https://preview.redd.it/i-think-the-shrek-5-trailer-is-just-a-joke-from-dreamworks-v0-255a5xa3egpe1.jpeg?width=1080&crop=smart&auto=webp&s=cf40d68eb14585714d1b768b0d0fb14b61cb51a5",
       "modoVenta": "sector",
       "sectores": [
         {
           "nombre": "vip",
           "capacidad": 500,
-          "precio": 1000
+          "precio": 100
         }
       ],
       "butacas": []

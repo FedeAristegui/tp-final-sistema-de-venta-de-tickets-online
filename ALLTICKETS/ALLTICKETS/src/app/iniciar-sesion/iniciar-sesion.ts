@@ -1,59 +1,63 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { NgForm } from '@angular/forms';
-import { Autenticador } from '../autenticador';
-
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Autenticador } from '../servicios/autenticador';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-iniciar-sesion',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './iniciar-sesion.html',
   styleUrls: ['./iniciar-sesion.css']
 })
 export class IniciarSesion {
-  email: string = '';
-  contrasena: string = '';
-  error: string = '';
-
-  constructor(private autenticador: Autenticador, private router: Router) {}
-
-  
-iniciarSesion(loginForm: NgForm) {
-  const { email, contrasena } = loginForm.value;
-
-  if (!email || !contrasena) {
-    this.error = 'Todos los campos son obligatorios';
-    return;
-  }
-
-  this.autenticador.buscarPorCredenciales(email, contrasena).subscribe({
-    next: (usuarios) => {
-      if (usuarios.length > 0) {
-        const usuario = usuarios[0];
-        localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
-
-        
-        alert('Inicio de sesión exitoso ✅');
-
-        // Limpiar formulario
-        loginForm.resetForm();
-        this.error = '';
-
-        // Redirigir
-        this.router.navigate(['/home']);
-      } else {
-        this.error = 'Email o contraseña incorrectos';
-        alert('Email o contraseña incorrectos');
-      }
-    },
-    error: (err) => {
-      console.error('Error en el servidor:', err);
-      this.error = 'Error en el servidor. Intenta más tarde.';
-    }
-  });
  
-}
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly autenticador = inject(Autenticador);
+
+  protected error: string | null = null;
+
+  protected readonly form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    contrasena: ['', [Validators.required, Validators.minLength(6)]]
+  });
+
+  iniciarSesion(): void {
+    if (this.form.invalid) {
+      this.error = 'Todos los campos son obligatorios.';
+      this.form.markAllAsTouched();
+      return;
+    }
+
+      const email = this.form.get('email')?.value;
+    const contrasena = this.form.get('contrasena')?.value;
+
+    if (!email || !contrasena) {
+      this.error = 'Datos de formulario inválidos';
+      return;
+    }
+
+    this.autenticador.buscarPorCredenciales(email, contrasena).subscribe({
+      next: (usuarios) => {
+        if (usuarios.length > 0) {
+          const usuario = usuarios[0];
+          localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
+          this.error = null; // Clear any previous errors
+          alert('Inicio de sesión exitoso ✅');
+          this.form.reset();
+          this.router.navigate(['/']); // Changed to root route
+        } else {
+          this.error = 'Email o contraseña incorrectos';
+          alert(this.error);
+        }
+      },
+      error: (err) => {
+        console.error('Error en el servidor:', err);
+        this.error = 'Error en el servidor. Intenta más tarde.';
+      }
+    });
+  }
 }

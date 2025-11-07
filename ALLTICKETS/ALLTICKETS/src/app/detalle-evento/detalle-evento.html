@@ -1,0 +1,39 @@
+@if (evento) {
+  <h2>{{ evento.titulo }}</h2>
+    <pre style="background:#f6f6f6;padding:8px;border-radius:4px;">{{ evento | json }}</pre>
+  <img [src]="evento.imagen" alt="{{ evento.titulo }}" style="max-width:100%;" />
+  <p><strong>Fecha:</strong> {{ evento.fecha }}</p>
+  <p><strong>Hora:</strong> {{ evento.hora }}</p>
+  <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+  <p><strong>Modo de venta:</strong> {{ evento.modoVenta }}</p>
+
+  @if (evento.modoVenta === 'sector') {
+    <h4>Sectores</h4>
+    <ul>
+      @for (s of evento.sectores ?? []; track s.nombre) {
+        <li>
+          {{ s.nombre }} – capacidad: {{ s.capacidad }}, precio: {{ s.precio }}
+        </li>
+      }
+    </ul>
+  } @else {
+    <h4>Butacas</h4>
+    <ul>
+      @for (b of evento.butacas ?? []; track b.numero) {
+        <li>
+          Fila: {{ b.fila }}, Nº: {{ b.numero }}, precio: {{ b.precio }}, disponible: {{ b.disponible }}
+        </li>
+      }
+    </ul>
+  }
+
+  <button routerLink="/eventos">Volver a lista de eventos</button>
+} @else {
+  <p>Cargando evento…</p>
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+}
+
+  <button routerLink="/eventos">Volver a lista de eventos</button>
+

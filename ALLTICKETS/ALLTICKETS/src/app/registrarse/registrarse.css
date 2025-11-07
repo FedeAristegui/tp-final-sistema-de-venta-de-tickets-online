@@ -67,3 +67,10 @@ form button:disabled {
   background-color: #f0a08e;
   cursor: not-allowed;
 }
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

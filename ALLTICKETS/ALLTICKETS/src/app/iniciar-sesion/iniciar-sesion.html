@@ -1,21 +1,22 @@
-<body class="login-body">
-  
-
 <div class="login-container">
+  <h2>Iniciar Sesión</h2>
 
-<form #loginForm="ngForm" (ngSubmit)="iniciarSesion(loginForm)">
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" ngModel required placeholder="Email"/>
-  </div>
-  <div>
-    <label for="contrasena">Contraseña:</label>
-    <input type="password" id="contrasena" name="contrasena" ngModel required  placeholder="Contraseña"/>
-  </div>
-  <button type="submit" [disabled]="!loginForm.valid">Iniciar Sesión</button>
-</form>
-<a routerLink=""><button>Volver</button></a>
+  <form [formGroup]="form" (ngSubmit)="iniciarSesion()">
+    <input type="email" placeholder="Email" formControlName="email" />
+    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+      <div class="error">Email inválido</div>
+    }
+
+    <input type="password" placeholder="Contraseña" formControlName="contrasena" />
+    @if (form.get('contrasena')?.invalid && form.get('contrasena')?.touched) {
+      <div class="error">Contraseña requerida</div>
+    }
+
+    <button type="submit" [disabled]="form.invalid">Iniciar Sesión</button>
+    <a routerLink="/"><button type="button">Volver</button></a>
+  </form>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
 </div>
-
-
-</body>

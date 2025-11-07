@@ -1,104 +1,67 @@
-import { Component } from '@angular/core';
-import { usuario } from '../usuario';
+import { Component, inject } from '@angular/core';
+import { usuario } from '../models/usuario';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Autenticador } from '../autenticador';
-import { NgForm } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Autenticador } from '../servicios/autenticador';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-registrarse',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './registrarse.html',
   styleUrls: ['./registrarse.css'],
 })
 export class Registrarse {
-  usuario: usuario = {
-    
-    nombre: '',
-    apellido: '',
-    email: '',
-    contrasena: '',
-    rol: 'usuario'
-  };
   
-  constructor(private autenticador: Autenticador) {}
-  
+  private readonly fb = inject(FormBuilder);
+  private readonly autenticador = inject(Autenticador);
 
+  protected readonly form = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]],
+    apellido: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]], 
+    email: ['', [Validators.required, Validators.email]],
+    contrasena: ['', [Validators.required, Validators.minLength(6)]],
+    rol: ['usuario', Validators.required]
+  });
 
-  validateUsuario(): boolean {
-    if (!this.usuario.nombre || this.usuario.nombre.trim().length < 2) {
-      alert('El nombre debe tener al menos 2 caracteres.');
-      return false;
+ 
+
+  registrar() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      alert('Por favor, complete todos los campos correctamente.');
+      return;
     }
 
-    if (!this.usuario.apellido || this.usuario.apellido.trim().length < 2) {
-      alert('El apellido debe tener al menos 2 caracteres.');
-      return false;
-    }
+    const nuevoUsuario: usuario = this.form.value as usuario;
 
-    const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
-    if (!soloLetras.test(this.usuario.nombre || '')) {
-      alert('El nombre no debe contener números');
-      return false;
-    }
-
-    if (!soloLetras.test(this.usuario.apellido || '')) {
-      alert('El apellido no debe contener números');
-      return false;
-    }
-
-    if (!this.usuario.email) {
-      alert('El email es obligatorio.');
-      return false;
-    } else {
-      const re = /^\S+@\S+\.\S+$/;
-      if (!re.test(this.usuario.email)) {
-        alert('El email no tiene un formato válido.');
-        return false;
-      }
-    } 
-
-    if (!this.usuario.contrasena || this.usuario.contrasena.length < 6 || this.usuario.contrasena.length > 20) {
-      alert('La contraseña debe tener entre 6 y 20 caracteres.');
-      return false;
-    }
-
-    return true;
-  }
-
-  registrar(form: NgForm) {
-    const formatoValido = this.validateUsuario();
-    
-    if (!formatoValido) {
-      console.warn('Errores de validación, se detuvo.');
-      return; 
-    }
-
-    this.autenticador.obtenerUsuarios().subscribe(usuarios => {
-      
-      const emailYaRegistrado = usuarios.some(
-        user => user.email === this.usuario.email
-      );
-
-      if (emailYaRegistrado) {
-        alert('El email ya está registrado.'); 
-        return; 
-      }
-      
-      this.autenticador.registrarUsuario(this.usuario).subscribe({
-        next: (res) => {
-          alert('¡Usuario registrado con éxito!');
-          form.resetForm();
-          this.usuario.rol = 'usuario';
-
-        },
-        error: (err) => {
-          console.error('Error guardando usuario en el servidor:', err);
-          alert('Error al guardar el usuario. Causa: ' + err.message); 
+    // Verificar si el email ya está registrado
+    this.autenticador.obtenerUsuarios().subscribe({
+      next: usuarios => {
+        const existe = usuarios.some(u => u.email === nuevoUsuario.email);
+        if (existe) {
+          alert('El email ya está registrado.');
+          return;
         }
-      });
+
+        // Si no existe, lo registramos
+        this.autenticador.registrarUsuario(nuevoUsuario).subscribe({
+          next: () => {
+            alert('✅ Usuario registrado con éxito.');
+            this.form.reset({ rol: 'usuario' });
+          },
+          error: err => {
+            console.error('Error al registrar:', err);
+            alert('❌ Ocurrió un error al registrar el usuario.');
+          }
+        });
+      },
+      error: err => {
+        console.error('Error al verificar usuarios:', err);
+        alert('❌ No se pudo verificar el email.');
+      }
     });
   }
 }

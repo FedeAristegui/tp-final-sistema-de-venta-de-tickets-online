@@ -5,6 +5,7 @@ import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
 import { PaginaPrincipal } from './pagina-principal/pagina-principal';
 import { RouterModule } from "@angular/router";
 
+
 @Component({
   standalone: true,
   selector: 'app-root',
