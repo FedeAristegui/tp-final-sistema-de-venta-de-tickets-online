@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule  } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -11,6 +11,7 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { Evento } from '../../models/evento';
 import { detalleEvento } from '../../detalle-evento/detalle-evento';  
+
 
 @Component({
   selector: 'app-admin-eventos',
@@ -28,6 +29,8 @@ export class AdminEventos implements OnInit {
 
   protected eventos: Evento[] = [];
   protected modoEdicion = false;
+   eventosFiltrados: Evento[] = [];
+  filtroTitulo: string = '';
 
   protected readonly form = this.fb.group({
     id: [null as number | null],
@@ -81,14 +84,34 @@ export class AdminEventos implements OnInit {
   }
 
   // 🔹 Cargar lista de eventos
-  cargarEventos(): void {
+ cargarEventos(): void {
     this.eventoService.obtenerEventos().subscribe({
-      next: (lista: Evento[]) => (this.eventos = lista || []),
+      next: lista => {
+        this.eventos = lista || [];
+        this.aplicarFiltro();  // aplica filtro inicial (vacío)
+      },
       error: err => {
         console.error('Error al obtener eventos:', err);
         this.eventos = [];
+        this.eventosFiltrados = [];
       }
     });
+  }
+
+  aplicarFiltro(): void {
+    const term = this.filtroTitulo.trim().toLowerCase();
+    if (!term) {
+      this.eventosFiltrados = [...this.eventos];
+    } else {
+      this.eventosFiltrados = this.eventos.filter(ev => 
+        (ev.titulo ?? '').toLowerCase().includes(term)
+      );
+    }
+  }
+
+  // manejar cambio de filtro ligado al input
+  onFiltroCambio(): void {
+    this.aplicarFiltro();
   }
 
   // 🔹 Cargar un evento al formulario (para edición)
