@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Evento } from '../models/evento';
+import { Evento } from '../modelos/evento';
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +15,19 @@ export class EventoServicio {
     return this.http.get<Evento[]>(this.urlBase);
   }
 
-  obtenerEvento(id: number): Observable<Evento> {
+  obtenerEvento(id: number|string): Observable<Evento> {
     return this.http.get<Evento>(`${this.urlBase}/${id}`);
   }
 
-  crearEvento(evento: Evento): Observable<Evento> {
+  crearEvento(evento: Evento){
     return this.http.post<Evento>(this.urlBase, evento);
   }
 
-  actualizarEvento(evento: Evento): Observable<Evento> {
+  actualizarEvento(evento: Evento, id:string|number){
     return this.http.put<Evento>(`${this.urlBase}/${evento.id}`, evento);
   }
 
-  borrarEvento(id: number): Observable<void> {
+  borrarEvento(id: number|string): Observable<void> {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 }

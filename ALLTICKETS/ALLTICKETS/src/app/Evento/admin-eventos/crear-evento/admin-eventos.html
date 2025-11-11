@@ -1,54 +1,15 @@
 <div class="contenedor">
-  <label>Buscar por título:</label>
-<input type="text" (ngModelChange)="onFiltroCambio()" placeholder="Ingrese título" />
-  <!-- Tabla de eventos -->
-  <div class="tabla-container">
-    <h3>Lista de Eventos</h3>
-
-    @if (eventos.length > 0) {
-      <table class="tabla-eventos">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Lugar</th>
-            <th>Modo Venta</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (ev of eventos; track ev.id) {
-            <tr>
-             
-              <td>{{ ev.titulo }}</td>
-              <td>{{ ev.fecha | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ ev.hora }}</td>
-              <td>{{ ev.lugar }}</td>
-              <td>{{ ev.modoVenta }}</td>
-              <td>
-                <button (click)="navegarAdetalles(ev.id!)">Ver Detalle</button>
-                <button (click)="seleccionarEvento(ev)">Editar</button>
-                <button (click)="eliminarEvento(ev.id)">Eliminar</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <p>No hay eventos disponibles.</p>
-    }
-
-    <button routerLink="/menu-principal" class="volver-btn">
-      Volver al Menú Principal
-    </button>
-  </div>
-
   <!-- Formulario -->
   <div class="formulario-container">
-    <h3>{{ modoEdicion ? 'Editar Evento' : 'Crear Nuevo Evento' }}</h3>
+    <h3>
+      @if(isEditing()) {
+        Editar Evento
+      } @else {
+        Crear Nuevo Evento
+      }
+    </h3>
 
-    <form [formGroup]="form" (ngSubmit)="guardarEvento()" class="formulario-evento">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario-evento">
       <label>Título:</label>
       <input formControlName="titulo" placeholder="Título del evento" />
 
@@ -108,8 +69,17 @@
         </div>
       }
 
-      <button type="submit">{{ modoEdicion ? 'Actualizar Evento' : 'Guardar Evento' }}</button>
+      <button type="submit">
+        @if(isEditing()) {
+          Actualizar Evento
+        } @else {
+          Guardar Evento
+        }
+      </button>
+      
     </form>
+    <button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>
   </div>
 </div>
+
 

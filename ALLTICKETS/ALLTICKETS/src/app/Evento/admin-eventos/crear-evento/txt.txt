@@ -1,51 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule  } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormArray
-} from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { EventoServicio } from '../../servicios/evento.servicio';
-import { Evento } from '../../models/evento';
-import { detalleEvento } from '../../detalle-evento/detalle-evento';  
-
-
-@Component({
-  selector: 'app-admin-eventos',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './admin-eventos.html',
-  styleUrls: ['./admin-eventos.css']
-})
-export class AdminEventos implements OnInit {
-  private readonly fb = inject(FormBuilder);
-  private readonly eventoService = inject(EventoServicio);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  private readonly cdr = inject(ChangeDetectorRef);
-
-  protected eventos: Evento[] = [];
-  protected modoEdicion = false;
-   eventosFiltrados: Evento[] = [];
-  filtroTitulo: string = '';
-
-  protected readonly form = this.fb.group({
-    id: [null as number | null],
-    titulo: ['', [Validators.required, Validators.minLength(3)]],
-    fecha: ['', Validators.required],
-    hora: ['', Validators.required],
-    lugar: ['', [Validators.required, Validators.minLength(3)]],
-    imagen: ['', Validators.required],
-    modoVenta: ['sector', Validators.required],
-    sectores: this.fb.array([]),
-    butacas: this.fb.array([])
-  });
-
-
-     ngOnInit(): void {
+ngOnInit(): void {
     // Load events first
     this.eventoService.obtenerEventos().subscribe({
       next: (lista: Evento[]) => {
@@ -170,7 +123,7 @@ export class AdminEventos implements OnInit {
       butacas: (raw.butacas ?? []) as Evento['butacas']
     };
 
-     if (this.modoEdicion && evento.id != null) {
+    if (this.modoEdicion && evento.id != null) {
       this.eventoService.actualizarEvento(evento).subscribe({
         next: () => {
           // Update the local array immediately
@@ -218,27 +171,6 @@ export class AdminEventos implements OnInit {
     this.form.get('id')?.setValue(ev.id ?? null);
   }
 
-  // 🔹 Eliminar evento
- eliminarEvento(id: number | undefined): void {
-    if (!id) return;
-    if (!confirm('¿Está seguro que desea eliminar este evento?')) return;
-
-    // Remove from local array immediately (optimistic update)
-    this.eventos = this.eventos.filter(e => e.id !== id);
-
-    this.eventoService.borrarEvento(id).subscribe({
-      next: () => {
-        alert('🗑️ Evento eliminado');
-      },
-      error: err => {
-        // Restore the item if deletion fails
-        this.cargarEventos(); // reload the list from server
-        console.error('Error al eliminar evento:', err);
-        alert('❌ Error al eliminar el evento.');
-      }
-    });
-  }
-
   // 🔹 Cambiar modo de venta
   cambiarModoVenta(): void {
     const modo = this.form.get('modoVenta')?.value;
@@ -266,9 +198,65 @@ export class AdminEventos implements OnInit {
       })
     );
   }
-    navegarAdetalles(id: number | string) {
-    if (id == null) return;
-    this.router.navigate(['/ficha-evento', id]);
-  }
-}
 
+
+
+
+
+
+
+
+
+  private readonly fb = inject(FormBuilder);
+  private readonly eventoCliente = inject(EventoServicio);
+
+  readonly isEditing = input(false);
+  readonly evento = input<Evento>();
+  readonly edited = output<Evento>();
+
+  constructor(){
+    effect(() =>{
+        if(this.isEditing() && this.evento()){
+          this.form.patchValue(this.evento()!);
+        }
+    });
+  }
+
+  protected readonly form = this.fb.group({
+    titulo: ['', [Validators.required, Validators.minLength(3)]],
+    fecha: ['', Validators.required],
+    hora: ['', Validators.required],
+    lugar: ['', [Validators.required, Validators.minLength(3)]],
+    imagen: ['', Validators.required],
+    modoVenta: ['sector', Validators.required],
+    sectores: this.fb.array([]),
+    butacas: this.fb.array([])
+  });
+
+  handleSubmit() {//Nos da un objeto nuevo a partir de toda la info que tiene
+
+    if (this.form.invalid) {
+      alert('El formulario es inválido');
+      return;
+    }
+
+    if (confirm('Desea confirmar los datos')) {
+
+      const evento = this.form.getRawValue();
+
+      if (!this.isEditing) {
+        this.eventoCliente.crearEvento(evento).subscribe(() => {
+          alert('Pelicula agregada con exito');
+          this.form.reset();
+        });
+      } else if(this.evento()){
+        this.eventoCliente.actualizarEvento(evento, this.evento()?.id!).subscribe((m) =>{
+          alert('Pelicula modificada con exito');
+          this.edited.emit(m);
+        });
+      }
+
+
+    }
+
+  }

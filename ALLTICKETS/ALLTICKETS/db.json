@@ -59,12 +59,20 @@
       "email": "valen@gmail.com",
       "contrasena": "hola123",
       "rol": "usuario"
+    },
+    {
+      "id": "b026",
+      "nombre": "joaquin",
+      "apellido": "adami",
+      "email": "joaquin@gmail.com",
+      "contrasena": "123456",
+      "rol": "usuario"
     }
   ],
   "eventos": [
     {
       "id": "a2ba",
-      "titulo": "shrek",
+      "titulo": "shrek1",
       "fecha": "2025-11-09",
       "hora": "20:00",
       "lugar": "cine",
@@ -93,6 +101,40 @@
           "nombre": "vip",
           "capacidad": 500,
           "precio": 100
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "513b",
+      "titulo": "xwxewxewxwe",
+      "fecha": "2025-11-10",
+      "hora": "10:41",
+      "lugar": "xqxw",
+      "imagen": "https://www.google.com/imgres?q=messi&imgurl=https%3A%2F%2Fimg.a.transfermarkt.technology%2Fportrait%2Fbig%2F28003-1740766555.jpg%3Flm%3D1&imgrefurl=https%3A%2F%2Fwww.transfermarkt.es%2Flionel-messi%2Fprofil%2Fspieler%2F28003&docid=rgw2IqJrMisJbM&tbnid=g-ns9X0CbSd-OM&vet=12ahUKEwiXno3o9uiQAxV5BrkGHVLuLWgQM3oECBgQAA..i&w=300&h=390&hcb=2&ved=2ahUKEwiXno3o9uiQAxV5BrkGHVLuLWgQM3oECBgQAA",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "vip",
+          "capacidad": 12,
+          "precio": 1222
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "02eb",
+      "titulo": "RTWVBRWVdewdwexwex",
+      "fecha": "2025-11-11",
+      "hora": "23:10",
+      "lugar": "WEDDEWED",
+      "imagen": "https://www.france24.com/es/20200904-messi-futbol-fc-barcelona-argentina-la-liga",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "nose",
+          "capacidad": 12,
+          "precio": 1222
         }
       ],
       "butacas": []

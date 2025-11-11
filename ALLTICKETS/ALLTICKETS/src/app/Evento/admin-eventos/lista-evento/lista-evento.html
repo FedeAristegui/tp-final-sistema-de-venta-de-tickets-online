@@ -1,0 +1,49 @@
+<h1>Lista de Eventos</h1>
+
+<!-- Buscador simple -->
+<input
+  type="text"
+  placeholder="Buscar por título..."
+  [(ngModel)]="filtroTitulo"
+/>
+
+@let evento = eventosFiltrados;
+
+@if (isLoading()) {
+  <p>Cargando eventos...</p>
+}
+@else if (evento && evento.length > 0) {
+  <table class="tabla-eventos">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Lugar</th>
+        <th>Modo Venta</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (ev of evento; track ev.id) {
+        <tr>
+          <td>{{ ev.titulo  }}</td>
+          <td>{{ ev.fecha ? (ev.fecha | date:'dd/MM/yyyy') : '-' }}</td>
+          <td>{{ ev.hora ?? '-' }}</td>
+          <td>{{ ev.lugar  }}</td>
+          <td>{{ ev.modoVenta ?? '-' }}</td>
+          <td class="acciones">
+            <button class="btn-ver" (click)="navegarAdetalles(ev.id!)">Ver detalles</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <a routerLink="/menu-principal" class="btn volver-btn">Volver al menú principal</a>
+}
+@else {
+  <p>No hay eventos disponibles.</p>
+}
+
+
+

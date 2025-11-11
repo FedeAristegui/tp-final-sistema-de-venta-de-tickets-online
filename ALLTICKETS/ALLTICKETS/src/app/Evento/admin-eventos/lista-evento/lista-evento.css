@@ -1,0 +1,154 @@
+/* ===== Estilos generales ===== */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #004b96;
+  padding: 20px;
+  color: #333;
+}
+
+/* ===== Título ===== */
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* ===== Mensajes ===== */
+p {
+  text-align: center;
+  color: #f0f0f0;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+/* ===== Tabla ===== */
+.tabla-eventos {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.tabla-eventos thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.tabla-eventos th,
+.tabla-eventos td {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-eventos tbody tr:nth-child(even) {
+  background-color: #f8f9fb;
+}
+
+.tabla-eventos tbody tr:hover {
+  background-color: #e3f2ff;
+  transition: background-color 0.2s ease;
+}
+
+/* ===== Botones ===== */
+.acciones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.btn-ver {
+  background-color: #28a745;
+}
+
+.btn-ver:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* ===== Enlace Volver ===== */
+nav {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.volver-btn {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.volver-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* ===== Input de filtro ===== */
+input[type="text"] {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.4);
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 768px) {
+  .tabla-eventos th,
+  .tabla-eventos td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+
+  button, .volver-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+

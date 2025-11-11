@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { usuario } from '../models/usuario';
+import { usuario } from '../modelos/usuario';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';

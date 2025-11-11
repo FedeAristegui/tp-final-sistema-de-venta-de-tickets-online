@@ -46,16 +46,6 @@ tbody tr:hover {
   background-color: #eef2f7;
 }
 
-
-
-td button:first-child {
-  background-color: #28a745;
-}
-
-td button:last-child {
-  background-color: #dc3545;
-}
-
 /* Formulario */
 .formulario-evento {
   background-color: white;
@@ -119,4 +109,51 @@ td button:last-child {
   margin-top: 20px;
   color: #444;
 }
+
+/* Columna de acciones */
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Estilo general de botones dentro de la tabla */
+.acciones button {
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Botones individuales */
+.btn-ver {
+  background-color: #17a2b8; /* celeste tipo info */
+}
+
+.btn-ver:hover {
+  background-color: #138496;
+}
+
+.btn-editar {
+  background-color: #ffc107; /* amarillo tipo warning */
+  color: #333;
+}
+
+.btn-editar:hover {
+  background-color: #e0a800;
+}
+
+.btn-eliminar {
+  background-color: #dc3545; /* rojo tipo danger */
+}
+
+.btn-eliminar:hover {
+  background-color: #c82333;
+}
+
 
