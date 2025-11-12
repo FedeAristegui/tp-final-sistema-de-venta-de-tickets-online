@@ -1,0 +1,38 @@
+<h1>Lista de Descuentos</h1>
+
+@let descuento = this.descuentos();
+
+@if (isLoading()) {
+  <p>Cargando descuentos...</p>
+} @else if (descuento && descuentos()!.length > 0) {
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Porcentaje</th>
+        <th>Fecha de inicio</th>
+        <th>Fecha de fin</th>
+        <th>Activo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (descuento of descuentos(); track $index) {
+        <tr>
+          <td>{{ descuento.codigo }}</td>
+          <td>{{ descuento.porcentaje }}%</td>
+          <td>{{ descuento.fechaInicio | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ descuento.fechaFin | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ descuento.activo ? 'Sí' : 'No' }}</td>
+          <td>
+            <button (click)="navegarDetalles(descuento.id!)">Ver detalles</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else {
+  <p>No hay descuentos registrados.</p>
+}
+<button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>

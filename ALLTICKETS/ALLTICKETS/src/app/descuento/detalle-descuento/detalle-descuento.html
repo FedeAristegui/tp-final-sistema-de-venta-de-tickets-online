@@ -1,0 +1,33 @@
+@let descuento = this.descuento();
+
+@if (descuento) {
+
+  <h2>{{ descuento.codigo }}</h2>
+  <p>
+    Descuento: {{ descuento.porcentaje }}% |
+    Estado: {{ descuento.activo ? 'Activo' : 'Inactivo' }}
+  </p>
+
+  <p>
+    Vigencia: desde {{ descuento.fechaInicio | date:'dd/MM/yyyy' }}
+    hasta {{ descuento.fechaFin | date:'dd/MM/yyyy' }}
+  </p>
+
+  <div class="acciones">
+    <button (click)="toggleEdit()">Editar</button>
+    <button (click)="eliminarDescuento()" [disabled]="isEditing()">Eliminar</button>
+  </div>
+
+  @if (isEditing()) {
+    <p>Editando...</p>
+    <app-formulario-descuento
+      [isEditing]="true"
+      [descuento]="descuento"
+      (edited)="handleEdit($event)">
+    </app-formulario-descuento>
+  }
+
+} @else {
+  <p>No se encontró el descuento</p>
+}
+<button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>

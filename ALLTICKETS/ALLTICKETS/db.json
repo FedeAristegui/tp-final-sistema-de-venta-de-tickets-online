@@ -139,5 +139,15 @@
       ],
       "butacas": []
     }
+  ],
+  "descuentos": [
+    {
+      "codigo": "sqswq",
+      "porcentaje": 100,
+      "fechaInicio": "2025-11-11",
+      "fechaFin": "2025-11-13",
+      "activo": false,
+      "id": "94b1"
+    }
   ]
 }
