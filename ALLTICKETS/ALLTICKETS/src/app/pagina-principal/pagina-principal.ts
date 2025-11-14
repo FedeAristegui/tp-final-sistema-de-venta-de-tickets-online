@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -25,6 +25,15 @@ cerrarSesion() {
   this.router.navigate(['/']);
 }
 constructor(private router: Router) {}
+
+navegarAPerfil(){
+  const id = this.usuario?.id;
+  if (!id) {
+    this.router.navigate(['/login']);
+    return;
+  }
+  this.router.navigate(['/perfil', id]);
+}
 
 
 }

@@ -14,7 +14,7 @@
   <!-- Menú que aparece solo para usuario común -->
   @if (usuario.rol === 'usuario') {
     <ul>
-      <li><a routerLink="/perfil">Mi Perfil</a></li>
+      <li><a [routerLink]="['/perfil', usuario?.id]">Mi Perfil</a></li>
       <li><a routerLink="/comprar">Comprar</a></li>
       <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
     </ul>

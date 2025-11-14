@@ -54,11 +54,12 @@
     },
     {
       "id": "9534",
-      "nombre": "valen",
+      "nombre": "valentin",
       "apellido": "carzon",
       "email": "valen@gmail.com",
       "contrasena": "hola123",
-      "rol": "usuario"
+      "rol": "usuario",
+      "ultimaActividad": "2025-11-14T14:36:05.350Z"
     },
     {
       "id": "b026",
