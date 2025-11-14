@@ -22,6 +22,8 @@
         <h2>Bienvenido, {{ usuario.nombre }}</h2>
         <ul>
           <li><a routerLink="/perfil/:id">Mi Perfil</a></li>
+          <li><a routerLink="/favoritos">❤️ Mis Favoritos</a></li>
+          <li><a routerLink="/mis-tarjetas">💳 Mis Tarjetas</a></li>
           <li><a routerLink="/comprar">Comprar</a></li>
           <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
         </ul>
@@ -43,20 +45,89 @@
 <div class="eventos-container">
   <h2 class="titulo-seccion">Próximos Eventos</h2>
   
+  <!-- Sección de Filtros -->
+  <div class="filtros-container">
+    <form [formGroup]="filtrosForm">
+      <div class="filtros-grid">
+        <!-- Filtro por nombre -->
+        <div class="filtro-item">
+          <label for="filtroNombre">🔍 Buscar por nombre o lugar</label>
+          <input 
+            type="text" 
+            id="filtroNombre"
+            formControlName="nombre"
+            placeholder="Ej: Concierto, Teatro..."
+            class="filtro-input"
+          />
+        </div>
+
+        <!-- Filtro por fecha -->
+        <div class="filtro-item">
+          <label for="filtroFecha">📅 Filtrar por fecha</label>
+          <input 
+            type="date" 
+            id="filtroFecha"
+            formControlName="fecha"
+            class="filtro-input"
+          />
+        </div>
+
+        <!-- Filtro por categoría -->
+        <div class="filtro-item">
+          <label for="filtroCategoria">🎭 Categoría</label>
+          <select 
+            id="filtroCategoria"
+            formControlName="categoria"
+            class="filtro-input"
+          >
+            <option value="">Todas las categorías</option>
+            @for (categoria of categorias; track categoria) {
+              <option [value]="categoria">{{ categoria }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <!-- Botón limpiar filtros -->
+    <div class="filtros-acciones">
+      <button (click)="limpiarFiltros()" class="btn-limpiar">
+        🗑️ Limpiar Filtros
+      </button>
+      <span class="resultados-contador">
+        {{ eventosFiltrados.length }} evento(s) encontrado(s)
+      </span>
+    </div>
+  </div>
+  
   @if (isLoading) {
     <div class="loading">
       <div class="spinner"></div>
       <p>Cargando eventos...</p>
     </div>
-  } @else if (eventos.length > 0) {
+  } @else if (eventosFiltrados.length > 0) {
     <div class="eventos-grid">
-      @for (evento of eventos; track evento.id) {
+      @for (evento of eventosFiltrados; track evento.id) {
         <div class="evento-card" (click)="verDetalleEvento(evento.id)">
+          <!-- Botón de favorito -->
+          @if (usuario && usuario.rol === 'usuario') {
+            <button 
+              class="btn-favorito" 
+              [class.activo]="esFavorito(evento.id)"
+              (click)="toggleFavorito(evento, $event)"
+              [title]="esFavorito(evento.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+              {{ esFavorito(evento.id) ? '❤️' : '🤍' }}
+            </button>
+          }
+          
           <div class="evento-imagen">
             @if (evento.imagen) {
               <img [src]="evento.imagen" [alt]="evento.titulo">
             } @else {
               <div class="sin-imagen">Sin imagen</div>
+            }
+            @if (evento.categoria) {
+              <span class="categoria-badge">{{ evento.categoria }}</span>
             }
           </div>
           <div class="evento-info">
@@ -67,10 +138,10 @@
               <p><span class="icono">📍</span> {{ evento.lugar }}</p>
             </div>
             <div class="evento-tipo">
-              @if (evento.modoVenta === 'sector') {
-                <span class="badge badge-sector">Por Sectores</span>
+              @if (evento.categoria) {
+                <span class="badge badge-categoria">{{ evento.categoria }}</span>
               } @else {
-                <span class="badge badge-butaca">Por Butacas</span>
+                <span class="badge badge-sin-categoria">Sin categoría</span>
               }
             </div>
             <button class="btn-ver-mas">Ver Detalles →</button>
@@ -80,8 +151,11 @@
     </div>
   } @else {
     <div class="sin-eventos">
-      <p>📭 No hay eventos disponibles en este momento</p>
-      <p>Vuelve pronto para ver nuevas opciones</p>
+      <p>📭 No se encontraron eventos con los filtros aplicados</p>
+      <p>Intenta ajustar los criterios de búsqueda</p>
+      <button (click)="limpiarFiltros()" class="btn-limpiar-inline">
+        Limpiar Filtros
+      </button>
     </div>
   }
 </div>

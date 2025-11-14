@@ -1,0 +1,63 @@
+<div class="favoritos-container">
+  <div class="header">
+    <h1>❤️ Mis Favoritos</h1>
+    <p>Eventos que has guardado para ver más tarde</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando favoritos...</p>
+    </div>
+  } @else if (eventosFavoritos.length > 0) {
+    <div class="eventos-grid">
+      @for (evento of eventosFavoritos; track evento.id) {
+        <div class="evento-card">
+          <button 
+            class="btn-quitar-favorito" 
+            (click)="quitarFavorito(evento.id)"
+            title="Quitar de favoritos">
+            ✕
+          </button>
+
+          <div class="evento-imagen" (click)="verDetalleEvento(evento.id)">
+            @if (evento.imagen) {
+              <img [src]="evento.imagen" [alt]="evento.titulo">
+            } @else {
+              <div class="sin-imagen">Sin imagen</div>
+            }
+            @if (evento.categoria) {
+              <span class="categoria-badge">{{ evento.categoria }}</span>
+            }
+          </div>
+
+          <div class="evento-info" (click)="verDetalleEvento(evento.id)">
+            <h3>{{ evento.titulo }}</h3>
+            <div class="evento-detalles">
+              <p><span class="icono">📅</span> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
+              <p><span class="icono">🕐</span> {{ evento.hora }}</p>
+              <p><span class="icono">📍</span> {{ evento.lugar }}</p>
+            </div>
+            <div class="evento-tipo">
+              @if (evento.modoVenta === 'sector') {
+                <span class="badge badge-sector">Por Sectores</span>
+              } @else {
+                <span class="badge badge-butaca">Por Butacas</span>
+              }
+            </div>
+            <button class="btn-ver-mas">Ver Detalles →</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="sin-favoritos">
+      <div class="icono-grande">💔</div>
+      <h2>No tienes eventos favoritos</h2>
+      <p>Explora eventos y agrega tus favoritos haciendo clic en el corazón</p>
+      <button routerLink="/menu-principal" class="btn-explorar">
+        🔍 Explorar Eventos
+      </button>
+    </div>
+  }
+</div>

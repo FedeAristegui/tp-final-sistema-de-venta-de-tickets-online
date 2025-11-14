@@ -9,6 +9,8 @@ import { FormularioDescuento } from './descuento/formulario-descuento/formulario
 import { ListaDescuento } from './descuento/lista-descuento/lista-descuento';
 import { DetalleDescuento } from './descuento/detalle-descuento/detalle-descuento';
 import { PerfilUsuario } from './usuario/perfil-usuario/perfil-usuario';
+import { ListaFavoritos } from './lista-favoritos/lista-favoritos';
+import { MisTarjetas } from './mis-tarjetas/mis-tarjetas';
 
 
 
@@ -54,6 +56,14 @@ export const routes: Routes = [
   },
   {
     path: 'perfil/:id', component: PerfilUsuario,
+  },
+  {
+    path: 'favoritos', component: ListaFavoritos,
+    title: 'Mis Favoritos'
+  },
+  {
+    path: 'mis-tarjetas', component: MisTarjetas,
+    title: 'Mis Tarjetas'
   },
   { 
     path: '**', redirectTo: '' 

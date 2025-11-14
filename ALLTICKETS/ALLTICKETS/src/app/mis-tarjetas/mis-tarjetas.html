@@ -1,0 +1,205 @@
+<div class="tarjetas-container">
+  <div class="header">
+    <h1>💳 Mis Tarjetas</h1>
+    <p>Administra tus métodos de pago</p>
+    <button class="btn-agregar" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? '✕ Cancelar' : '+ Agregar Tarjeta' }}
+    </button>
+  </div>
+
+  <!-- Formulario para agregar tarjeta -->
+  @if (mostrarFormulario) {
+    <div class="formulario-tarjeta">
+      <h2>Nueva Tarjeta</h2>
+      <form [formGroup]="tarjetaForm" (ngSubmit)="agregarTarjeta()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="numeroTarjeta">Número de Tarjeta *</label>
+            <input 
+              type="text" 
+              id="numeroTarjeta"
+              formControlName="numeroTarjeta"
+              placeholder="1234 5678 9012 3456"
+              maxlength="16"
+              class="form-input"
+            />
+            @if (tarjetaForm.get('numeroTarjeta')?.touched && tarjetaForm.get('numeroTarjeta')?.invalid) {
+              <span class="error">Ingresa un número de tarjeta válido (16 dígitos)</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="titular">Titular de la Tarjeta *</label>
+            <input 
+              type="text" 
+              id="titular"
+              formControlName="titular"
+              placeholder="JUAN PEREZ"
+              class="form-input"
+            />
+            @if (tarjetaForm.get('titular')?.touched && tarjetaForm.get('titular')?.invalid) {
+              <span class="error">El nombre del titular es requerido</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="vencimiento">Vencimiento (MM/YY) *</label>
+            <input 
+              type="text" 
+              id="vencimiento"
+              formControlName="vencimiento"
+              placeholder="12/25"
+              maxlength="5"
+              class="form-input"
+            />
+            @if (tarjetaForm.get('vencimiento')?.touched && tarjetaForm.get('vencimiento')?.invalid) {
+              <span class="error">Formato: MM/YY (ej: 12/25)</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV *</label>
+            <input 
+              type="text" 
+              id="cvv"
+              formControlName="cvv"
+              placeholder="123"
+              maxlength="4"
+              class="form-input"
+            />
+            @if (tarjetaForm.get('cvv')?.touched && tarjetaForm.get('cvv')?.invalid) {
+              <span class="error">CVV de 3-4 dígitos</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="tipo">Tipo de Tarjeta *</label>
+            <select id="tipo" formControlName="tipo" class="form-input">
+              <option value="Visa">Visa</option>
+              <option value="Mastercard">Mastercard</option>
+              <option value="American Express">American Express</option>
+              <option value="Cabal">Cabal</option>
+              <option value="Naranja">Naranja X</option>
+            </select>
+          </div>
+
+          @if (tarjetas.length > 0) {
+            <div class="form-group checkbox-group">
+              <label>
+                <input type="checkbox" formControlName="esPrincipal" />
+                Establecer como tarjeta principal
+              </label>
+            </div>
+          }
+        </div>
+
+        <div class="form-acciones">
+          <button type="submit" class="btn-guardar" [disabled]="tarjetaForm.invalid">
+            💾 Guardar Tarjeta
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Lista de tarjetas -->
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando tarjetas...</p>
+    </div>
+  } @else if (tarjetas.length > 0) {
+    <div class="tarjetas-grid">
+      @for (tarjeta of tarjetas; track tarjeta.id) {
+        <div class="tarjeta-card" [class.principal]="tarjeta.esPrincipal">
+          @if (tarjeta.esPrincipal) {
+            <span class="badge-principal">⭐ Principal</span>
+          }
+          
+          <div class="tarjeta-header">
+            <span class="tarjeta-icono">{{ obtenerIconoTarjeta(tarjeta.tipo) }}</span>
+            <span class="tarjeta-tipo">{{ tarjeta.tipo }}</span>
+          </div>
+
+          <div class="tarjeta-numero">
+            {{ formatearNumeroTarjeta(tarjeta.numeroTarjeta) }}
+          </div>
+
+          <div class="tarjeta-info">
+            <div class="info-item">
+              <span class="label">Titular</span>
+              <span class="valor">{{ tarjeta.titular }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Vence</span>
+              <span class="valor">{{ tarjeta.vencimiento }}</span>
+            </div>
+          </div>
+
+          <!-- Detalles expandibles -->
+          @if (mostrarDetalles(tarjeta.id)) {
+            <div class="tarjeta-detalles-completos">
+              <div class="detalle-row">
+                <span class="detalle-label">🔢 Número completo:</span>
+                <span class="detalle-valor">•••• •••• •••• {{ tarjeta.numeroTarjeta }}</span>
+              </div>
+              <div class="detalle-row">
+                <span class="detalle-label">👤 Titular completo:</span>
+                <span class="detalle-valor">{{ tarjeta.titular }}</span>
+              </div>
+              <div class="detalle-row">
+                <span class="detalle-label">📅 Vencimiento:</span>
+                <span class="detalle-valor">{{ tarjeta.vencimiento }}</span>
+              </div>
+              <div class="detalle-row">
+                <span class="detalle-label">💳 Tipo:</span>
+                <span class="detalle-valor">{{ tarjeta.tipo }}</span>
+              </div>
+              <div class="detalle-row">
+                <span class="detalle-label">⭐ Estado:</span>
+                <span class="detalle-valor">{{ tarjeta.esPrincipal ? 'Tarjeta Principal' : 'Tarjeta Secundaria' }}</span>
+              </div>
+            </div>
+          }
+
+          <div class="tarjeta-acciones">
+            <button 
+              class="btn-accion btn-detalles" 
+              (click)="toggleDetalles(tarjeta.id)"
+              [title]="mostrarDetalles(tarjeta.id) ? 'Ocultar detalles' : 'Ver detalles'">
+              {{ mostrarDetalles(tarjeta.id) ? '👁️ Ocultar' : '👁️ Ver Detalles' }}
+            </button>
+            @if (!tarjeta.esPrincipal) {
+              <button 
+                class="btn-accion btn-principal" 
+                (click)="establecerPrincipal(tarjeta)"
+                title="Establecer como principal">
+                ⭐ Principal
+              </button>
+            }
+            <button 
+              class="btn-accion btn-eliminar" 
+              (click)="eliminarTarjeta(tarjeta)"
+              title="Eliminar tarjeta">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="sin-tarjetas">
+      <div class="icono-grande">💳</div>
+      <h2>No tienes tarjetas registradas</h2>
+      <p>Agrega una tarjeta para realizar tus compras de forma rápida</p>
+      <button class="btn-agregar-inline" (click)="toggleFormulario()">
+        + Agregar Primera Tarjeta
+      </button>
+    </div>
+  }
+
+  <div class="nota-seguridad">
+    <span class="icono-seguridad">🔒</span>
+    <p>Tus datos están protegidos. Solo guardamos los últimos 4 dígitos de tu tarjeta.</p>
+  </div>
+</div>
