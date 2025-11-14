@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../../servicios/evento.servicio';
@@ -12,55 +12,109 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-eventos.html',
   styleUrls: ['./admin-eventos.css']
 })
-export class AdminEventos {
+export class AdminEventos implements OnInit {
+
+  @Input() isEditing: boolean = false;
+  @Input() evento?: Evento;
+  @Output() edited = new EventEmitter<Evento>();
 
   private readonly fb = inject(FormBuilder);
   private readonly eventoService = inject(EventoServicio);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  // Props estilo "MovieForm"
-  readonly isEditing = input(false);
-  readonly evento = input<Evento>();
-  readonly edited = output<Evento>();
+  protected eventos: Evento[] = [];
+  protected modoEdicion = false;
+  protected mostrarTodasButacas = false;
 
-  protected readonly form = this.fb.nonNullable.group({
+  toggleMostrarTodas(): void {
+    this.mostrarTodasButacas = !this.mostrarTodasButacas;
+  }
+
+  protected readonly form = this.fb.group({
     id: [null as number | null],
     titulo: ['', [Validators.required, Validators.minLength(3)]],
     fecha: ['', Validators.required],
     hora: ['', Validators.required],
     lugar: ['', [Validators.required, Validators.minLength(3)]],
     imagen: ['', Validators.required],
-    modoVenta: ['sector', Validators.required],
+    modoVenta: ['sector' as 'sector' | 'butaca', Validators.required],
     sectores: this.fb.array([]),
     butacas: this.fb.array([])
   });
 
-  // Getters para arrays reactivos
+  // 🔹 Formulario generador de butacas
+  protected readonly generadorButacas = this.fb.group({
+    filas: ['', Validators.required],
+    butacasPorFila: [0, [Validators.required, Validators.min(1)]],
+    precioBase: [0, [Validators.required, Validators.min(0)]]
+  });
+
   get sectores(): FormArray {
     return this.form.get('sectores') as FormArray;
   }
+
   get butacas(): FormArray {
     return this.form.get('butacas') as FormArray;
   }
 
-  constructor() {
-    // Efecto: si es edición y llega un evento, parcheamos el form
-    effect(() => {
-      if (this.isEditing() && this.evento()) {
-        this.cargarEventoEnFormulario(this.evento()!);
+  ngOnInit(): void {
+    this.cargarEventos();
+
+    // Si viene desde @Input, usar ese evento
+    if (this.isEditing && this.evento) {
+      this.modoEdicion = true;
+      this.cargarEventoEnFormulario(this.evento);
+      return;
+    }
+
+    // Si viene desde ruta, cargar por ID
+    const idParam = this.route.snapshot.params['id'];
+    if (idParam) {
+      this.modoEdicion = true;
+      const id = Number(idParam);
+      this.eventoService.obtenerEvento(id).subscribe({
+        next: ev => this.cargarEventoEnFormulario(ev),
+        error: err => {
+          console.error('Error al cargar evento:', err);
+          alert('No se pudo cargar el evento para editar.');
+          this.router.navigate(['/eventos']);
+        }
+      });
+    }
+  }
+
+  cargarEventos(): void {
+    this.eventoService.obtenerEventos().subscribe({
+      next: (lista: Evento[]) => {
+        this.eventos = lista || [];
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.error('Error al cargar eventos:', err);
+        this.eventos = [];
       }
     });
   }
 
-  // 🔹 Cargar un evento en el formulario
-  cargarEventoEnFormulario(ev: Evento) {
-    this.form.patchValue(ev);
+  cargarEventoEnFormulario(ev: Evento): void {
+    if (!ev) return;
+
+    this.form.patchValue({
+      id: ev.id,
+      titulo: ev.titulo,
+      fecha: ev.fecha,
+      hora: ev.hora,
+      lugar: ev.lugar,
+      imagen: ev.imagen,
+      modoVenta: ev.modoVenta
+    });
 
     this.sectores.clear();
     this.butacas.clear();
 
-    if (ev.modoVenta === 'sector' && ev.sectores) {
+    if (ev.modoVenta === 'sector' && ev.sectores?.length) {
       ev.sectores.forEach(s =>
         this.sectores.push(
           this.fb.group({
@@ -72,7 +126,7 @@ export class AdminEventos {
       );
     }
 
-    if (ev.modoVenta === 'butaca' && ev.butacas) {
+    if (ev.modoVenta === 'butaca' && ev.butacas?.length) {
       ev.butacas.forEach(b =>
         this.butacas.push(
           this.fb.group({
@@ -86,8 +140,13 @@ export class AdminEventos {
     }
   }
 
-  // 🔹 Agregar items dinámicos
-  agregarSector() {
+  seleccionarEvento(ev: Evento): void {
+    this.modoEdicion = true;
+    this.cargarEventoEnFormulario(ev);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  agregarSector(): void {
     this.sectores.push(
       this.fb.group({
         nombre: ['', Validators.required],
@@ -97,31 +156,167 @@ export class AdminEventos {
     );
   }
 
-  agregarButaca() {
+  eliminarSector(index: number): void {
+    if (confirm('¿Eliminar este sector?')) {
+      this.sectores.removeAt(index);
+    }
+  }
+
+  agregarButaca(): void {
+    const ultimaButaca = this.butacas.length > 0 ? this.butacas.at(this.butacas.length - 1).value : null;
+    const filaDefault = ultimaButaca?.fila || 'A';
+    const numeroDefault = ultimaButaca ? (ultimaButaca.numero + 1) : 1;
+    const precioDefault = ultimaButaca?.precio || 0;
+
     this.butacas.push(
       this.fb.group({
-        fila: ['', Validators.required],
-        numero: [0, [Validators.required, Validators.min(1)]],
-        precio: [0, [Validators.required, Validators.min(0)]],
+        fila: [filaDefault, Validators.required],
+        numero: [numeroDefault, [Validators.required, Validators.min(1)]],
+        precio: [precioDefault, [Validators.required, Validators.min(0)]],
         disponible: [true]
       })
     );
   }
 
-  cambiarModoVenta() {
-    const modo = this.form.get('modoVenta')?.value;
-    if (modo === 'sector') this.butacas.clear();
-    else this.sectores.clear();
+  eliminarButaca(index: number): void {
+    if (confirm('¿Eliminar esta butaca?')) {
+      this.butacas.removeAt(index);
+    }
   }
 
-  // 🔹 Guardar evento (crear o actualizar)
-  handleSubmit() {
-    if (this.form.invalid) {
-      alert('El formulario es inválido');
+  limpiarButacas(): void {
+    if (confirm(`¿Eliminar todas las ${this.butacas.length} butacas?`)) {
+      while (this.butacas.length) {
+        this.butacas.removeAt(0);
+      }
+      this.mostrarTodasButacas = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  // 🔹 Generar butacas automáticamente
+  generarButacas(): void {
+    const filasInput = this.generadorButacas.get('filas')?.value || '';
+    const cantidad = this.generadorButacas.get('butacasPorFila')?.value || 0;
+    const precio = this.generadorButacas.get('precioBase')?.value || 0;
+
+    if (!filasInput.trim()) {
+      alert('⚠️ Por favor ingresa las filas (Ejemplo: A-E o A,B,C)');
       return;
     }
 
-    if (!confirm('Desea confirmar los datos')) return;
+    if (cantidad <= 0) {
+      alert('⚠️ La cantidad de butacas por fila debe ser mayor a 0');
+      return;
+    }
+
+    if (precio < 0) {
+      alert('⚠️ El precio debe ser mayor o igual a 0');
+      return;
+    }
+
+    const filas = this.parsearFilas(filasInput);
+    
+    if (filas.length === 0) {
+      alert('❌ Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-E (rango de filas)');
+      return;
+    }
+
+    const totalButacas = filas.length * cantidad;
+    const mensaje = this.butacas.length > 0
+      ? `¿Generar ${totalButacas} butacas nuevas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca\n\n⚠️ Esto reemplazará las ${this.butacas.length} butacas actuales`
+      : `¿Generar ${totalButacas} butacas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca`;
+
+    if (!confirm(mensaje)) {
+      return;
+    }
+
+    // Limpiar butacas existentes
+    while (this.butacas.length) {
+      this.butacas.removeAt(0);
+    }
+
+    // Generar nuevas butacas
+    filas.forEach(fila => {
+      for (let num = 1; num <= cantidad; num++) {
+        this.butacas.push(
+          this.fb.group({
+            fila: [fila, Validators.required],
+            numero: [num, [Validators.required, Validators.min(1)]],
+            precio: [precio, [Validators.required, Validators.min(0)]],
+            disponible: [true]
+          })
+        );
+      }
+    });
+
+    this.mostrarTodasButacas = false;
+    alert(`✅ ${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`);
+    this.cdr.detectChanges();
+  }
+
+  private parsearFilas(input: string): string[] {
+    const trimmed = input.trim().toUpperCase();
+
+    if (trimmed.includes('-')) {
+      const partes = trimmed.split('-');
+      if (partes.length !== 2) return [];
+      
+      const inicio = partes[0].trim().charCodeAt(0);
+      const fin = partes[1].trim().charCodeAt(0);
+      
+      if (inicio > fin || inicio < 65 || fin > 90) return [];
+      
+      const filas: string[] = [];
+      for (let i = inicio; i <= fin; i++) {
+        filas.push(String.fromCharCode(i));
+      }
+      return filas;
+    }
+
+    return trimmed.split(',').map(f => f.trim()).filter(f => f.length > 0);
+  }
+
+  cambiarModoVenta(): void {
+    const modo = this.form.get('modoVenta')?.value;
+    if (modo === 'sector') {
+      while (this.butacas.length) {
+        this.butacas.removeAt(0);
+      }
+      this.generadorButacas.reset();
+    } else {
+      while (this.sectores.length) {
+        this.sectores.removeAt(0);
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
+  // Método para manejar el submit del formulario
+  handleSubmit(): void {
+    this.guardarEvento();
+  }
+
+  // Método para cancelar la edición
+  cancelarEdicion(): void {
+    this.modoEdicion = false;
+    this.form.reset({ modoVenta: 'sector' });
+    while (this.sectores.length) {
+      this.sectores.removeAt(0);
+    }
+    while (this.butacas.length) {
+      this.butacas.removeAt(0);
+    }
+    this.generadorButacas.reset();
+    this.cdr.detectChanges();
+  }
+
+  guardarEvento(): void {
+    if (this.form.invalid) {
+      alert('Por favor completá todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const raw = this.form.getRawValue() as any;
 
@@ -137,14 +332,21 @@ export class AdminEventos {
       butacas: (raw.butacas ?? []) as Evento['butacas']
     };
 
-    if (this.isEditing() && evento.id != null) {
+    if (this.modoEdicion && evento.id != null) {
       this.eventoService.actualizarEvento(evento, evento.id).subscribe({
         next: () => {
+          const index = this.eventos.findIndex(e => e.id === evento.id);
+          if (index !== -1) {
+            this.eventos[index] = { ...evento };
+          }
           alert('✅ Evento actualizado con éxito');
-          this.edited.emit(evento);
-          this.form.reset({ modoVenta: 'sector' });
-          this.sectores.clear();
-          this.butacas.clear();
+          
+          // Si viene desde @Input, emitir el evento actualizado
+          if (this.isEditing) {
+            this.edited.emit(evento);
+          }
+          
+          this.cancelarEdicion();
         },
         error: err => {
           console.error('Error al actualizar evento:', err);
@@ -155,17 +357,39 @@ export class AdminEventos {
       delete (evento as any).id;
       this.eventoService.crearEvento(evento).subscribe({
         next: (nuevoEvento: Evento) => {
+          this.eventos.push(nuevoEvento);
           alert('🎉 Evento creado con éxito');
-          this.edited.emit(nuevoEvento);
-          this.form.reset({ modoVenta: 'sector' });
-          this.sectores.clear();
-          this.butacas.clear();
+          this.cancelarEdicion();
         },
         error: err => {
           console.error('Error al crear evento:', err);
           alert('❌ Hubo un error al crear el evento.');
         }
       });
+    }
+  }
+
+  eliminarEvento(id: number | undefined): void {
+    if (!id) return;
+    if (!confirm('¿Está seguro que desea eliminar este evento?')) return;
+
+    this.eventos = this.eventos.filter(e => e.id !== id);
+
+    this.eventoService.borrarEvento(id).subscribe({
+      next: () => {
+        alert('🗑️ Evento eliminado');
+      },
+      error: err => {
+        this.cargarEventos();
+        console.error('Error al eliminar evento:', err);
+        alert('❌ Error al eliminar el evento.');
+      }
+    });
+  }
+
+  navegarAdetalles(id: number | undefined): void {
+    if (id != null) {
+      this.router.navigate(['/ficha-evento', id]);
     }
   }
 }

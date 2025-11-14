@@ -1,29 +1,87 @@
-@if (usuario) {
-  <!-- Menú que aparece solo para admin -->
-  @if (usuario.rol === 'admin') {
-    <ul>
-      
-      <li><a routerLink="/eventos">Agregar Eventos</a></li>
-      <li><a routerLink="/lista-eventos">Ver lista de Eventos</a></li>
-      <li><a routerLink="/formulario-descuento">Agregar Descuento</a></li>
-      <li><a routerLink="/lista-descuento">Ver lista Descuentos</a></li>
-      <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
-    </ul>
-  }
+<!-- Menú de navegación -->
+<div class="menu-container">
+  @if (usuario) {
+    <!-- Menú que aparece solo para admin -->
+    @if (usuario.rol === 'admin') {
+      <nav class="menu-admin">
+        <h2>Panel de Administración</h2>
+        <ul>
+          <li><a routerLink="/eventos">Agregar Eventos</a></li>
+          <li><a routerLink="/lista-eventos">Ver lista de Eventos</a></li>
+          <li><a routerLink="/formulario-descuento">Agregar Descuento</a></li>
+          <li><a routerLink="/lista-descuento">Ver lista Descuentos</a></li>
+          <li><a routerLink="/estadisticas">📊 Ver Estadísticas de Ventas</a></li>
+          <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+        </ul>
+      </nav>
+    }
 
-  <!-- Menú que aparece solo para usuario común -->
-  @if (usuario.rol === 'usuario') {
-    <ul>
-      <li><a [routerLink]="['/perfil', usuario?.id]">Mi Perfil</a></li>
-      <li><a routerLink="/comprar">Comprar</a></li>
-      <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
-    </ul>
+    <!-- Menú que aparece solo para usuario común -->
+    @if (usuario.rol === 'usuario') {
+      <nav class="menu-usuario">
+        <h2>Bienvenido, {{ usuario.nombre }}</h2>
+        <ul>
+          <li><a routerLink="/perfil/:id">Mi Perfil</a></li>
+          <li><a routerLink="/comprar">Comprar</a></li>
+          <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+        </ul>
+      </nav>
+    }
+  } @else {
+    <!-- Menú para visitantes (sin sesión) -->
+    <nav class="menu-visitante">
+      <h1>🎫 AllTickets - Eventos en Vivo</h1>
+      <ul>
+        <li><a routerLink="/login">Iniciar Sesión</a></li>
+        <li><a routerLink="/registro">Registrarse</a></li>
+      </ul>
+    </nav>
   }
-} @else {
-  <nav>
-    <ul>
-      <li><a routerLink="/login">Iniciar Sesión</a></li>
-      <li><a routerLink="/registro">Registrarse</a></li>
-    </ul>
-  </nav>
-}
+</div>
+
+<!-- Galería de Eventos -->
+<div class="eventos-container">
+  <h2 class="titulo-seccion">Próximos Eventos</h2>
+  
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando eventos...</p>
+    </div>
+  } @else if (eventos.length > 0) {
+    <div class="eventos-grid">
+      @for (evento of eventos; track evento.id) {
+        <div class="evento-card" (click)="verDetalleEvento(evento.id)">
+          <div class="evento-imagen">
+            @if (evento.imagen) {
+              <img [src]="evento.imagen" [alt]="evento.titulo">
+            } @else {
+              <div class="sin-imagen">Sin imagen</div>
+            }
+          </div>
+          <div class="evento-info">
+            <h3>{{ evento.titulo }}</h3>
+            <div class="evento-detalles">
+              <p><span class="icono">📅</span> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
+              <p><span class="icono">🕐</span> {{ evento.hora }}</p>
+              <p><span class="icono">📍</span> {{ evento.lugar }}</p>
+            </div>
+            <div class="evento-tipo">
+              @if (evento.modoVenta === 'sector') {
+                <span class="badge badge-sector">Por Sectores</span>
+              } @else {
+                <span class="badge badge-butaca">Por Butacas</span>
+              }
+            </div>
+            <button class="btn-ver-mas">Ver Detalles →</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="sin-eventos">
+      <p>📭 No hay eventos disponibles en este momento</p>
+      <p>Vuelve pronto para ver nuevas opciones</p>
+    </div>
+  }
+</div>

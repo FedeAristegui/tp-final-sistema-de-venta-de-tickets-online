@@ -2,7 +2,7 @@
   <!-- Formulario -->
   <div class="formulario-container">
     <h3>
-      @if(isEditing()) {
+      @if(isEditing) {
         Editar Evento
       } @else {
         Crear Nuevo Evento
@@ -44,25 +44,104 @@
                 <input formControlName="capacidad" type="number" />
                 <label>Precio:</label>
                 <input formControlName="precio" type="number" />
+                <button type="button" (click)="eliminarSector(i)" class="btn-eliminar-item">🗑️ Eliminar</button>
               </div>
             }
           </div>
         </div>
       } @else {
         <div class="butacas-block">
-          <h4>Butacas</h4>
-          <button type="button" (click)="agregarButaca()">+ Agregar Butaca</button>
+          <h4>Configuración de Butacas</h4>
+          
+          <!-- 🔹 Generador Automático de Butacas -->
+          <div class="generador-butacas" [formGroup]="generadorButacas">
+            <h5>🎫 Generador Automático de Butacas</h5>
+            <p class="info-ayuda">
+              Genera automáticamente todas las butacas del evento especificando las filas y cantidad.
+            </p>
+            <div class="generador-campos">
+              <div>
+                <label>Filas <small>(A,B,C o A-E)</small>:</label>
+                <input formControlName="filas" placeholder="Ejemplo: A-E" />
+                <small class="hint">💡 Usa comas (A,B,C) o guión (A-E)</small>
+              </div>
+              <div>
+                <label>Butacas por fila:</label>
+                <input formControlName="butacasPorFila" type="number" placeholder="Ej: 10" min="1" />
+                <small class="hint">💡 Cantidad de asientos por fila</small>
+              </div>
+              <div>
+                <label>Precio por butaca ($):</label>
+                <input formControlName="precioBase" type="number" placeholder="Ej: 1000" min="0" />
+                <small class="hint">💡 Precio base para todas las butacas</small>
+              </div>
+            </div>
+            
+            @if (butacas.length > 0) {
+              <div class="advertencia-reemplazo">
+                ⚠️ Al generar se reemplazarán las {{ butacas.length }} butacas actuales
+              </div>
+            }
+            
+            <button type="button" (click)="generarButacas()" class="btn-generar">
+              🎫 Generar Butacas Automáticamente
+            </button>
+          </div>
+
+          <hr />
+
+          <!-- Vista previa de butacas -->
           <div formArrayName="butacas">
-            @for (b of butacas.controls; track $index; let i = $index) {
-              <div [formGroupName]="i" class="butaca-item">
-                <label>Fila:</label>
-                <input formControlName="fila" />
-                <label>Número:</label>
-                <input formControlName="numero" type="number" />
-                <label>Precio:</label>
-                <input formControlName="precio" type="number" />
-                <label>Disponible:</label>
-                <input formControlName="disponible" type="checkbox" />
+            @if (butacas.length > 0) {
+              <div class="butacas-header">
+                <h5>Butacas Creadas</h5>
+                <div class="info-butacas">Total: {{ butacas.length }} butacas</div>
+              </div>
+              
+              <!-- Opción de edición manual -->
+              <div class="opciones-butacas">
+                <button type="button" (click)="agregarButaca()" class="btn-agregar">+ Agregar Butaca Manual</button>
+                <button type="button" (click)="limpiarButacas()" class="btn-limpiar">🗑️ Limpiar Todas</button>
+              </div>
+              
+              <!-- Lista de butacas (solo mostrar primeras 20 para no saturar) -->
+              <div class="lista-butacas">
+                @for (b of butacas.controls; track $index; let i = $index) {
+                  @if (i < 20 || mostrarTodasButacas) {
+                    <div [formGroupName]="i" class="butaca-item">
+                      <div class="butaca-info">
+                        <span class="butaca-label">Fila {{ b.get('fila')?.value }} - #{{ b.get('numero')?.value }}</span>
+                        <span class="butaca-precio">${{ b.get('precio')?.value }}</span>
+                      </div>
+                      <div class="butaca-controles">
+                        <label class="checkbox-disponible">
+                          <input formControlName="disponible" type="checkbox" />
+                          Disponible
+                        </label>
+                        <button type="button" (click)="eliminarButaca(i)" class="btn-eliminar-item">🗑️</button>
+                      </div>
+                    </div>
+                  }
+                }
+                
+                @if (butacas.length > 20 && !mostrarTodasButacas) {
+                  <div class="ver-mas">
+                    <p>Mostrando 20 de {{ butacas.length }} butacas</p>
+                    <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
+                      Ver todas las butacas
+                    </button>
+                  </div>
+                } @else if (butacas.length > 20 && mostrarTodasButacas) {
+                  <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
+                    Ver menos
+                  </button>
+                }
+              </div>
+            } @else {
+              <div class="sin-butacas">
+                <p>📋 No hay butacas creadas aún</p>
+                <p>Usa el generador automático o agrega butacas manualmente</p>
+                <button type="button" (click)="agregarButaca()" class="btn-agregar">+ Agregar Primera Butaca</button>
               </div>
             }
           </div>
@@ -70,12 +149,16 @@
       }
 
       <button type="submit">
-        @if(isEditing()) {
+        @if(isEditing) {
           Actualizar Evento
         } @else {
           Guardar Evento
         }
       </button>
+      
+      @if(isEditing) {
+        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">Cancelar</button>
+      }
       
     </form>
     <button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>
