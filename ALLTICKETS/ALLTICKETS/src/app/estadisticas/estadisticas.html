@@ -1,0 +1,173 @@
+<div class="contenedor-estadisticas">
+  <div class="header">
+    <h1>📊 Estadísticas de Ventas</h1>
+    <p class="subtitulo">Panel de control de entradas vendidas por evento</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+  } @else {
+    
+    <!-- Resumen General -->
+    <div class="resumen-general">
+      <div class="tarjeta-resumen">
+        <div class="icono">🎫</div>
+        <div class="contenido">
+          <h3>{{ totalEntradasVendidas }}</h3>
+          <p>Entradas Vendidas</p>
+        </div>
+      </div>
+
+      <div class="tarjeta-resumen">
+        <div class="icono">💰</div>
+        <div class="contenido">
+          <h3>${{ totalRecaudadoGeneral | number:'1.2-2' }}</h3>
+          <p>Total Recaudado</p>
+        </div>
+      </div>
+
+      <div class="tarjeta-resumen">
+        <div class="icono">📈</div>
+        <div class="contenido">
+          <h3>{{ promedioOcupacion | number:'1.0-0' }}%</h3>
+          <p>Ocupación Promedio</p>
+        </div>
+      </div>
+
+      <div class="tarjeta-resumen">
+        <div class="icono">🎪</div>
+        <div class="contenido">
+          <h3>{{ estadisticas.length }}</h3>
+          <p>Eventos Totales</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Estadísticas por Evento -->
+    @if (estadisticas.length > 0) {
+      <div class="tabla-container">
+        <h2>Detalle por Evento</h2>
+        <table class="tabla-estadisticas">
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Entradas Vendidas</th>
+              <th>Capacidad Total</th>
+              <th>Ocupación</th>
+              <th>Recaudado</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (stat of estadisticas; track stat.eventoId) {
+              <tr>
+                <td class="evento-titulo">
+                  <strong>{{ stat.eventoTitulo }}</strong>
+                </td>
+                <td class="centrado">
+                  <span class="badge badge-vendidas">{{ stat.totalVendidas }}</span>
+                </td>
+                <td class="centrado">{{ stat.capacidadTotal }}</td>
+                <td class="centrado">
+                  <div class="barra-progreso">
+                    <div 
+                      class="barra-relleno" 
+                      [style.width.%]="stat.porcentajeOcupacion"
+                      [style.background-color]="getColorPorcentaje(stat.porcentajeOcupacion)">
+                    </div>
+                    <span class="porcentaje-texto">{{ stat.porcentajeOcupacion | number:'1.0-0' }}%</span>
+                  </div>
+                </td>
+                <td class="recaudado">
+                  ${{ stat.totalRecaudado | number:'1.2-2' }}
+                </td>
+                <td class="centrado">
+                  @if (stat.porcentajeOcupacion >= 80) {
+                    <span class="estado estado-lleno">🔥 Casi Lleno</span>
+                  } @else if (stat.porcentajeOcupacion >= 50) {
+                    <span class="estado estado-medio">✅ Buena Venta</span>
+                  } @else if (stat.porcentajeOcupacion > 0) {
+                    <span class="estado estado-bajo">⚠️ Disponible</span>
+                  } @else {
+                    <span class="estado estado-sin-ventas">❌ Sin Ventas</span>
+                  }
+                </td>
+              </tr>
+              <!-- Fila expandible con detalles de ventas -->
+              @if (stat.detalleVentas && stat.totalVendidas > 0) {
+                <tr class="fila-detalle">
+                  <td colspan="6" class="celda-detalle">
+                    <div class="detalle-ventas">
+                      <!-- Detalles por butacas -->
+                      @if (stat.detalleVentas.butacas && stat.detalleVentas.butacas.length > 0) {
+                        <div class="detalle-seccion">
+                          <h4>🎫 Butacas Vendidas por Fila:</h4>
+                          <div class="detalle-items">
+                            @for (butaca of stat.detalleVentas.butacas; track butaca.fila) {
+                              <div class="detalle-chip">
+                                <span class="detalle-label">Fila {{ butaca.fila }}</span>
+                                <span class="detalle-valor">{{ butaca.cantidad }} butacas</span>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                      
+                      <!-- Detalles por sectores -->
+                      @if (stat.detalleVentas.sectores && stat.detalleVentas.sectores.length > 0) {
+                        <div class="detalle-seccion">
+                          <h4>🎪 Entradas Vendidas por Sector:</h4>
+                          <div class="detalle-items">
+                            @for (sector of stat.detalleVentas.sectores; track sector.nombre) {
+                              <div class="detalle-chip">
+                                <span class="detalle-label">{{ sector.nombre }}</span>
+                                <span class="detalle-valor">{{ sector.cantidad }} entradas</span>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Gráfico de Barras Simplificado -->
+      <div class="grafico-barras">
+        <h2>Ranking de Eventos Más Vendidos</h2>
+        <div class="barras-container">
+          @for (stat of estadisticas.slice(0, 5); track stat.eventoId) {
+            <div class="barra-item">
+              <div class="barra-label">{{ stat.eventoTitulo }}</div>
+              <div class="barra-visual">
+                <div 
+                  class="barra-fill" 
+                  [style.width.%]="(stat.totalVendidas / estadisticas[0].totalVendidas) * 100">
+                  <span class="barra-valor">{{ stat.totalVendidas }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    } @else {
+      <div class="sin-datos">
+        <p>📋 No hay estadísticas disponibles</p>
+        <p>Aún no se han registrado ventas de entradas</p>
+      </div>
+    }
+
+    <div class="acciones">
+      <button routerLink="/menu-principal" class="btn-volver">← Volver al Menú Principal</button>
+      <button (click)="cargarEstadisticas()" class="btn-actualizar">🔄 Actualizar Datos</button>
+    </div>
+  }
+</div>

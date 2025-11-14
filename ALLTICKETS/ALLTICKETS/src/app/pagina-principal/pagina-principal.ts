@@ -1,9 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { Evento } from '../modelos/evento';
-// Diagnostics: keep imports minimal for now
 
 @Component({
   selector: 'app-pagina-principal',
@@ -19,6 +18,8 @@ export class PaginaPrincipal implements OnInit {
 
   private readonly eventoService = inject(EventoServicio);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
@@ -29,18 +30,36 @@ export class PaginaPrincipal implements OnInit {
 
   cargarEventos(): void {
     this.isLoading = true;
-    console.log('[PaginaPrincipal] cargarEventos: iniciando petición');
+    this.eventos = [];
+    
+    
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
-        console.log('[PaginaPrincipal] cargarEventos: eventos recibidos', eventos);
+        
         this.eventos = eventos;
         this.isLoading = false;
+        this.cdr.detectChanges(); // Forzar detección de cambios
       },
       error: (err) => {
-        console.error('Error al cargar eventos:', err);
+        
+        this.eventos = [];
         this.isLoading = false;
+        
+        // Mostrar mensaje de error al usuario
+        alert('Error al cargar eventos. Asegúrate de que json-server esté corriendo en http://localhost:3000');
+      },
+      complete: () => {
+        console.log('[PaginaPrincipal] Petición completada. isLoading:', this.isLoading, 'eventos.length:', this.eventos.length);
       }
     });
+    
+    // Timeout de seguridad
+    setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('[PaginaPrincipal] ⚠️ Timeout: La petición está tomando demasiado tiempo');
+        this.isLoading = false;
+      }
+    }, 10000);
   }
 
   cerrarSesion() {

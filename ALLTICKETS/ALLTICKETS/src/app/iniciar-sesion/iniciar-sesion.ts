@@ -45,10 +45,11 @@ export class IniciarSesion {
         if (usuarios.length > 0) {
           const usuario = usuarios[0];
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
-          this.error = null; // Clear any previous errors
+          this.error = null;
           alert('Inicio de sesión exitoso ✅');
           this.form.reset();
-          this.router.navigate(['/']); // Changed to root route
+          // Recargar la página completamente
+          window.location.href = '/menu-principal';
         } else {
           this.error = 'Email o contraseña incorrectos';
           alert(this.error);
