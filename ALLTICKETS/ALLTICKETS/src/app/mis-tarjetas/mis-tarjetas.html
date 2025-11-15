@@ -3,12 +3,12 @@
     <h1>💳 Mis Tarjetas</h1>
     <p>Administra tus métodos de pago</p>
     <button class="btn-agregar" (click)="toggleFormulario()">
-      {{ mostrarFormulario ? '✕ Cancelar' : '+ Agregar Tarjeta' }}
+      {{ mostrarFormulario() ? '✕ Cancelar' : '+ Agregar Tarjeta' }}
     </button>
   </div>
 
   <!-- Formulario para agregar tarjeta -->
-  @if (mostrarFormulario) {
+  @if (mostrarFormulario()) {
     <div class="formulario-tarjeta">
       <h2>Nueva Tarjeta</h2>
       <form [formGroup]="tarjetaForm" (ngSubmit)="agregarTarjeta()">
@@ -83,7 +83,7 @@
             </select>
           </div>
 
-          @if (tarjetas.length > 0) {
+          @if (tarjetas().length > 0) {
             <div class="form-group checkbox-group">
               <label>
                 <input type="checkbox" formControlName="esPrincipal" />
@@ -103,14 +103,14 @@
   }
 
   <!-- Lista de tarjetas -->
-  @if (isLoading) {
+  @if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>
       <p>Cargando tarjetas...</p>
     </div>
-  } @else if (tarjetas.length > 0) {
+  } @else if (tarjetas().length > 0) {
     <div class="tarjetas-grid">
-      @for (tarjeta of tarjetas; track tarjeta.id) {
+      @for (tarjeta of tarjetas(); track tarjeta.id) {
         <div class="tarjeta-card" [class.principal]="tarjeta.esPrincipal">
           @if (tarjeta.esPrincipal) {
             <span class="badge-principal">⭐ Principal</span>

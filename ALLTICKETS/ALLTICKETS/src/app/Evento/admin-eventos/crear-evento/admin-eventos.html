@@ -107,7 +107,7 @@
               <!-- Lista de butacas (solo mostrar primeras 20 para no saturar) -->
               <div class="lista-butacas">
                 @for (b of butacas.controls; track $index; let i = $index) {
-                  @if (i < 20 || mostrarTodasButacas) {
+                  @if (i < 20 || mostrarTodasButacas()) {
                     <div [formGroupName]="i" class="butaca-item">
                       <div class="butaca-info">
                         <span class="butaca-label">Fila {{ b.get('fila')?.value }} - #{{ b.get('numero')?.value }}</span>
@@ -124,14 +124,14 @@
                   }
                 }
                 
-                @if (butacas.length > 20 && !mostrarTodasButacas) {
+                @if (butacas.length > 20 && !mostrarTodasButacas()) {
                   <div class="ver-mas">
                     <p>Mostrando 20 de {{ butacas.length }} butacas</p>
                     <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
                       Ver todas las butacas
                     </button>
                   </div>
-                } @else if (butacas.length > 20 && mostrarTodasButacas) {
+                } @else if (butacas.length > 20 && mostrarTodasButacas()) {
                   <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
                     Ver menos
                   </button>

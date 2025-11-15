@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -14,15 +14,14 @@ import { Tarjeta } from '../modelos/tarjeta';
 })
 export class MisTarjetas implements OnInit {
   usuario: any = null;
-  tarjetas: Tarjeta[] = [];
-  isLoading = true;
-  mostrarFormulario = false;
-  tarjetaExpandida: string | null = null;
+  tarjetas = signal<Tarjeta[]>([]);
+  isLoading = signal(true);
+  mostrarFormulario = signal(false);
+  tarjetaExpandida = signal<string | null>(null);
   tarjetaForm: FormGroup;
 
   private readonly tarjetaService = inject(TarjetaServicio);
   private readonly router = inject(Router);
-  private readonly cdr = inject(ChangeDetectorRef);
   private readonly fb = inject(FormBuilder);
 
   constructor() {
@@ -50,26 +49,24 @@ export class MisTarjetas implements OnInit {
   }
 
   cargarTarjetas(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
 
     this.tarjetaService.obtenerTarjetasPorUsuario(this.usuario.id).subscribe({
       next: (tarjetas) => {
-        this.tarjetas = tarjetas;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.tarjetas.set(tarjetas);
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error al cargar tarjetas:', err);
-        this.tarjetas = [];
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.tarjetas.set([]);
+        this.isLoading.set(false);
       }
     });
   }
 
   toggleFormulario(): void {
-    this.mostrarFormulario = !this.mostrarFormulario;
-    if (!this.mostrarFormulario) {
+    this.mostrarFormulario.update(v => !v);
+    if (!this.mostrarFormulario()) {
       this.tarjetaForm.reset({ tipo: 'Visa', esPrincipal: false });
     }
   }
@@ -91,21 +88,20 @@ export class MisTarjetas implements OnInit {
       titular: formValue.titular,
       vencimiento: formValue.vencimiento,
       tipo: formValue.tipo,
-      esPrincipal: this.tarjetas.length === 0 ? true : formValue.esPrincipal,
+      esPrincipal: this.tarjetas().length === 0 ? true : formValue.esPrincipal,
       fechaAgregada: new Date().toISOString()
     };
 
     this.tarjetaService.agregarTarjeta(nuevaTarjeta).subscribe({
       next: (tarjeta) => {
         // Si es principal, desmarcar las demás
-        if (tarjeta.esPrincipal && this.tarjetas.length > 0) {
+        if (tarjeta.esPrincipal && this.tarjetas().length > 0) {
           this.actualizarTarjetasPrincipales(tarjeta.id!);
         }
         
-        this.tarjetas.push(tarjeta);
+        this.tarjetas.update(tarjetas => [...tarjetas, tarjeta]);
         this.tarjetaForm.reset({ tipo: 'Visa', esPrincipal: false });
-        this.mostrarFormulario = false;
-        this.cdr.detectChanges();
+        this.mostrarFormulario.set(false);
         alert('Tarjeta agregada correctamente ✅');
       },
       error: (err) => {
@@ -123,8 +119,7 @@ export class MisTarjetas implements OnInit {
     if (tarjeta.id) {
       this.tarjetaService.eliminarTarjeta(tarjeta.id).subscribe({
         next: () => {
-          this.tarjetas = this.tarjetas.filter(t => t.id !== tarjeta.id);
-          this.cdr.detectChanges();
+          this.tarjetas.update(tarjetas => tarjetas.filter(t => t.id !== tarjeta.id));
           alert('Tarjeta eliminada');
         },
         error: (err) => {
@@ -144,21 +139,21 @@ export class MisTarjetas implements OnInit {
 
   private actualizarTarjetasPrincipales(tarjetaPrincipalId: string): void {
     // Actualizar localmente
-    this.tarjetas = this.tarjetas.map(t => ({
-      ...t,
-      esPrincipal: t.id === tarjetaPrincipalId
-    }));
+    this.tarjetas.update(tarjetas => 
+      tarjetas.map(t => ({
+        ...t,
+        esPrincipal: t.id === tarjetaPrincipalId
+      }))
+    );
 
     // Actualizar en el servidor
-    this.tarjetas.forEach(t => {
+    this.tarjetas().forEach(t => {
       if (t.id) {
         this.tarjetaService.actualizarTarjeta(t).subscribe({
           error: (err) => console.error('Error al actualizar tarjeta:', err)
         });
       }
     });
-
-    this.cdr.detectChanges();
   }
 
   obtenerIconoTarjeta(tipo: string): string {
@@ -176,15 +171,15 @@ export class MisTarjetas implements OnInit {
 
   toggleDetalles(tarjetaId: string | undefined) {
     if (!tarjetaId) return;
-    if (this.tarjetaExpandida === tarjetaId) {
-      this.tarjetaExpandida = null;
+    if (this.tarjetaExpandida() === tarjetaId) {
+      this.tarjetaExpandida.set(null);
     } else {
-      this.tarjetaExpandida = tarjetaId;
+      this.tarjetaExpandida.set(tarjetaId);
     }
   }
 
   mostrarDetalles(tarjetaId: string | undefined): boolean {
     if (!tarjetaId) return false;
-    return this.tarjetaExpandida === tarjetaId;
+    return this.tarjetaExpandida() === tarjetaId;
   }
 }

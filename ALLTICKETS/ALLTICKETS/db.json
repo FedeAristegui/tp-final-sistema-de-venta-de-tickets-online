@@ -144,24 +144,24 @@
   "favoritos": [],
   "tarjetas": [
     {
-      "id": "1atn0do",
-      "usuarioId": "d227",
-      "numeroTarjeta": "2144",
-      "titular": "agustin demarco",
-      "vencimiento": "12/30",
-      "tipo": "Mastercard",
-      "esPrincipal": false,
-      "fechaAgregada": "2025-11-14T18:05:11.619Z"
-    },
-    {
       "id": "96ctqy8",
       "usuarioId": "d227",
       "numeroTarjeta": "5555",
       "titular": "agustin demarco",
       "vencimiento": "12/29",
       "tipo": "Mastercard",
-      "esPrincipal": true,
+      "esPrincipal": false,
       "fechaAgregada": "2025-11-14T18:05:48.016Z"
+    },
+    {
+      "id": "n270640",
+      "usuarioId": "d227",
+      "numeroTarjeta": "9749",
+      "titular": "agus",
+      "vencimiento": "12/27",
+      "tipo": "Mastercard",
+      "esPrincipal": true,
+      "fechaAgregada": "2025-11-14T19:44:13.705Z"
     }
   ]
 }

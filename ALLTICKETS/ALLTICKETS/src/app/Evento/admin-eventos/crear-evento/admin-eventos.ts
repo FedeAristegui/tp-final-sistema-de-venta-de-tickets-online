@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, signal, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../../servicios/evento.servicio';
@@ -22,14 +22,13 @@ export class AdminEventos implements OnInit {
   private readonly eventoService = inject(EventoServicio);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  protected eventos: Evento[] = [];
-  protected modoEdicion = false;
-  protected mostrarTodasButacas = false;
+  protected eventos = signal<Evento[]>([]);
+  protected modoEdicion = signal(false);
+  protected mostrarTodasButacas = signal(false);
 
   toggleMostrarTodas(): void {
-    this.mostrarTodasButacas = !this.mostrarTodasButacas;
+    this.mostrarTodasButacas.update(v => !v);
   }
 
   protected readonly form = this.fb.group({
@@ -64,7 +63,7 @@ export class AdminEventos implements OnInit {
 
     // Si viene desde @Input, usar ese evento
     if (this.isEditing && this.evento) {
-      this.modoEdicion = true;
+      this.modoEdicion.set(true);
       this.cargarEventoEnFormulario(this.evento);
       return;
     }
@@ -72,7 +71,7 @@ export class AdminEventos implements OnInit {
     // Si viene desde ruta, cargar por ID
     const idParam = this.route.snapshot.params['id'];
     if (idParam) {
-      this.modoEdicion = true;
+      this.modoEdicion.set(true);
       const id = Number(idParam);
       this.eventoService.obtenerEvento(id).subscribe({
         next: ev => this.cargarEventoEnFormulario(ev),
@@ -88,12 +87,11 @@ export class AdminEventos implements OnInit {
   cargarEventos(): void {
     this.eventoService.obtenerEventos().subscribe({
       next: (lista: Evento[]) => {
-        this.eventos = lista || [];
-        this.cdr.detectChanges();
+        this.eventos.set(lista || []);
       },
       error: err => {
         console.error('Error al cargar eventos:', err);
-        this.eventos = [];
+        this.eventos.set([]);
       }
     });
   }
@@ -141,7 +139,7 @@ export class AdminEventos implements OnInit {
   }
 
   seleccionarEvento(ev: Evento): void {
-    this.modoEdicion = true;
+    this.modoEdicion.set(true);
     this.cargarEventoEnFormulario(ev);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -189,8 +187,7 @@ export class AdminEventos implements OnInit {
       while (this.butacas.length) {
         this.butacas.removeAt(0);
       }
-      this.mostrarTodasButacas = false;
-      this.cdr.detectChanges();
+      this.mostrarTodasButacas.set(false);
     }
   }
 
@@ -250,9 +247,8 @@ export class AdminEventos implements OnInit {
       }
     });
 
-    this.mostrarTodasButacas = false;
+    this.mostrarTodasButacas.set(false);
     alert(`✅ ${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`);
-    this.cdr.detectChanges();
   }
 
   private parsearFilas(input: string): string[] {
@@ -289,7 +285,6 @@ export class AdminEventos implements OnInit {
         this.sectores.removeAt(0);
       }
     }
-    this.cdr.detectChanges();
   }
 
   // Método para manejar el submit del formulario
@@ -299,7 +294,7 @@ export class AdminEventos implements OnInit {
 
   // Método para cancelar la edición
   cancelarEdicion(): void {
-    this.modoEdicion = false;
+    this.modoEdicion.set(false);
     this.form.reset({ modoVenta: 'sector' });
     while (this.sectores.length) {
       this.sectores.removeAt(0);
@@ -308,7 +303,6 @@ export class AdminEventos implements OnInit {
       this.butacas.removeAt(0);
     }
     this.generadorButacas.reset();
-    this.cdr.detectChanges();
   }
 
   guardarEvento(): void {
@@ -332,13 +326,18 @@ export class AdminEventos implements OnInit {
       butacas: (raw.butacas ?? []) as Evento['butacas']
     };
 
-    if (this.modoEdicion && evento.id != null) {
+    if (this.modoEdicion() && evento.id != null) {
       this.eventoService.actualizarEvento(evento, evento.id).subscribe({
         next: () => {
-          const index = this.eventos.findIndex(e => e.id === evento.id);
-          if (index !== -1) {
-            this.eventos[index] = { ...evento };
-          }
+          this.eventos.update(eventos => {
+            const index = eventos.findIndex(e => e.id === evento.id);
+            if (index !== -1) {
+              const updated = [...eventos];
+              updated[index] = { ...evento };
+              return updated;
+            }
+            return eventos;
+          });
           alert('✅ Evento actualizado con éxito');
           
           // Si viene desde @Input, emitir el evento actualizado
@@ -357,7 +356,7 @@ export class AdminEventos implements OnInit {
       delete (evento as any).id;
       this.eventoService.crearEvento(evento).subscribe({
         next: (nuevoEvento: Evento) => {
-          this.eventos.push(nuevoEvento);
+          this.eventos.update(eventos => [...eventos, nuevoEvento]);
           alert('🎉 Evento creado con éxito');
           this.cancelarEdicion();
         },
@@ -373,7 +372,7 @@ export class AdminEventos implements OnInit {
     if (!id) return;
     if (!confirm('¿Está seguro que desea eliminar este evento?')) return;
 
-    this.eventos = this.eventos.filter(e => e.id !== id);
+    this.eventos.update(eventos => eventos.filter(e => e.id !== id));
 
     this.eventoService.borrarEvento(id).subscribe({
       next: () => {

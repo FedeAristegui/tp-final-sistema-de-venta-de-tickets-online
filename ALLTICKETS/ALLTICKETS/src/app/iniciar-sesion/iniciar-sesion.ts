@@ -25,10 +25,10 @@ export class IniciarSesion {
     contrasena: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  iniciarSesion(): void {
+  iniciarSesion() {
     if (this.form.invalid) {
       this.error = 'Todos los campos son obligatorios.';
-      this.form.markAllAsTouched();
+      
       return;
     }
 
@@ -46,7 +46,7 @@ export class IniciarSesion {
           const usuario = usuarios[0];
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
           this.error = null;
-          alert('Inicio de sesión exitoso ✅');
+          
           this.form.reset();
           // Recargar la página completamente
           window.location.href = '/menu-principal';

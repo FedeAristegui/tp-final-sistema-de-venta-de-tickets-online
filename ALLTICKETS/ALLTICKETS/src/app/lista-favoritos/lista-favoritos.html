@@ -4,14 +4,14 @@
     <p>Eventos que has guardado para ver más tarde</p>
   </div>
 
-  @if (isLoading) {
+  @if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>
       <p>Cargando favoritos...</p>
     </div>
-  } @else if (eventosFavoritos.length > 0) {
+  } @else if (eventosFavoritos().length > 0) {
     <div class="eventos-grid">
-      @for (evento of eventosFavoritos; track evento.id) {
+      @for (evento of eventosFavoritos(); track evento.id) {
         <div class="evento-card">
           <button 
             class="btn-quitar-favorito" 

@@ -29,9 +29,9 @@
         <tr>
           <td>{{ ev.titulo  }}</td>
           <td>{{ ev.fecha ? (ev.fecha | date:'dd/MM/yyyy') : '-' }}</td>
-          <td>{{ ev.hora ?? '-' }}</td>
+          <td>{{ ev.hora  }}</td>
           <td>{{ ev.lugar  }}</td>
-          <td>{{ ev.modoVenta ?? '-' }}</td>
+          <td>{{ ev.modoVenta  }}</td>
           <td class="acciones">
             <button class="btn-ver" (click)="navegarAdetalles(ev.id!)">Ver detalles</button>
           </td>
