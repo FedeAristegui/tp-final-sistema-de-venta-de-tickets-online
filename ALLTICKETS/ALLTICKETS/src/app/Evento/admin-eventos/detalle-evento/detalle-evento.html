@@ -29,6 +29,8 @@
             <th>Nombre</th>
             <th>Capacidad</th>
             <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -37,6 +39,19 @@
               <td>{{ s.nombre }}</td>
               <td>{{ s.capacidad }}</td>
               <td>${{ s.precio }}</td>
+              <td>
+                <input 
+                  type="number" 
+                  [(ngModel)]="cantidadSeleccionada"
+                  min="1" 
+                  [max]="s.capacidad"
+                  style="width: 60px;">
+              </td>
+              <td>
+                <button (click)="agregarSectorAlCarrito(s)" class="btn-agregar-carrito">
+                  🛒 Agregar al Carrito
+                </button>
+              </td>
             </tr>
           }
         </tbody>
@@ -56,15 +71,24 @@
             <th>Número</th>
             <th>Precio</th>
             <th>Disponible</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           @for (b of evento.butacas; track b.numero) {
-            <tr>
+            <tr [class.butaca-ocupada]="!b.disponible">
               <td>{{ b.fila }}</td>
               <td>{{ b.numero }}</td>
               <td>${{ b.precio }}</td>
               <td>{{ b.disponible ? 'Sí' : 'No' }}</td>
+              <td>
+                <button 
+                  (click)="agregarButacaAlCarrito(b)" 
+                  [disabled]="!b.disponible"
+                  class="btn-agregar-carrito">
+                  🛒 Agregar al Carrito
+                </button>
+              </td>
             </tr>
           }
         </tbody>

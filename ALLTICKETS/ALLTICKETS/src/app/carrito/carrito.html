@@ -1,0 +1,265 @@
+<div class="carrito-container">
+  <h1>Mi Carrito de Compras</h1>
+
+  @if (compraExitosa()) {
+    <div class="mensaje-compra-exitosa">
+      <div class="icono-exito">✓</div>
+      <h2>{{ mensajeCompra() }}</h2>
+      
+      @if (detalleCompra(); as detalle) {
+        <div class="detalle-compra-exitosa">
+          <p><strong>Ventas procesadas:</strong> {{ detalle.ventasProcesadas }}</p>
+          @if (detalle.descuentoAplicado > 0) {
+            <p><strong>Descuento aplicado:</strong> {{ detalle.descuentoAplicado }}%</p>
+          }
+          @if (detalle.tarjetaUsada) {
+            <p><strong>Tarjeta:</strong> {{ detalle.tarjetaUsada }}</p>
+          }
+          <p class="total-pagado"><strong>Total pagado:</strong> ${{ detalle.totalPagado.toFixed(2) }}</p>
+        </div>
+      }
+      
+      <div class="acciones-compra-exitosa">
+        <button class="btn-continuar-comprando" (click)="continuarComprando()">
+          Ver Más Eventos
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (items().length === 0 && !compraExitosa()) {
+    <div class="carrito-vacio">
+      <p>Tu carrito está vacío</p>
+      <a routerLink="/" class="btn-seguir-comprando">Explorar Eventos</a>
+    </div>
+  } @else if (items().length > 0) {
+    <div class="carrito-contenido">
+      <div class="items-carrito">
+        @for (item of items(); track $index) {
+          <div class="item-carrito">
+            <div class="item-imagen">
+              <img [src]="item.evento.imagen" [alt]="item.evento.titulo">
+            </div>
+            
+            <div class="item-info">
+              <h3>{{ item.evento.titulo }}</h3>
+              <p class="item-fecha">{{ item.evento.fecha }} - {{ item.evento.hora }}</p>
+              <p class="item-lugar">{{ item.evento.lugar }}</p>
+              <p class="item-detalle">{{ item.detalleEntrada }}</p>
+            </div>
+
+            <div class="item-cantidad">
+              <label>Cantidad:</label>
+              <input 
+                type="number" 
+                [value]="item.cantidad" 
+                min="1" 
+                (change)="actualizarCantidad($index, $event)"
+                class="input-cantidad">
+            </div>
+
+            <div class="item-precio">
+              <p class="precio-unitario">${{ item.precioUnitario.toFixed(2) }} c/u</p>
+              <p class="precio-total">${{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+            </div>
+
+            <button class="btn-eliminar" (click)="eliminarItem($index)" title="Eliminar">
+              <span>🗑️</span>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="carrito-resumen">
+        <h2>Resumen de Compra</h2>
+        
+        <div class="resumen-linea">
+          <span>Total de items:</span>
+          <span>{{ cantidadTotal() }}</span>
+        </div>
+
+        <div class="resumen-linea">
+          <span>Subtotal:</span>
+          <span>${{ subtotal().toFixed(2) }}</span>
+        </div>
+
+        <div class="cupon-seccion">
+          <h3>¿Tienes un cupón?</h3>
+          
+          @if (!cuponAplicado()) {
+            <div class="cupon-input-group">
+              <input 
+                type="text" 
+                [(ngModel)]="codigoCupon"
+                placeholder="Ingresa tu código"
+                class="input-cupon"
+                (keyup.enter)="aplicarCupon()">
+              <button 
+                class="btn-aplicar-cupon" 
+                (click)="aplicarCupon()">
+                Aplicar
+              </button>
+            </div>
+          } @else {
+            <div class="cupon-aplicado">
+              <span class="cupon-codigo">{{ cuponAplicado()!.codigo }}</span>
+              <span class="cupon-descuento">-{{ descuentoPorcentaje() }}%</span>
+              <button class="btn-remover-cupon" (click)="borrarCupon()">✕</button>
+            </div>
+          }
+          
+          @if (mensajeCupon()) {
+            <p class="mensaje-cupon" [class.error]="mensajeCupon().includes('❌')">
+              {{ mensajeCupon() }}
+            </p>
+          }
+        </div>
+
+        @if (cuponAplicado()) {
+          <div class="resumen-linea descuento">
+            <span>Descuento ({{ descuentoPorcentaje() }}%):</span>
+            <span class="texto-descuento">-${{ montoDescuento().toFixed(2) }}</span>
+          </div>
+        }
+
+        <div class="resumen-linea total">
+          <span>Total a pagar:</span>
+          <span class="precio-total">${{ total().toFixed(2) }}</span>
+        </div>
+
+        <div class="metodo-pago-seccion">
+          <h3>Método de Pago</h3>
+          
+          @if (usuario) {
+            @if (tarjetasUsuario().length > 0 && !mostrarFormularioTarjeta()) {
+              <div class="tarjetas-lista">
+                @for (tarjeta of tarjetasUsuario(); track tarjeta.id) {
+                  <div 
+                    class="tarjeta-item"
+                    [class.seleccionada]="tarjetaSeleccionada()?.id === tarjeta.id"
+                    (click)="seleccionarTarjeta(tarjeta)">
+                    <div class="tarjeta-icono">{{ obtenerIconoTarjeta(tarjeta.tipo) }}</div>
+                    <div class="tarjeta-info">
+                      <span class="tarjeta-tipo">{{ tarjeta.tipo }}</span>
+                      <span class="tarjeta-numero">{{ formatearNumeroTarjeta(tarjeta.numeroTarjeta) }}</span>
+                    </div>
+                    @if (tarjetaSeleccionada()?.id === tarjeta.id) {
+                      <span class="check-seleccion">✓</span>
+                    }
+                  </div>
+                }
+                
+                <button class="btn-agregar-tarjeta" (click)="toggleFormularioTarjeta()">
+                  + Agregar nueva tarjeta
+                </button>
+              </div>
+            } @else if (mostrarFormularioTarjeta() || tarjetasUsuario().length === 0) {
+              <form [formGroup]="tarjetaForm" class="formulario-tarjeta">
+                <div class="form-group">
+                  <label>Número de Tarjeta</label>
+                  <input 
+                    type="text" 
+                    formControlName="numeroTarjeta"
+                    placeholder="1234 5678 9012 3456"
+                    maxlength="16"
+                    class="input-tarjeta">
+                  @if (tarjetaForm.get('numeroTarjeta')?.invalid && tarjetaForm.get('numeroTarjeta')?.touched) {
+                    <span class="error-msg">Ingresa 16 dígitos</span>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label>Titular</label>
+                  <input 
+                    type="text" 
+                    formControlName="titular"
+                    placeholder="Nombre como aparece en la tarjeta"
+                    class="input-tarjeta">
+                  @if (tarjetaForm.get('titular')?.invalid && tarjetaForm.get('titular')?.touched) {
+                    <span class="error-msg">Nombre requerido</span>
+                  }
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Vencimiento</label>
+                    <input 
+                      type="text" 
+                      formControlName="vencimiento"
+                      placeholder="MM/YY"
+                      maxlength="5"
+                      class="input-tarjeta">
+                    @if (tarjetaForm.get('vencimiento')?.invalid && tarjetaForm.get('vencimiento')?.touched) {
+                      <span class="error-msg">Formato MM/YY</span>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label>CVV</label>
+                    <input 
+                      type="text" 
+                      formControlName="cvv"
+                      placeholder="123"
+                      maxlength="4"
+                      class="input-tarjeta">
+                    @if (tarjetaForm.get('cvv')?.invalid && tarjetaForm.get('cvv')?.touched) {
+                      <span class="error-msg">CVV inválido</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Tipo de Tarjeta</label>
+                  <select formControlName="tipo" class="select-tarjeta">
+                    <option value="Visa">Visa</option>
+                    <option value="Mastercard">Mastercard</option>
+                    <option value="American Express">American Express</option>
+                    <option value="Cabal">Cabal</option>
+                    <option value="Naranja">Naranja</option>
+                  </select>
+                </div>
+
+                <div class="form-actions">
+                  <button 
+                    type="button"
+                    class="btn-guardar-tarjeta" 
+                    (click)="agregarNuevaTarjeta()">
+                    Guardar Tarjeta
+                  </button>
+                  @if (tarjetasUsuario().length > 0) {
+                    <button 
+                      type="button"
+                      class="btn-cancelar" 
+                      (click)="toggleFormularioTarjeta()">
+                      Cancelar
+                    </button>
+                  }
+                </div>
+              </form>
+            }
+          } @else {
+            <div class="sin-login">
+              <p>Debes iniciar sesión para continuar con la compra</p>
+              <a routerLink="/login" class="btn-login">Iniciar Sesión</a>
+            </div>
+          }
+        </div>
+
+        <button 
+          class="btn-pagar" 
+          (click)="procederAlPago()"
+          [disabled]="procesandoCompra() || !tarjetaSeleccionada()">
+          {{ procesandoCompra() ? 'Procesando...' : 'Confirmar Compra' }}
+        </button>
+
+        <button class="btn-vaciar" (click)="vaciarCarrito()">
+          Vaciar Carrito
+        </button>
+
+        <a routerLink="/" class="btn-seguir-comprando">
+          Seguir Comprando
+        </a>
+      </div>
+    </div>
+  }
+</div>

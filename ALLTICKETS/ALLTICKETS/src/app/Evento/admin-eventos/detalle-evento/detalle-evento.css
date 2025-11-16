@@ -112,3 +112,39 @@ p.sin-evento {
   font-style: italic;
   margin-top: 30px;
 }
+
+/* Estilos para agregar al carrito */
+.btn-agregar-carrito {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-agregar-carrito:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-agregar-carrito:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.butaca-ocupada {
+  background-color: #ffe6e6 !important;
+}
+
+input[type="number"] {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}

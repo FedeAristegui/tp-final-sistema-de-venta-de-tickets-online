@@ -11,6 +11,7 @@ import { DetalleDescuento } from './descuento/detalle-descuento/detalle-descuent
 import { PerfilUsuario } from './usuario/perfil-usuario/perfil-usuario';
 import { ListaFavoritos } from './lista-favoritos/lista-favoritos';
 import { MisTarjetas } from './mis-tarjetas/mis-tarjetas';
+import { Carrito } from './carrito/carrito';
 
 
 
@@ -64,6 +65,10 @@ export const routes: Routes = [
   {
     path: 'mis-tarjetas', component: MisTarjetas,
     title: 'Mis Tarjetas'
+  },
+  {
+    path: 'carrito', component: Carrito,
+    title: 'Mi Carrito'
   },
   { 
     path: '**', redirectTo: '' 
