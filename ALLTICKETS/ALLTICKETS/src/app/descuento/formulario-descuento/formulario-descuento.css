@@ -1,112 +1,142 @@
-* {
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
+/********************************
+ *  CONTENEDOR PRINCIPAL
+ ********************************/
+.contenedor {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
 }
 
-body {
-  background-color: #004b96;
-  padding: 30px;
+.formulario-container {
+  width: 100%;
+  max-width: 600px;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
 }
 
-/* ======== CONTENEDOR PRINCIPAL ======== */
-form {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 500px;
-  margin: 40px auto;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* ======== TÍTULO ======== */
+/********************************
+ *  TITULO
+ ********************************/
 h3 {
+  font-size: 1.8rem;
   text-align: center;
-  color: #333;
   margin-bottom: 25px;
-  font-size: 1.6rem;
-  font-weight: 600;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 5px 15px rgba(102,126,234,0.35);
 }
 
-/* ======== CAMPOS ======== */
+/********************************
+ *  FORMULARIO
+ ********************************/
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 label {
-  display: block;
-  margin: 12px 0 6px;
   font-weight: 600;
-  color: #444;
+  margin-bottom: 4px;
+  color: #4a5568;
 }
 
 input[type="text"],
 input[type="number"],
-input[type="date"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-size: 0.95rem;
+input[type="date"],
+input[type="checkbox"] {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: 0.2s;
 }
 
 input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0,123,255,0.3);
-  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 6px rgba(102,126,234,0.4);
 }
 
-/* ======== CHECKBOX ======== */
+/********************************
+ *  CHECKBOX
+ ********************************/
 label input[type="checkbox"] {
-  margin-right: 8px;
-  accent-color: #007bff;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
 }
 
-/* ======== BOTÓN PRINCIPAL ======== */
+/********************************
+ *  BOTONES
+ ********************************/
+
+/* BOTÓN PRINCIPAL (Guardar / Crear) */
 button[type="submit"] {
-  width: 100%;
+  padding: 14px;
   margin-top: 20px;
-  padding: 12px;
   border: none;
-  border-radius: 6px;
-  background-color: #007bff;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#667eea,#764ba2);
   color: white;
-  font-size: 1rem;
-  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: 0.3s;
 }
 
 button[type="submit"]:hover {
-  background-color: #005ecb;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
-button[type="submit"]:active {
-  transform: translateY(0);
-}
-
-/* ======== BOTÓN VOLVER ======== */
-.volver-btn {
-  display: block;
-  width: fit-content;
-  margin: 0 auto;
-  margin-top: 20px;
-  background-color: #17a2b8;
-  color: white;
+/* BOTÓN CANCELAR */
+.cancelar-btn {
+  margin-top: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 6px;
-  padding: 10px 18px;
-  font-size: 0.95rem;
-  font-weight: 500;
+  border-radius: 12px;
+  background: #f56565;
+  color: white;
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.cancelar-btn:hover {
+  background: #c53030;
+}
+
+/* BOTÓN VOLVER */
+.volver-btn {
+  margin-top: 25px;
+  padding: 14px;
+  width: 100%;
+  border-radius: 12px;
+  background: #a0aec0;
+  color: white;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
 }
 
 .volver-btn:hover {
-  background-color: #138496;
-  transform: translateY(-1px);
+  background: #718096;
 }
 
-.volver-btn:active {
-  transform: translateY(0);
+/********************************
+ *  RESPONSIVE
+ ********************************/
+@media (max-width: 768px) {
+  .formulario-container {
+    padding: 25px;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
 }

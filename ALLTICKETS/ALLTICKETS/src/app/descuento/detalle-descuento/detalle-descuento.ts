@@ -25,6 +25,12 @@ export class DetalleDescuento {
 
   toggleEdit(){
     this.isEditing.set(!this.isEditing());
+    setTimeout(() => {
+    document.getElementById("form-edicion")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 50);
   }
 
   handleEdit(descuento: Descuento){

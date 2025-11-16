@@ -21,13 +21,17 @@
   @if (isEditing()) {
     <p>Editando...</p>
     <app-formulario-descuento
+      id="form-edicion"
       [isEditing]="true"
       [descuento]="descuento"
-      (edited)="handleEdit($event)">
+      (edited)="handleEdit($event)" 
+      (cancelled)="toggleEdit()">
     </app-formulario-descuento>
   }
 
 } @else {
   <p>No se encontró el descuento</p>
 }
-<button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>
+@if(!isEditing()){
+  <button routerLink="/lista-descuento" class="volver-btn">Volver a la lista</button>
+}

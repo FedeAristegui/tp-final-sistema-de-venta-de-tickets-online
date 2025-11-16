@@ -26,6 +26,7 @@ export class AdminEventos implements OnInit {
   protected eventos = signal<Evento[]>([]);
   protected modoEdicion = signal(false);
   protected mostrarTodasButacas = signal(false);
+  @Output() cancelled = new EventEmitter<void>();
 
   toggleMostrarTodas(): void {
     this.mostrarTodasButacas.update(v => !v);
@@ -303,6 +304,7 @@ export class AdminEventos implements OnInit {
       this.butacas.removeAt(0);
     }
     this.generadorButacas.reset();
+    this.cancelled.emit();
   }
 
   guardarEvento(): void {
@@ -343,6 +345,7 @@ export class AdminEventos implements OnInit {
           // Si viene desde @Input, emitir el evento actualizado
           if (this.isEditing) {
             this.edited.emit(evento);
+            this.cancelled.emit();
           }
           
           this.cancelarEdicion();

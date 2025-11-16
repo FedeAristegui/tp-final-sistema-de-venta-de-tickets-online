@@ -23,6 +23,35 @@ export class ListaEvento {
 
   protected readonly eventosOriginales = toSignal(this.client.obtenerEventos());
 
+  ordenActual: string | null = null;
+  direccion: 'asc' | 'desc' = 'asc';
+
+  ordenarPor(campo: string) {
+  if (this.ordenActual === campo) {
+    // Si vuelve a hacer click → invertimos la dirección
+    this.direccion = this.direccion === 'asc' ? 'desc' : 'asc';
+  } else {
+    // Si cambia de columna, arranca ascendente
+    this.ordenActual = campo;
+    this.direccion = 'asc';
+  }
+
+  this.eventosFiltrados.sort((a: any, b: any) => {
+    let valorA = a[campo];
+    let valorB = b[campo];
+
+    // Si es fecha, convertir a Date
+    if (campo === 'fecha') {
+      valorA = new Date(valorA);
+      valorB = new Date(valorB);
+    }
+
+    if (valorA < valorB) return this.direccion === 'asc' ? -1 : 1;
+    if (valorA > valorB) return this.direccion === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
 // propiedad para el filtro
   filtroTitulo: string = '';
 

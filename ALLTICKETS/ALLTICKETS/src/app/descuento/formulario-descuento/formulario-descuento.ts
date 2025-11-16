@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, Output, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClienteDescuento } from '../cliente-descuento';
 import { Descuento } from '../../modelos/descuento';
@@ -14,6 +14,8 @@ export class FormularioDescuento {
   // 🔹 Inyecciones
   private readonly formBuilder = inject(FormBuilder);
   private readonly descuentoClient = inject(ClienteDescuento);
+  @Output() cancelled = new EventEmitter<void>();
+
 
   // 🔹 Inputs y Outputs
   readonly isEditing = input(false);
@@ -68,6 +70,10 @@ export class FormularioDescuento {
         });
       }
     }
+  }
+
+  cancelarEdicion(): void {
+    this.cancelled.emit();
   }
 
 }

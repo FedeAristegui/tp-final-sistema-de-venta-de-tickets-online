@@ -1,25 +1,52 @@
-<h3>Registrar Descuento</h3>
-<form [formGroup]="form" (ngSubmit)="handleSubmit()">
-  <label>Código:</label>
-  <input formControlName="codigo" placeholder="Código del cupón" />
+<div class="contenedor">
+  <div class="formulario-container">
 
-  <label>Porcentaje de descuento:</label>
-  <input type="number" formControlName="porcentaje" min="1" max="100" />
+    @if (isEditing()) {
+      <h3>Modificar Descuento</h3>
+    } @else {
+      <h3>Registrar Descuento</h3>
+    }
 
-  <label>Fecha de inicio:</label>
-  <input type="date" formControlName="fechaInicio" />
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
 
-  <label>Fecha de fin:</label>
-  <input type="date" formControlName="fechaFin" />
+      <!-- Campos -->
+      <label>Código:</label>
+      <input formControlName="codigo" />
 
-  <label>
-    <input type="checkbox" formControlName="activo" />
-    Activo
-  </label>
+      <label>Porcentaje:</label>
+      <input type="number" formControlName="porcentaje" min="1" max="100" />
 
-  <button type="submit">
-    {{ isEditing() ? 'Actualizar' : 'Crear' }} descuento
-  </button>
-  
-</form>
-<button routerLink="/menu-principal" class="volver-btn">Volver al Menú Principal</button>
+      <label>Fecha de inicio:</label>
+      <input type="date" formControlName="fechaInicio" />
+
+      <label>Fecha de fin:</label>
+      <input type="date" formControlName="fechaFin" />
+
+      <label>
+        <input type="checkbox" formControlName="activo" />
+        Activo
+      </label>
+
+      <!-- Guardar -->
+      <button type="submit">
+        {{ isEditing() ? 'Actualizar' : 'Crear' }} descuento
+      </button>
+
+      <!-- Cancelar -->
+      @if (isEditing()) {
+        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">
+          Cancelar
+        </button>
+      }
+
+    </form>
+
+    <!-- Volver -->
+    @if (!isEditing()) {
+      <button routerLink="/menu-principal" class="volver-btn">
+        Volver al Menú Principal
+      </button>
+    }
+
+  </div>
+</div>

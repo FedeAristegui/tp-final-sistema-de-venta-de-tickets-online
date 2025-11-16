@@ -1,0 +1,88 @@
+:host {
+    display: block;
+    padding: 40px;
+    font-family: 'Inter', sans-serif;
+    color: #2d3748;
+}
+
+h2{
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  font-weight: 800;
+
+  /* GRADIENTE DE TEXTO */
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #4a5568;
+    text-align: center;
+}
+
+/* Acciones */
+.acciones {
+    margin: 30px auto;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.acciones button {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .3s all;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.acciones button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 22px rgba(102, 126, 234, 0.45);
+}
+
+.acciones button:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Formulario embebido */
+app-formulario-descuento {
+    display: block;
+    margin-top: 30px;
+}
+
+/* Botón volver */
+.volver-btn {
+    margin: 30px auto 0;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    font-weight: 700;
+    color: #222;
+    /* TEXTO OSCURO */
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    /* BORDE VISIBILE */
+    text-decoration: none;
+    display: inline-block;
+    backdrop-filter: blur(10px);
+    transition: .3s;
+}
+
+.volver-btn:hover {
+    background: rgba(255, 255, 255, 0.65);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.45);
+}
+

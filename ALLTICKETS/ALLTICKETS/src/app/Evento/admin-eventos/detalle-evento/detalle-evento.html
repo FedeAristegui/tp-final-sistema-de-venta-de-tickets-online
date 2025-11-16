@@ -1,115 +1,128 @@
 @let evento = this.evento();
-
 @if (evento) {
 
 <p><strong>Evento:</strong> {{ evento.titulo }}</p>
 
 
-  <div class="info-principal">
-    @if (evento.imagen) {
-      <img [src]="evento.imagen" [alt]="evento.titulo">
-    } @else {
-      <div class="sin-imagen">Sin imagen disponible</div>
-    }
+<div class="info-principal">
+  @if (evento.imagen) {
+  <img [src]="evento.imagen" [alt]="evento.titulo">
+  } @else {
+  <div class="sin-imagen">Sin imagen disponible</div>
+  }
 
-    <div class="datos">
-      <p><strong>Fecha:</strong> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
-      <p><strong>Hora:</strong> {{ evento.hora }}</p>
-      <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
-      <p><strong>Modo de venta:</strong> {{ evento.modoVenta }}</p>
-    </div>
+  <div class="datos">
+    <p><strong>Fecha:</strong> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Hora:</strong> {{ evento.hora }}</p>
+    <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+    <p><strong>Modo de venta:</strong> {{ evento.modoVenta }}</p>
   </div>
+</div>
 
-  @if (evento.modoVenta === 'sector') {
-    <h3>Sectores</h3>
-    @if (evento.sectores && evento.sectores.length > 0) {
-      <table class="tabla">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Capacidad</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (s of evento.sectores; track s.nombre) {
-            <tr>
-              <td>{{ s.nombre }}</td>
-              <td>{{ s.capacidad }}</td>
-              <td>${{ s.precio }}</td>
-              <td>
-                <input 
-                  type="number" 
-                  [(ngModel)]="cantidadSeleccionada"
-                  min="1" 
-                  [max]="s.capacidad"
-                  style="width: 60px;">
-              </td>
-              <td>
-                <button (click)="agregarSectorAlCarrito(s)" class="btn-agregar-carrito">
-                  🛒 Agregar al Carrito
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <p>No hay sectores configurados.</p>
+@if (evento.modoVenta === 'sector') {
+<h3>Sectores</h3>
+@if (evento.sectores && evento.sectores.length > 0) {
+<table class="tabla">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Capacidad</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (s of evento.sectores; track s.nombre) {
+    <tr>
+      <td>{{ s.nombre }}</td>
+      <td>{{ s.capacidad }}</td>
+      <td>${{ s.precio }}</td>
+      <td>
+        <input type="number" [(ngModel)]="cantidadSeleccionada" min="1" [max]="s.capacidad" style="width: 60px;">
+      </td>
+      <td>
+        @if(usuario()?.rol === 'admin'){
+        <div>
+          <button (click)="toggleEdit()">Editar</button>
+          <button (click)="deleteMovie()" [disabled]="isEditing()">Eliminar</button>
+        </div>
+        }
+        @else if(usuario()?.rol === 'usuario'){
+        <button (click)="agregarSectorAlCarrito(s)" class="btn-agregar-carrito">
+          🛒 Agregar al Carrito
+        </button>
+        }
+      </td>
+    </tr>
     }
-  }
+  </tbody>
+</table>
+} @else {
+<p>No hay sectores configurados.</p>
+}
+}
 
-  @if (evento.modoVenta === 'butaca') {
-    <h3>Butacas</h3>
-    @if (evento.butacas && evento.butacas.length > 0) {
-      <table class="tabla">
-        <thead>
-          <tr>
-            <th>Fila</th>
-            <th>Número</th>
-            <th>Precio</th>
-            <th>Disponible</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (b of evento.butacas; track b.numero) {
-            <tr [class.butaca-ocupada]="!b.disponible">
-              <td>{{ b.fila }}</td>
-              <td>{{ b.numero }}</td>
-              <td>${{ b.precio }}</td>
-              <td>{{ b.disponible ? 'Sí' : 'No' }}</td>
-              <td>
-                <button 
-                  (click)="agregarButacaAlCarrito(b)" 
-                  [disabled]="!b.disponible"
-                  class="btn-agregar-carrito">
-                  🛒 Agregar al Carrito
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <p>No hay butacas configuradas.</p>
+@if (evento.modoVenta === 'butaca') {
+<h3>Butacas</h3>
+@if (evento.butacas && evento.butacas.length > 0) {
+<table class="tabla">
+  <thead>
+    <tr>
+      <th>Fila</th>
+      <th>Número</th>
+      <th>Precio</th>
+      <th>Disponible</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (b of evento.butacas; track b.numero) {
+    <tr [class.butaca-ocupada]="!b.disponible">
+      <td>{{ b.fila }}</td>
+      <td>{{ b.numero }}</td>
+      <td>${{ b.precio }}</td>
+      <td>{{ b.disponible ? 'Sí' : 'No' }}</td>
+      <td>
+        @if(usuario()?.rol === 'admin'){
+        <div>
+          <button (click)="toggleEdit()">Editar</button>
+          <button (click)="deleteMovie()" [disabled]="isEditing()">Eliminar</button>
+        </div>
+        }
+        @else if(usuario()?.rol === 'usuario'){
+        <button (click)="agregarButacaAlCarrito(b)" [disabled]="!b.disponible" class="btn-agregar-carrito">
+          🛒 Agregar al Carrito
+        </button>
+        }
+      </td>
+    </tr>
     }
-  }
+  </tbody>
+</table>
+} @else {
+<p>No hay butacas configuradas.</p>
+}
+}
 
-    <div>
-        <button (click)="toggleEdit()">Editar</button>
-        <button (click)="deleteMovie()" [disabled]="isEditing()">Eliminar</button>
-    </div>
-    @if (isEditing()) {
-        <p>Editando</p>
-        <app-admin-eventos [isEditing]="true" [evento]="evento" (edited)="handleEdit($event)"></app-admin-eventos>
-    }
-    
+
+@if (isEditing()) {
+  <p>Editando</p>
+  <app-admin-eventos id="form-edicion" [isEditing]="true" [evento]="evento" (edited)="handleEdit($event)" (cancelled)="toggleEdit()"></app-admin-eventos>
+}@else {
+  @if(usuario()?.rol === 'admin'){
   <div class="acciones">
-    <a routerLink="/lista-eventos" class="btn volver-btn">Volver a la lista</a>
+  <a routerLink="/lista-eventos" class="btn volver-btn">Volver a la lista</a>
   </div>
+  }
+  @else if(usuario()?.rol === 'usuario'){
+  <div class="acciones">
+  <a routerLink="/menu-principal" class="btn volver-btn">Volver al menu</a>
+  </div>
+  }
+
+}
+
 
 } @else {
   <p>No se encontró el evento.</p>

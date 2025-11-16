@@ -7,6 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AdminEventos } from "../crear-evento/admin-eventos";
+import { Autenticador } from '../../../servicios/autenticador';
 
 @Component({
   selector: 'app-evento-ficha',
@@ -26,6 +27,10 @@ export class detalleEvento {
   protected readonly evento = linkedSignal(() => this.eventoFuente());
   protected readonly isEditing = signal(false);
   
+  private readonly autenticador = inject(Autenticador);
+
+  protected readonly usuario = signal(this.autenticador.obtenerUsuarioActual());
+
   // Variables para la compra
   protected cantidadSeleccionada = signal<number>(1);
   protected sectorSeleccionado = signal<string>('');
@@ -33,11 +38,18 @@ export class detalleEvento {
 
   toggleEdit(){
     this.isEditing.set(!this.isEditing());
+    setTimeout(() => {
+    document.getElementById("form-edicion")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 50);
   }
 
   handleEdit(evento: Evento){
     this.evento.set(evento);
     this.toggleEdit();
+    
 
   }
 

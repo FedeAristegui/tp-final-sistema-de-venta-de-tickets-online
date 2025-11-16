@@ -19,5 +19,6 @@ export class ListaDescuento {
   navegarDetalles(id: string|number){
     this.router.navigateByUrl(`ficha-descuento/${id}`);
   }
+  
 
 }

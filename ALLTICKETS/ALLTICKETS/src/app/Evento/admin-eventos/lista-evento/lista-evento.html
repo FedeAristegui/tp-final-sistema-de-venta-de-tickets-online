@@ -16,12 +16,12 @@
   <table class="tabla-eventos">
     <thead>
       <tr>
-        <th>Título</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Lugar</th>
-        <th>Modo Venta</th>
-        <th>Acciones</th>
+        <th class="sortable" (click)="ordenarPor('titulo')">Título</th>
+        <th class="sortable" (click)="ordenarPor('fecha')">Fecha</th>
+        <th class="sortable" (click)="ordenarPor('hora')">Hora</th>
+        <th class="sortable" (click)="ordenarPor('lugar')">Lugar</th>
+        <th class="sortable" (click)="ordenarPor('modoVenta')">Modo Venta</th>
+        <th class="no-sort">Acciones</th>  
       </tr>
     </thead>
     <tbody>
