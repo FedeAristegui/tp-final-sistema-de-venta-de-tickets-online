@@ -12,19 +12,63 @@
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario-evento">
       <label>Título:</label>
       <input formControlName="titulo" placeholder="Título del evento" />
+      @if (titulo.dirty || titulo.touched) {
+        @if (titulo.hasError('required')) {
+          <span>El titulo es requerido</span>
+        }
+        @else if (titulo.hasError('minlength')) {
+          <span>El campo "Titulo" debe tener como minimo 3 caracteres</span>
+        }
+      }
 
       <label>Fecha:</label>
       <input formControlName="fecha" type="date" />
+      @if (fecha.dirty || fecha.touched) {
+        @if (fecha.hasError('required')) {
+          <span>La fecha es requerida</span>
+        }
+      }
 
       <label>Hora:</label>
       <input formControlName="hora" type="time" />
+      @if (hora.dirty || hora.touched) {
+        @if (hora.hasError('required')) {
+          <span>La hora es requerida</span>
+        }
+      }
 
       <label>Lugar:</label>
       <input formControlName="lugar" placeholder="Lugar del evento" />
+      @if (lugar.dirty || lugar.touched) {
+        @if (lugar.hasError('required')) {
+          <span>El lugar es requerido</span>
+        }
+        @else if (titulo.hasError('minlength')) {
+          <span>El campo "Lugar" debe tener como minimo 3 caracteres</span>
+        }
+      }
+
+      <label>Categoría: </label>
+      <select id = "categoria" formControlName = "categoria">
+      <option value="" disabled selected>Seleccione una categoria</option>
+      @for (categoria of categorias; track $index) {
+        <option [value] = "categoria">{{ categoria }}</option>
+      }
+    </select>
+    @if (categoria.dirty || categoria.touched) {
+      @if (categoria.hasError('required')) {
+        <span>La categoria es requerida</span>
+      }
+    }
 
       <label>Imagen (URL):</label>
       <input formControlName="imagen" placeholder="https://..." />
-
+        @if (imagen.dirty || imagen.touched) {
+        @if (imagen.hasError('required')) {
+          <span>La foto es requerida</span>
+        }
+      }
+  
       <label>Modo de Venta:</label>
       <select formControlName="modoVenta" (change)="cambiarModoVenta()">
         <option value="sector">Venta por Sector</option>
@@ -147,14 +191,16 @@
           </div>
         </div>
       }
-
-      <button type="submit">
+    
+        <button type="submit">
         @if(isEditing) {
           Actualizar Evento
         } @else {
           Guardar Evento
         }
       </button>
+      
+      
       
       @if(isEditing) {
         <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">Cancelar</button>

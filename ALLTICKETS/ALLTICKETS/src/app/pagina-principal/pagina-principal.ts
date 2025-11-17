@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject, signal } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { FavoritoServicio } from '../servicios/favorito.servicio';
-import { Evento, CategoriaEvento } from '../modelos/evento';
+import { Evento } from '../modelos/evento';
 import { Favorito } from '../modelos/favorito';
 
 @Component({
@@ -18,19 +18,20 @@ export class PaginaPrincipal implements OnInit {
   usuario: any = null;
   eventos: Evento[] = [];
   eventosFiltrados: Evento[] = [];
-  isLoading = true;
+  isLoading = signal(false);  
   favoritosUsuario: string[] = []; // IDs de eventos favoritos del usuario
+  protected readonly categorias = ['Deportes', 'Música', 'Comedia'];
 
   // Formulario de filtros
   filtrosForm: FormGroup;
   
   // Categorías fijas
-  readonly categorias: CategoriaEvento[] = ['Deportes', 'Música', 'Comedia'];
+
 
   private readonly eventoService = inject(EventoServicio);
   private readonly favoritoService = inject(FavoritoServicio);
   private readonly router = inject(Router);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef); // REEMPLAZAR POR SEÑALES
   private readonly fb = inject(FormBuilder);
 
   constructor() {
@@ -61,20 +62,20 @@ export class PaginaPrincipal implements OnInit {
 
 
   cargarEventos(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.eventos = [];
     
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
         this.eventos = eventos;
         this.eventosFiltrados = eventos;
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {
         this.eventos = [];
         this.eventosFiltrados = [];
-        this.isLoading = false;
+        this.isLoading.set(false);
         alert('Error al cargar eventos. Asegúrate de que json-server esté corriendo en http://localhost:3000');
       },
       complete: () => {
@@ -83,9 +84,9 @@ export class PaginaPrincipal implements OnInit {
     });
     
     setTimeout(() => {
-      if (this.isLoading) {
+      if (this.isLoading()) {
         console.warn('[PaginaPrincipal] ⚠️ Timeout: La petición está tomando demasiado tiempo');
-        this.isLoading = false;
+        this.isLoading.set(false);
       }
     }, 10000);
   }

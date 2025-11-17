@@ -138,6 +138,28 @@
         }
       ],
       "butacas": []
+    },
+    {
+      "id": "9559",
+      "titulo": "jidsjisd",
+      "fecha": "2025-11-27",
+      "hora": "15:30",
+      "lugar": "Mar del plata",
+      "imagen": "https://images.pexels.com/photos/3426870/pexels-photo-3426870.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "modoVenta": "sector",
+      "sectores": [],
+      "butacas": []
+    },
+    {
+      "id": "8d70",
+      "titulo": "PROBANDO",
+      "fecha": "2025-11-21",
+      "hora": "11:11",
+      "lugar": "bs as",
+      "imagen": "https://www.istockphoto.com/resources/images/PhotoFTLP/P1-regional-iStock-1985150440.jpg",
+      "modoVenta": "sector",
+      "sectores": [],
+      "butacas": []
     }
   ],
   "descuentos": [

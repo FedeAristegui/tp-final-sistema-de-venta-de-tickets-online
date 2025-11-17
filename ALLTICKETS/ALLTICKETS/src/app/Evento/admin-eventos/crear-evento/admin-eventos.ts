@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, signal, Input, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../../servicios/evento.servicio';
@@ -40,10 +40,16 @@ export class AdminEventos implements OnInit {
     lugar: ['', [Validators.required, Validators.minLength(3)]],
     imagen: ['', Validators.required],
     modoVenta: ['sector' as 'sector' | 'butaca', Validators.required],
+    categoria: ['', Validators.required],
     sectores: this.fb.array([]),
     butacas: this.fb.array([])
   });
 
+  protected readonly categorias = [
+    'Deportes', 'Música', 'Comedia'
+  ];
+
+   
   // 🔹 Formulario generador de butacas
   protected readonly generadorButacas = this.fb.group({
     filas: ['', Validators.required],
@@ -51,12 +57,37 @@ export class AdminEventos implements OnInit {
     precioBase: [0, [Validators.required, Validators.min(0)]]
   });
 
-  get sectores(): FormArray {
-    return this.form.get('sectores') as FormArray;
+  get titulo(){
+    return this.form.controls.titulo;
+  }
+  get fecha(){
+    return this.form.controls.fecha;
+  }
+  get hora(){
+    return this.form.controls.hora;
+  }
+  get lugar(){
+    return this.form.controls.lugar;
   }
 
-  get butacas(): FormArray {
-    return this.form.get('butacas') as FormArray;
+  get imagen(){
+    return this.form.controls.imagen;
+  }
+
+  get modoVenta(){
+    return this.form.controls.modoVenta;
+  }
+
+  get categoria(){  
+    return this.form.controls.categoria;
+  }
+
+  get sectores(){
+    return this.form.controls.sectores as FormArray;
+  }
+
+  get butacas(){
+    return this.form.controls.butacas as FormArray;
   }
 
   ngOnInit(): void {
