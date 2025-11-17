@@ -271,6 +271,7 @@ export class Carrito implements OnInit {
     const ventas: Venta[] = items.map(item => {
       const venta: Venta = {
         eventoId: item.evento.id!,
+        usuarioId: this.usuario.id,
         eventoTitulo: item.evento.titulo,
         cantidad: item.cantidad,
         fecha: new Date().toISOString(),

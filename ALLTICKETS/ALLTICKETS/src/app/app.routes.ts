@@ -12,6 +12,11 @@ import { PerfilUsuario } from './usuario/perfil-usuario/perfil-usuario';
 import { ListaFavoritos } from './lista-favoritos/lista-favoritos';
 import { MisTarjetas } from './mis-tarjetas/mis-tarjetas';
 import { Carrito } from './carrito/carrito';
+import { adminGuard} from './guards/admin.guard';
+import { clienteGuard } from './guards/cliente.guard';
+import { authGuard } from './guards/auth.guard';
+import { formIncompletoGuard } from './guards/form.incompleto.guard';
+import { HistorialCompras } from './historial-compras/historial-compras';
 
 
 
@@ -33,44 +38,59 @@ export const routes: Routes = [
   },
   {
     path: 'eventos', component: AdminEventos,
-    title: 'Agregar Evento' 
+    title: 'Agregar Evento',
+    canActivate: [adminGuard], canDeactivate: [formIncompletoGuard]
   },
   { 
     path: 'lista-eventos', component: ListaEvento,
-    title: 'Listado de Eventos' 
+    title: 'Listado de Eventos',
+    canActivate: [adminGuard]
   },
   {
     path: 'ficha-evento/:id', component: detalleEvento,
-    title: 'Detalle de Evento' 
+    title: 'Detalle de Evento',
   },
   {
     path: 'formulario-descuento', component: FormularioDescuento,
-    title: 'Formulario Descuento' 
+    title: 'Formulario Descuento',
+    canActivate: [adminGuard], canDeactivate: [formIncompletoGuard]
   },
   {
     path: 'lista-descuento', component: ListaDescuento,
-    title: 'Lista Descuentos' 
+    title: 'Lista Descuentos',
+    canActivate: [adminGuard]
   },
   {
     path: 'ficha-descuento/:id', component: DetalleDescuento,
-    title: 'Detalle de Descuento' 
+    title: 'Detalle de Descuento',
+    canActivate: [adminGuard]
   },
   {
     path: 'perfil/:id', component: PerfilUsuario,
+    title: 'Mi Perfil',
+    canActivate: [authGuard]
   },
   {
     path: 'favoritos', component: ListaFavoritos,
-    title: 'Mis Favoritos'
+    title: 'Mis Favoritos',
+    canActivate: [clienteGuard]
   },
   {
     path: 'mis-tarjetas', component: MisTarjetas,
-    title: 'Mis Tarjetas'
+    title: 'Mis Tarjetas',
+    canActivate: [clienteGuard]
   },
   {
     path: 'carrito', component: Carrito,
-    title: 'Mi Carrito'
+    title: 'Mi Carrito',
+    canActivate: [clienteGuard]
+  },
+  {
+    path: 'historial-compras', component: HistorialCompras,
+    title: 'Historial de Compras',
+    canActivate: [clienteGuard]
   },
   { 
-    path: '**', redirectTo: '' 
+    path: '**', redirectTo: 'menu-principal' 
   }// redirección en caso de ruta no válida
 ];

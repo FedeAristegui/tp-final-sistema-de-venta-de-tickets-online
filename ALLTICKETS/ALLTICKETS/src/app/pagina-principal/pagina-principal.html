@@ -25,7 +25,7 @@
           <li><a routerLink="/favoritos">❤️ Mis Favoritos</a></li>
           <li><a routerLink="/mis-tarjetas">💳 Mis Tarjetas</a></li>
           <li><a routerLink="/carrito">🛒 Carrito</a></li>
-          <li><a routerLink="/comprar">🛍️ Mis compras</a></li>
+          <li><a routerLink="/historial-compras">🛍️ Mis compras</a></li>
           <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
         </ul>
       </nav>
@@ -109,6 +109,7 @@
   } @else if (eventosFiltrados.length > 0) {
     <div class="eventos-grid">
       @for (evento of eventosFiltrados; track evento.id) {
+
         <div class="evento-card" (click)="verDetalleEvento(evento.id)">
           <!-- Botón de favorito -->
           @if (usuario && usuario.rol === 'usuario') {

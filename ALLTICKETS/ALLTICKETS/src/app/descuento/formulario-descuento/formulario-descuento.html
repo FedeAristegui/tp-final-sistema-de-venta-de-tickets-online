@@ -12,15 +12,57 @@
       <!-- Campos -->
       <label>Código:</label>
       <input formControlName="codigo" />
+      @if (codigo.invalid && (codigo.dirty || codigo.touched)) {
+        <div class="error">
+          @if (codigo.errors?.['required']) {
+            <span>El código es requerido</span>
+          }
+        </div>
+      }
 
       <label>Porcentaje:</label>
       <input type="number" formControlName="porcentaje" min="1" max="100" />
+      @if (porcentaje.invalid && (porcentaje.dirty || porcentaje.touched)) {
+        <div class="error">
+          @if (porcentaje.errors?.['required']) {
+            <span>El porcentaje es requerido</span>
+          }
+          @if (porcentaje.errors?.['min']) {
+            <span>El porcentaje debe ser mayor que 0</span>
+          }
+          @if (porcentaje.errors?.['max']) {
+            <span>El porcentaje no puede exceder 100</span>
+          }
+        </div>
+      }
 
       <label>Fecha de inicio:</label>
       <input type="date" formControlName="fechaInicio" />
+      @if (fechaInicio.invalid && (fechaInicio.dirty || fechaInicio.touched)) {
+        <div class="error">
+          @if (fechaInicio.errors?.['required']) {
+            <span>La fecha de inicio es requerida</span>
+          }
+          @if (fechaInicio.errors?.['minDateToday']) {
+            <span>La fecha debe ser hoy o posterior</span>
+          }
+        </div>
+      }
 
       <label>Fecha de fin:</label>
       <input type="date" formControlName="fechaFin" />
+      @if (fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)) {
+        <div class="error">
+          @if (fechaFin.errors?.['required']) {
+            <span>La fecha de fin es requerida</span>
+          }
+        </div>
+      }
+      @if (form.errors?.['dateFinInvalid'] && (fechaFin.dirty || fechaFin.touched)) {
+        <div class="error">
+          <span>La fecha de fin debe ser al menos 1 día después de la fecha de inicio</span>
+        </div>
+      }
 
       <label>
         <input type="checkbox" formControlName="activo" />

@@ -160,6 +160,90 @@
       "modoVenta": "sector",
       "sectores": [],
       "butacas": []
+    },
+    {
+      "id": "b89d",
+      "titulo": "asdfg",
+      "fecha": "2025-11-27",
+      "hora": "11:12",
+      "lugar": "bs as",
+      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtaQRFQoi3tJfAtOqeUnlXqFZAuQtnQPwppZpDpdf_L2UoqS-Je4WhtmMNkzKqcYLW-jh6jT77cvh2-ERnj0ujAKJkf73Y_l4iCj-Og&s=10",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "asd",
+          "capacidad": 10,
+          "precio": 100
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "3e08",
+      "titulo": "sdf",
+      "fecha": "2025-12-03",
+      "hora": "11:11",
+      "lugar": "dsf",
+      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtaQRFQoi3tJfAtOqeUnlXqFZAuQtnQPwppZpDpdf_L2UoqS-Je4WhtmMNkzKqcYLW-jh6jT77cvh2-ERnj0ujAKJkf73Y_l4iCj-Og&s=10",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "asd",
+          "capacidad": 100,
+          "precio": 100
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "088c",
+      "titulo": "probandootravez",
+      "fecha": "2025-11-15",
+      "hora": "11:11",
+      "lugar": "assdaf",
+      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtaQRFQoi3tJfAtOqeUnlXqFZAuQtnQPwppZpDpdf_L2UoqS-Je4WhtmMNkzKqcYLW-jh6jT77cvh2-ERnj0ujAKJkf73Y_l4iCj-Og&s=10",
+      "modoVenta": "sector",
+      "sectores": [],
+      "butacas": []
+    },
+    {
+      "id": "0b06",
+      "titulo": "asdf",
+      "fecha": "2025-11-29",
+      "hora": "11:11",
+      "lugar": "bs as",
+      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtaQRFQoi3tJfAtOqeUnlXqFZAuQtnQPwppZpDpdf_L2UoqS-Je4WhtmMNkzKqcYLW-jh6jT77cvh2-ERnj0ujAKJkf73Y_l4iCj-Og&s=10",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": []
+    },
+    {
+      "id": "7634",
+      "titulo": "asdfadf",
+      "fecha": "2025-11-28",
+      "hora": "11:11",
+      "lugar": "bsa as",
+      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtaQRFQoi3tJfAtOqeUnlXqFZAuQtnQPwppZpDpdf_L2UoqS-Je4WhtmMNkzKqcYLW-jh6jT77cvh2-ERnj0ujAKJkf73Y_l4iCj-Og&s=10",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": []
+    },
+    {
+      "id": "243d",
+      "titulo": "asdmk",
+      "fecha": "2025-11-27",
+      "hora": "11:11",
+      "lugar": "2390",
+      "imagen": "https://inkscape.app/wp-content/uploads/imagen-vectorial.webp",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "VIP",
+          "capacidad": 300,
+          "precio": 300
+        }
+      ],
+      "butacas": []
     }
   ],
   "descuentos": [
@@ -186,9 +270,30 @@
       "fechaInicio": "2025-11-12",
       "fechaFin": "2025-11-14",
       "activo": true
+    },
+    {
+      "codigo": "PROMO10",
+      "porcentaje": 10,
+      "fechaInicio": "2025-11-15",
+      "fechaFin": "2025-12-05",
+      "activo": false,
+      "id": "cce5"
     }
   ],
-  "favoritos": [],
+  "favoritos": [
+    {
+      "id": "2b5yrcf",
+      "usuarioId": "9534",
+      "eventoId": "8348",
+      "fechaAgregado": "2025-11-17T21:03:55.919Z"
+    },
+    {
+      "id": "31wgeuo",
+      "usuarioId": "9534",
+      "eventoId": "d3a8",
+      "fechaAgregado": "2025-11-17T21:04:09.182Z"
+    }
+  ],
   "tarjetas": [
     {
       "id": "96ctqy8",
@@ -283,6 +388,23 @@
         {
           "nombre": "VIP",
           "cantidad": 6
+        }
+      ]
+    },
+    {
+      "id": "157d",
+      "eventoId": "513b",
+      "usuarioId": "9534",
+      "eventoTitulo": "xwxewxewxwe",
+      "cantidad": 1,
+      "fecha": "2025-11-17T20:26:03.062Z",
+      "total": 1222,
+      "tipo": "sector",
+      "detalle": "vip",
+      "sectoresVendidos": [
+        {
+          "nombre": "vip",
+          "cantidad": 1
         }
       ]
     }

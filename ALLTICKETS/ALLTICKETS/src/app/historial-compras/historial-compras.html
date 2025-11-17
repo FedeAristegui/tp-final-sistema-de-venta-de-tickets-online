@@ -1,0 +1,30 @@
+
+    <div class="historial-container">
+      <h2>📋 Mi Historial de Compras</h2>
+      
+      @if (cargando()) {
+        <p>Cargando...</p>
+      } @else if (compras().length === 0) {
+        <div class="sin-compras">
+          <p>No tienes compras registradas</p>
+          <a routerLink="/menu-principal">Ver eventos</a>
+        </div>
+      } @else {
+        <div class="lista-compras">
+          @for (compra of compras(); track compra.id) {
+            <div class="compra-card">
+              <div class="compra-header">
+                <h3>{{ compra.eventoTitulo }}</h3>
+                <span class="fecha">{{ compra.fecha | date:'short' }}</span>
+              </div>
+              <div class="compra-info">
+                <p><strong>Tipo:</strong> {{ compra.tipo === 'sector' ? 'Sector' : 'Butaca' }}</p>
+                <p><strong>Detalle:</strong> {{ compra.detalle }}</p>
+                <p><strong>Cantidad:</strong> {{ compra.cantidad }}</p>
+                <p class="total"><strong>Total:</strong> ${{ compra.total }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>

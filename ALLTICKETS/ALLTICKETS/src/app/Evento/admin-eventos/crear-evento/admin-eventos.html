@@ -27,6 +27,9 @@
         @if (fecha.hasError('required')) {
           <span>La fecha es requerida</span>
         }
+        @else if (fecha.hasError('minDate')) {
+          <span>La fecha debe ser un día futuro (no hoy ni fechas pasadas)</span>
+        }
       }
 
       <label>Hora:</label>
@@ -43,8 +46,11 @@
         @if (lugar.hasError('required')) {
           <span>El lugar es requerido</span>
         }
-        @else if (titulo.hasError('minlength')) {
+        @else if (lugar.hasError('minlength')) {
           <span>El campo "Lugar" debe tener como minimo 3 caracteres</span>
+        }
+        @else if (lugar.hasError('hasNumbers')) {
+          <span>El lugar no puede contener números</span>
         }
       }
 
@@ -67,6 +73,9 @@
         @if (imagen.hasError('required')) {
           <span>La foto es requerida</span>
         }
+        @else if (imagen.hasError('invalidUrl')) {
+          <span>La URL debe empezar con "https://"</span>
+        }
       }
   
       <label>Modo de Venta:</label>
@@ -84,10 +93,34 @@
               <div [formGroupName]="i" class="sector-item">
                 <label>Nombre:</label>
                 <input formControlName="nombre" placeholder="Ej: VIP" />
+                @if (s.get('nombre')?.dirty || s.get('nombre')?.touched) {
+                  @if (s.get('nombre')?.hasError('required')) {
+                    <span class="error-inline">El nombre es requerido</span>
+                  }
+                  @else if (s.get('nombre')?.hasError('onlyLetters')) {
+                    <span class="error-inline">El nombre solo puede contener letras</span>
+                  }
+                }
                 <label>Capacidad:</label>
                 <input formControlName="capacidad" type="number" />
+                @if (s.get('capacidad')?.dirty || s.get('capacidad')?.touched) {
+                  @if (s.get('capacidad')?.hasError('required')) {
+                    <span class="error-inline">La capacidad es requerida</span>
+                  }
+                  @else if (s.get('capacidad')?.hasError('positiveNumber')) {
+                    <span class="error-inline">La capacidad debe ser mayor a 0</span>
+                  }
+                }
                 <label>Precio:</label>
                 <input formControlName="precio" type="number" />
+                @if (s.get('precio')?.dirty || s.get('precio')?.touched) {
+                  @if (s.get('precio')?.hasError('required')) {
+                    <span class="error-inline">El precio es requerido</span>
+                  }
+                  @else if (s.get('precio')?.hasError('positiveNumber')) {
+                    <span class="error-inline">El precio debe ser mayor a 0</span>
+                  }
+                }
                 <button type="button" (click)="eliminarSector(i)" class="btn-eliminar-item">🗑️ Eliminar</button>
               </div>
             }
@@ -108,16 +141,40 @@
                 <label>Filas <small>(A,B,C o A-E)</small>:</label>
                 <input formControlName="filas" placeholder="Ejemplo: A-E" />
                 <small class="hint">💡 Usa comas (A,B,C) o guión (A-E)</small>
+                @if (generadorButacas.get('filas')?.dirty || generadorButacas.get('filas')?.touched) {
+                  @if (generadorButacas.get('filas')?.hasError('required')) {
+                    <span class="error-inline">Las filas son requeridas</span>
+                  }
+                  @else if (generadorButacas.get('filas')?.hasError('invalidFilas')) {
+                    <span class="error-inline">Formato de filas inválido. Usa A-E o A,B,C</span>
+                  }
+                }
               </div>
               <div>
                 <label>Butacas por fila:</label>
                 <input formControlName="butacasPorFila" type="number" placeholder="Ej: 10" min="1" />
                 <small class="hint">💡 Cantidad de asientos por fila</small>
+                @if (generadorButacas.get('butacasPorFila')?.dirty || generadorButacas.get('butacasPorFila')?.touched) {
+                  @if (generadorButacas.get('butacasPorFila')?.hasError('required')) {
+                    <span class="error-inline">Las butacas por fila son requeridas</span>
+                  }
+                  @else if (generadorButacas.get('butacasPorFila')?.hasError('positiveNumber')) {
+                    <span class="error-inline">Las butacas por fila deben ser mayor a 0</span>
+                  }
+                }
               </div>
               <div>
                 <label>Precio por butaca ($):</label>
                 <input formControlName="precioBase" type="number" placeholder="Ej: 1000" min="0" />
                 <small class="hint">💡 Precio base para todas las butacas</small>
+                @if (generadorButacas.get('precioBase')?.dirty || generadorButacas.get('precioBase')?.touched) {
+                  @if (generadorButacas.get('precioBase')?.hasError('required')) {
+                    <span class="error-inline">El precio es requerido</span>
+                  }
+                  @else if (generadorButacas.get('precioBase')?.hasError('positiveNumber')) {
+                    <span class="error-inline">El precio debe ser mayor a 0</span>
+                  }
+                }
               </div>
             </div>
             
@@ -156,6 +213,32 @@
                       <div class="butaca-info">
                         <span class="butaca-label">Fila {{ b.get('fila')?.value }} - #{{ b.get('numero')?.value }}</span>
                         <span class="butaca-precio">${{ b.get('precio')?.value }}</span>
+                      </div>
+                      <div class="butaca-errores">
+                        @if (b.get('fila')?.dirty || b.get('fila')?.touched) {
+                          @if (b.get('fila')?.hasError('required')) {
+                            <span class="error-inline">Fila requerida</span>
+                          }
+                          @else if (b.get('fila')?.hasError('onlyLetters')) {
+                            <span class="error-inline">Fila debe ser una letra</span>
+                          }
+                        }
+                        @if (b.get('numero')?.dirty || b.get('numero')?.touched) {
+                          @if (b.get('numero')?.hasError('required')) {
+                            <span class="error-inline">Número requerido</span>
+                          }
+                          @else if (b.get('numero')?.hasError('positiveNumber')) {
+                            <span class="error-inline">Número debe ser > 0</span>
+                          }
+                        }
+                        @if (b.get('precio')?.dirty || b.get('precio')?.touched) {
+                          @if (b.get('precio')?.hasError('required')) {
+                            <span class="error-inline">Precio requerido</span>
+                          }
+                          @else if (b.get('precio')?.hasError('positiveNumber')) {
+                            <span class="error-inline">Precio debe ser > 0</span>
+                          }
+                        }
                       </div>
                       <div class="butaca-controles">
                         <label class="checkbox-disponible">

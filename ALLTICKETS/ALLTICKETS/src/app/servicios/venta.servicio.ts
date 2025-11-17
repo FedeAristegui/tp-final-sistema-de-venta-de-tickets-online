@@ -127,4 +127,11 @@ export class VentaServicio {
       })
     );
   }
+
+  obtenerVentasPorUsuario(usuarioId: number | string): Observable<Venta[]>{
+    return this.http.get<Venta[]>(`${this.urlBase}/ventas?usuarioId=${usuarioId}`);
+  }
+  
 }
+
+

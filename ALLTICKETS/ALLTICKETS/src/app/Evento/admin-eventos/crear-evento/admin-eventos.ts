@@ -1,5 +1,100 @@
 import { Component, inject, OnInit, signal, Input, Output, EventEmitter} from '@angular/core';
-import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormArray, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { CanDeactivateFn } from '@angular/router';
+
+// Validador: rechaza números en texto (para título y lugar)
+export const noNumbersValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  const hasNumbers = /\d/.test(control.value);
+  return hasNumbers ? { hasNumbers: true } : null;
+};
+
+// Validador: rechaza fechas pasadas o de hoy (solo futuro)
+export const minDateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  const selectedDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return selectedDate <= today ? { minDate: true } : null;
+};
+
+// Validador: imagen debe empezar con "https://"
+export const httpsUrlValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  return control.value.startsWith('https://') ? null : { invalidUrl: true };
+};
+
+// Validador: solo letras (para nombre de sectores)
+export const onlyLettersValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  const onlyLetters = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(control.value);
+  return onlyLetters ? null : { onlyLetters: true };
+};
+
+// Validador: número positivo (mayor que 0)
+export const positiveNumberValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (control.value === null || control.value === undefined || control.value === '') return null;
+  const num = Number(control.value);
+  return !isNaN(num) && num > 0 ? null : { positiveNumber: true };
+};
+
+// Validador: filas válidas (formato A-E o A,B,C - no se permite AHADJ)
+export const validFilasValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  const trimmed = String(control.value).trim().toUpperCase();
+
+  // Validar formato de rango A-E (no puede haber más de una letra sin guión)
+  if (trimmed.includes('-')) {
+    const partes = trimmed.split('-');
+    if (partes.length !== 2) return { invalidFilas: true };
+    
+    const inicio = partes[0].trim();
+    const fin = partes[1].trim();
+    
+    // Cada parte debe ser exactamente una letra
+    if (inicio.length !== 1 || fin.length !== 1) return { invalidFilas: true };
+    
+    const inicioCode = inicio.charCodeAt(0);
+    const finCode = fin.charCodeAt(0);
+    
+    if (inicioCode < 65 || inicioCode > 90 || finCode < 65 || finCode > 90 || inicioCode > finCode) {
+      return { invalidFilas: true };
+    }
+    return null;
+  }
+
+  // Validar formato de lista A,B,C (cada elemento debe ser exactamente una letra)
+  const filas = trimmed.split(',').map(f => f.trim()).filter(f => f.length > 0);
+  if (filas.length === 0) return { invalidFilas: true };
+
+  for (const fila of filas) {
+    // Rechaza si hay más de una letra (por ejemplo "AH" o "AHADJ")
+    if (fila.length !== 1) return { invalidFilas: true };
+    const code = fila.charCodeAt(0);
+    if (code < 65 || code > 90) return { invalidFilas: true };
+  }
+
+  return null;
+};
+
+// Validador: exige al menos un sector o una butaca según el modo de venta
+export const requireSectorOrButacaByModo: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const modo = group.get('modoVenta')?.value;
+  const sectores = group.get('sectores') as FormArray | null;
+  const butacas  = group.get('butacas')  as FormArray | null;
+
+  const sectoresCount = sectores ? sectores.length : 0;
+  const butacasCount  = butacas ? butacas.length : 0;
+
+  if (modo === 'sector') {
+    return sectoresCount > 0 ? null : { requireSectorOrButaca: true };
+  }
+  if (modo === 'butaca') {
+    return butacasCount > 0 ? null : { requireSectorOrButaca: true };
+  }
+
+  return (sectoresCount === 0 && butacasCount === 0) ? { requireSectorOrButaca: true } : null;
+};
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../../servicios/evento.servicio';
 import { Evento } from '../../../modelos/evento';
@@ -35,15 +130,15 @@ export class AdminEventos implements OnInit {
   protected readonly form = this.fb.group({
     id: [null as number | null],
     titulo: ['', [Validators.required, Validators.minLength(3)]],
-    fecha: ['', Validators.required],
+    fecha: ['', [Validators.required, minDateValidator]],
     hora: ['', Validators.required],
-    lugar: ['', [Validators.required, Validators.minLength(3)]],
-    imagen: ['', Validators.required],
+    lugar: ['', [Validators.required, Validators.minLength(3), noNumbersValidator]],
+    imagen: ['', [Validators.required, httpsUrlValidator]],
     modoVenta: ['sector' as 'sector' | 'butaca', Validators.required],
     categoria: ['', Validators.required],
     sectores: this.fb.array([]),
     butacas: this.fb.array([])
-  });
+  }, { validators: [requireSectorOrButacaByModo] });
 
   protected readonly categorias = [
     'Deportes', 'Música', 'Comedia'
@@ -52,9 +147,9 @@ export class AdminEventos implements OnInit {
    
   // 🔹 Formulario generador de butacas
   protected readonly generadorButacas = this.fb.group({
-    filas: ['', Validators.required],
-    butacasPorFila: [0, [Validators.required, Validators.min(1)]],
-    precioBase: [0, [Validators.required, Validators.min(0)]]
+    filas: ['', [Validators.required, validFilasValidator]],
+    butacasPorFila: [0, [Validators.required, positiveNumberValidator]],
+    precioBase: [0, [Validators.required, positiveNumberValidator]]
   });
 
   get titulo(){
@@ -148,9 +243,9 @@ export class AdminEventos implements OnInit {
       ev.sectores.forEach(s =>
         this.sectores.push(
           this.fb.group({
-            nombre: [s.nombre, Validators.required],
-            capacidad: [s.capacidad, [Validators.required, Validators.min(1)]],
-            precio: [s.precio, [Validators.required, Validators.min(0)]]
+            nombre: [s.nombre, [Validators.required, onlyLettersValidator]],
+            capacidad: [s.capacidad, [Validators.required, positiveNumberValidator]],
+            precio: [s.precio, [Validators.required, positiveNumberValidator]]
           })
         )
       );
@@ -160,14 +255,16 @@ export class AdminEventos implements OnInit {
       ev.butacas.forEach(b =>
         this.butacas.push(
           this.fb.group({
-            fila: [b.fila, Validators.required],
-            numero: [b.numero, [Validators.required, Validators.min(1)]],
-            precio: [b.precio, [Validators.required, Validators.min(0)]],
+            fila: [b.fila, [Validators.required, onlyLettersValidator]],
+            numero: [b.numero, [Validators.required, positiveNumberValidator]],
+            precio: [b.precio, [Validators.required, positiveNumberValidator]],
             disponible: [b.disponible]
           })
         )
       );
     }
+    // Forzar revalidación después de llenar el formulario
+    this.form.updateValueAndValidity();
   }
 
   seleccionarEvento(ev: Evento): void {
@@ -179,16 +276,18 @@ export class AdminEventos implements OnInit {
   agregarSector(): void {
     this.sectores.push(
       this.fb.group({
-        nombre: ['', Validators.required],
-        capacidad: [0, [Validators.required, Validators.min(1)]],
-        precio: [0, [Validators.required, Validators.min(0)]]
+        nombre: ['', [Validators.required, onlyLettersValidator]],
+        capacidad: [0, [Validators.required, positiveNumberValidator]],
+        precio: [0, [Validators.required, positiveNumberValidator]]
       })
     );
+    this.form.updateValueAndValidity();
   }
 
   eliminarSector(index: number): void {
     if (confirm('¿Eliminar este sector?')) {
       this.sectores.removeAt(index);
+      this.form.updateValueAndValidity();
     }
   }
 
@@ -200,17 +299,19 @@ export class AdminEventos implements OnInit {
 
     this.butacas.push(
       this.fb.group({
-        fila: [filaDefault, Validators.required],
-        numero: [numeroDefault, [Validators.required, Validators.min(1)]],
-        precio: [precioDefault, [Validators.required, Validators.min(0)]],
+        fila: [filaDefault, [Validators.required, onlyLettersValidator]],
+        numero: [numeroDefault, [Validators.required, positiveNumberValidator]],
+        precio: [precioDefault, [Validators.required, positiveNumberValidator]],
         disponible: [true]
       })
     );
+    this.form.updateValueAndValidity();
   }
 
   eliminarButaca(index: number): void {
     if (confirm('¿Eliminar esta butaca?')) {
       this.butacas.removeAt(index);
+      this.form.updateValueAndValidity();
     }
   }
 
@@ -220,29 +321,22 @@ export class AdminEventos implements OnInit {
         this.butacas.removeAt(0);
       }
       this.mostrarTodasButacas.set(false);
+      this.form.updateValueAndValidity();
     }
   }
 
   // 🔹 Generar butacas automáticamente
-  generarButacas(): void {
+  generarButacas(){
+    // Validar que el formulario generador sea válido
+    if (this.generadorButacas.invalid) {
+      alert('⚠️ Por favor completa correctamente los campos del generador de butacas.');
+      this.generadorButacas.markAllAsTouched();
+      return;
+    }
+
     const filasInput = this.generadorButacas.get('filas')?.value || '';
     const cantidad = this.generadorButacas.get('butacasPorFila')?.value || 0;
     const precio = this.generadorButacas.get('precioBase')?.value || 0;
-
-    if (!filasInput.trim()) {
-      alert('⚠️ Por favor ingresa las filas (Ejemplo: A-E o A,B,C)');
-      return;
-    }
-
-    if (cantidad <= 0) {
-      alert('⚠️ La cantidad de butacas por fila debe ser mayor a 0');
-      return;
-    }
-
-    if (precio < 0) {
-      alert('⚠️ El precio debe ser mayor o igual a 0');
-      return;
-    }
 
     const filas = this.parsearFilas(filasInput);
     
@@ -317,6 +411,7 @@ export class AdminEventos implements OnInit {
         this.sectores.removeAt(0);
       }
     }
+    this.form.updateValueAndValidity();
   }
 
   // Método para manejar el submit del formulario
@@ -340,7 +435,18 @@ export class AdminEventos implements OnInit {
 
   guardarEvento(): void {
     if (this.form.invalid) {
-      alert('Por favor completá todos los campos correctamente.');
+      if (this.form.hasError('requireSectorOrButaca')) {
+        const modo = this.form.get('modoVenta')?.value;
+        if (modo === 'sector') {
+          alert('❌ Debes agregar al menos un sector para este evento.');
+        } else if (modo === 'butaca') {
+          alert('❌ Debes agregar al menos una butaca para este evento.');
+        } else {
+          alert('❌ Debes agregar al menos un sector o una butaca para este evento.');
+        }
+      } else {
+        alert('Por favor completá todos los campos correctamente.');
+      }
       this.form.markAllAsTouched();
       return;
     }

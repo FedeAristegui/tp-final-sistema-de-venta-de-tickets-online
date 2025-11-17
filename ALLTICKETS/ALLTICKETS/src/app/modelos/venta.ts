@@ -1,5 +1,6 @@
 export interface Venta {
   id?: number;
+  usuarioId: number | string; // Permitir string o number
   eventoId: number | string; // Permitir string o number
   eventoTitulo?: string;
   cantidad: number;

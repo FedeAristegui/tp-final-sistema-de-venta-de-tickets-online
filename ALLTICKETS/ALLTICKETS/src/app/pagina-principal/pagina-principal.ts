@@ -67,8 +67,10 @@ export class PaginaPrincipal implements OnInit {
     
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
-        this.eventos = eventos;
-        this.eventosFiltrados = eventos;
+        const hoy = new Date().toISOString().split('T')[0];
+        const eventosFuturos = eventos.filter(evento => evento.fecha >= hoy);
+        this.eventos = eventosFuturos;
+        this.eventosFiltrados = eventosFuturos;
         this.isLoading.set(false);
         this.cdr.detectChanges();
       },
