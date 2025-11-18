@@ -182,13 +182,6 @@ export class PaginaPrincipal implements OnInit {
     }
   }
 
-  cerrarSesion() {
-    localStorage.removeItem('usuarioLogueado');
-    this.usuario.set(null);
-    this.favoritosUsuario.set([]);
-    this.router.navigate(['/']);
-  }
-
   verDetalleEvento(id: number | undefined): void {
     if (id) {
       this.router.navigate(['/ficha-evento', id]);

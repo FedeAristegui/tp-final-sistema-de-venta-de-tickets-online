@@ -9,7 +9,7 @@ import { PaginaPrincipal } from '../../pagina-principal/pagina-principal';
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './perfil-usuario.html',
   styleUrls: ['./perfil-usuario.css']
 })

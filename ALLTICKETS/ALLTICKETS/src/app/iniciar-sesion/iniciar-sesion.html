@@ -12,8 +12,7 @@
       <div class="error">Contraseña requerida</div>
     }
 
-    <button type="submit" [disabled]="form.invalid">Iniciar Sesión</button>
-    <button type="button" routerLink="/menu-principal">Volver</button>
+    <button class="iniciar-sesion" type="submit" [disabled]="form.invalid">Iniciar Sesión</button>
   </form>
 
   @if (error) {

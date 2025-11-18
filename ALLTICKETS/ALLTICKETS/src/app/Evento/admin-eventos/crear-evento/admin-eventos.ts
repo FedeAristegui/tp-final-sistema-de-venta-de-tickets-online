@@ -103,7 +103,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-admin-eventos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-eventos.html',
   styleUrls: ['./admin-eventos.css']
 })

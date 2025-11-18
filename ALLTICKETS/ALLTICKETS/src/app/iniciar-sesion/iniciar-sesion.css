@@ -56,20 +56,7 @@ input[type="password"] {
   box-sizing: border-box;
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:disabled {
+.iniciar-sesion {
   width: 100%;
   padding: 12px;
   background: #7c4dff;
