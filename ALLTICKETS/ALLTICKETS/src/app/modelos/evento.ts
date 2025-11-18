@@ -5,7 +5,7 @@ export interface Evento {
   hora: string ;
   lugar: string ;
   imagen: string ;
-  categoria?: string ;
+  categoria: string ;
   modoVenta: 'sector' | 'butaca' ;
   sectores: { nombre: string; capacidad: number; precio: number }[];
   butacas: { fila: string; numero: number; precio: number; disponible: boolean }[];

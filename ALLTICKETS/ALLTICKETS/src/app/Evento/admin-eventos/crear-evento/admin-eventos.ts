@@ -460,6 +460,7 @@ export class AdminEventos implements OnInit {
       hora: String(raw.hora ?? ''),
       lugar: String(raw.lugar ?? ''),
       imagen: String(raw.imagen ?? ''),
+      categoria: String(raw.categoria ?? ''),
       modoVenta: (raw.modoVenta as 'sector' | 'butaca') ?? 'sector',
       sectores: (raw.sectores ?? []) as Evento['sectores'],
       butacas: (raw.butacas ?? []) as Evento['butacas']

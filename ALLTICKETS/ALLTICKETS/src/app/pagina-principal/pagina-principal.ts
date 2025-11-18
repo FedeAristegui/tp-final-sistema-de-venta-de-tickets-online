@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -15,23 +15,19 @@ import { Favorito } from '../modelos/favorito';
   styleUrls: ['./pagina-principal.css']
 })
 export class PaginaPrincipal implements OnInit {
-  usuario: any = null;
-  eventos: Evento[] = [];
-  eventosFiltrados: Evento[] = [];
+  usuario = signal<any>(null);
+  eventos = signal<Evento[]>([]);
+  eventosFiltrados = signal<Evento[]>([]);
   isLoading = signal(false);  
-  favoritosUsuario: string[] = []; // IDs de eventos favoritos del usuario
+  favoritosUsuario = signal<string[]>([]); // IDs de eventos favoritos del usuario
   protected readonly categorias = ['Deportes', 'Música', 'Comedia'];
 
   // Formulario de filtros
   filtrosForm: FormGroup;
-  
-  // Categorías fijas
-
 
   private readonly eventoService = inject(EventoServicio);
   private readonly favoritoService = inject(FavoritoServicio);
   private readonly router = inject(Router);
-  private readonly cdr = inject(ChangeDetectorRef); // REEMPLAZAR POR SEÑALES
   private readonly fb = inject(FormBuilder);
 
   constructor() {
@@ -50,12 +46,12 @@ export class PaginaPrincipal implements OnInit {
 
   ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
-    this.usuario = data ? JSON.parse(data) : null;
-    console.log('[PaginaPrincipal] ngOnInit - usuario:', this.usuario);
+    this.usuario.set(data ? JSON.parse(data) : null);
+    console.log('[PaginaPrincipal] ngOnInit - usuario:', this.usuario());
     this.cargarEventos();
     
     // Cargar favoritos si hay usuario logueado
-    if (this.usuario) {
+    if (this.usuario()) {
       this.cargarFavoritos();
     }
   }
@@ -63,25 +59,24 @@ export class PaginaPrincipal implements OnInit {
 
   cargarEventos(): void {
     this.isLoading.set(true);
-    this.eventos = [];
+    this.eventos.set([]);
     
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
         const hoy = new Date().toISOString().split('T')[0];
         const eventosFuturos = eventos.filter(evento => evento.fecha >= hoy);
-        this.eventos = eventosFuturos;
-        this.eventosFiltrados = eventosFuturos;
+        this.eventos.set(eventosFuturos);
+        this.eventosFiltrados.set(eventosFuturos);
         this.isLoading.set(false);
-        this.cdr.detectChanges();
       },
       error: (err) => {
-        this.eventos = [];
-        this.eventosFiltrados = [];
+        this.eventos.set([]);
+        this.eventosFiltrados.set([]);
         this.isLoading.set(false);
         alert('Error al cargar eventos. Asegúrate de que json-server esté corriendo en http://localhost:3000');
       },
       complete: () => {
-        console.log('[PaginaPrincipal] Petición completada. isLoading:', this.isLoading, 'eventos.length:', this.eventos.length);
+        console.log('[PaginaPrincipal] Petición completada. isLoading:', this.isLoading(), 'eventos.length:', this.eventos().length);
       }
     });
     
@@ -96,7 +91,7 @@ export class PaginaPrincipal implements OnInit {
   aplicarFiltros(): void {
     const filtros = this.filtrosForm.value;
     
-    this.eventosFiltrados = this.eventos.filter(evento => {
+    this.eventosFiltrados.set(this.eventos().filter(evento => {
       // Filtro por nombre/título
       const cumpleNombre = !filtros.nombre || 
         evento.titulo.toLowerCase().includes(filtros.nombre.toLowerCase()) ||
@@ -109,7 +104,7 @@ export class PaginaPrincipal implements OnInit {
       const cumpleCategoria = !filtros.categoria || evento.categoria === filtros.categoria;
 
       return cumpleNombre && cumpleFecha && cumpleCategoria;
-    });
+    }));
   }
 
   limpiarFiltros(): void {
@@ -118,33 +113,33 @@ export class PaginaPrincipal implements OnInit {
       fecha: '',
       categoria: ''
     });
-    this.eventosFiltrados = this.eventos;
+    this.eventosFiltrados.set(this.eventos());
   }
 
   cargarFavoritos(): void {
-    if (!this.usuario) return;
+    if (!this.usuario()) return;
     
-    this.favoritoService.obtenerFavoritosPorUsuario(this.usuario.id).subscribe({
+    this.favoritoService.obtenerFavoritosPorUsuario(this.usuario().id).subscribe({
       next: (favoritos) => {
-        this.favoritosUsuario = favoritos.map(f => String(f.eventoId));
-        console.log('[PaginaPrincipal] Favoritos cargados:', this.favoritosUsuario);
+        this.favoritosUsuario.set(favoritos.map(f => String(f.eventoId)));
+        console.log('[PaginaPrincipal] Favoritos cargados:', this.favoritosUsuario());
       },
       error: (err) => {
         console.error('Error al cargar favoritos:', err);
-        this.favoritosUsuario = [];
+        this.favoritosUsuario.set([]);
       }
     });
   }
 
   esFavorito(eventoId: number | undefined): boolean {
     if (!eventoId) return false;
-    return this.favoritosUsuario.includes(String(eventoId));
+    return this.favoritosUsuario().includes(String(eventoId));
   }
 
   toggleFavorito(evento: Evento, event: Event): void {
     event.stopPropagation(); // Evitar que se active el click del card
     
-    if (!this.usuario) {
+    if (!this.usuario()) {
       alert('Debes iniciar sesión para agregar favoritos');
       this.router.navigate(['/login']);
       return;
@@ -156,13 +151,12 @@ export class PaginaPrincipal implements OnInit {
     
     if (this.esFavorito(evento.id)) {
       // Quitar de favoritos
-      this.favoritoService.verificarFavorito(this.usuario.id, eventoId).subscribe({
+      this.favoritoService.verificarFavorito(this.usuario().id, eventoId).subscribe({
         next: (favoritos) => {
           if (favoritos.length > 0 && favoritos[0].id) {
             this.favoritoService.eliminarFavorito(favoritos[0].id).subscribe({
               next: () => {
-                this.favoritosUsuario = this.favoritosUsuario.filter(id => id !== eventoId);
-                this.cdr.detectChanges(); // Forzar actualización de vista
+                this.favoritosUsuario.update(favs => favs.filter(id => id !== eventoId));
                 console.log('Favorito eliminado');
               },
               error: (err) => console.error('Error al eliminar favorito:', err)
@@ -173,15 +167,14 @@ export class PaginaPrincipal implements OnInit {
     } else {
       // Agregar a favoritos
       const nuevoFavorito: Favorito = {
-        usuarioId: this.usuario.id,
+        usuarioId: this.usuario().id,
         eventoId: eventoId,
         fechaAgregado: new Date().toISOString()
       };
 
       this.favoritoService.agregarFavorito(nuevoFavorito).subscribe({
         next: () => {
-          this.favoritosUsuario.push(eventoId);
-          this.cdr.detectChanges(); // Forzar actualización de vista
+          this.favoritosUsuario.update(favs => [...favs, eventoId]);
           console.log('Favorito agregado');
         },
         error: (err) => console.error('Error al agregar favorito:', err)
@@ -191,8 +184,8 @@ export class PaginaPrincipal implements OnInit {
 
   cerrarSesion() {
     localStorage.removeItem('usuarioLogueado');
-    this.usuario = null;
-    this.favoritosUsuario = [];
+    this.usuario.set(null);
+    this.favoritosUsuario.set([]);
     this.router.navigate(['/']);
   }
 

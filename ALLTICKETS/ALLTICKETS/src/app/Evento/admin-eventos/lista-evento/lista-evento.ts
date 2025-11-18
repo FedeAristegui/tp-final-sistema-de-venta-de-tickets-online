@@ -68,5 +68,29 @@ export class ListaEvento {
     if (id == null) return;
     this.router.navigate(['/ficha-evento', id]);
   }
+eliminarEvento(id: number | string) {
+  if (id == null) return;
+  
 
+  if (!confirm('¿Estás seguro de eliminar este evento?')) {
+    return; 
+  }
+  
+ 
+  this.client.borrarEvento(id).subscribe({
+    next: () => {
+     
+      
+      
+      
+      
+      window.location.reload();
+      
+    },
+    error: (err) => {
+      console.error('Error al eliminar:', err);
+      alert('❌ Error al eliminar el evento');
+    }
+  });
+}
 }

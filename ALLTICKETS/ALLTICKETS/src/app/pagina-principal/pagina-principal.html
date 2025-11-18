@@ -1,8 +1,8 @@
 <!-- Menú de navegación -->
 <div class="menu-container">
-  @if (usuario) {
+  @if (usuario()) {
     <!-- Menú que aparece solo para admin -->
-    @if (usuario.rol === 'admin') {
+    @if (usuario().rol === 'admin') {
       <nav class="menu-admin">
         <h2>Panel de Administración</h2>
         <ul>
@@ -17,9 +17,9 @@
     }
 
     <!-- Menú que aparece solo para usuario común -->
-    @if (usuario.rol === 'usuario') {
+    @if (usuario().rol === 'usuario') {
       <nav class="menu-usuario">
-        <h2>Bienvenido, {{ usuario.nombre }}</h2>
+        <h2>Bienvenido, {{ usuario().nombre }}</h2>
         <ul>
           <li><a routerLink="/perfil/:id">Mi Perfil</a></li>
           <li><a routerLink="/favoritos">❤️ Mis Favoritos</a></li>
@@ -33,7 +33,7 @@
   } @else {
     <!-- Menú para visitantes (sin sesión) -->
     <nav class="menu-visitante">
-      <h1>🎫 AllTickets - Eventos en Vivo</h1>
+      <h1>🎫 AllTickets - Eventos</h1>
       <ul>
         <li><a routerLink="/login">Iniciar Sesión</a></li>
         <li><a routerLink="/registro">Registrarse</a></li>
@@ -96,7 +96,7 @@
         🗑️ Limpiar Filtros
       </button>
       <span class="resultados-contador">
-        {{ eventosFiltrados.length }} evento(s) encontrado(s)
+        {{ eventosFiltrados().length }} evento(s) encontrado(s)
       </span>
     </div>
   </div>
@@ -106,13 +106,13 @@
       <div class="spinner"></div>
       <p>Cargando eventos...</p>
     </div>
-  } @else if (eventosFiltrados.length > 0) {
+  } @else if (eventosFiltrados().length > 0) {
     <div class="eventos-grid">
-      @for (evento of eventosFiltrados; track evento.id) {
+      @for (evento of eventosFiltrados(); track evento.id) {
 
         <div class="evento-card" (click)="verDetalleEvento(evento.id)">
           <!-- Botón de favorito -->
-          @if (usuario && usuario.rol === 'usuario') {
+          @if (usuario() && usuario().rol === 'usuario') {
             <button 
               class="btn-favorito" 
               [class.activo]="esFavorito(evento.id)"

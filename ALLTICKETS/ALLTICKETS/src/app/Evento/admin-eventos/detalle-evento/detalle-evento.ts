@@ -11,7 +11,7 @@ import { Autenticador } from '../../../servicios/autenticador';
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, RouterLink, AdminEventos, CommonModule, FormsModule],
+  imports: [DatePipe, AdminEventos, CommonModule, FormsModule],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
