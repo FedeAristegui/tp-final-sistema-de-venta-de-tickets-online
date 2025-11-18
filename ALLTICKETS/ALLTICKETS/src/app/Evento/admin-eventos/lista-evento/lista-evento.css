@@ -111,6 +111,23 @@ tbody tr:hover {
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.45);
 }
 
+.btn-borrar{
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  transition: .3s;
+}
+
+.btn-borrar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.45);
+}
+
 /********************************
  *  BOTÓN VOLVER
  ********************************/
@@ -148,6 +165,10 @@ tbody tr:hover {
   }
 
   .btn-ver {
+    padding: 8px 14px;
+  }
+
+  .btn-borrar {
     padding: 8px 14px;
   }
 }

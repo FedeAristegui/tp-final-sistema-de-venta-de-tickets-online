@@ -29,6 +29,7 @@ export class PaginaPrincipal implements OnInit {
   private readonly favoritoService = inject(FavoritoServicio);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  
 
   constructor() {
     // Inicializar formulario reactivo
@@ -55,7 +56,6 @@ export class PaginaPrincipal implements OnInit {
       this.cargarFavoritos();
     }
   }
-
 
   cargarEventos(): void {
     this.isLoading.set(true);

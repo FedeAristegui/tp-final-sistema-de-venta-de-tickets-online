@@ -1,129 +1,166 @@
-@let evento = this.evento();
-@if (evento) {
+@if (evento()) {
+  <div class="detalle-evento">
+    <div class="header-evento">
+      <button (click)="volverAtras()" class="btn-volver">
+        <span>←</span> Volver
+      </button>
+      @if(usuario()?.rol === 'usuario') {
+        <button routerLink="/carrito">Ver Carrito</button>  
+      }        
+      <h1>{{ evento()!.titulo }}</h1>
+    </div>
 
-<p><strong>Evento:</strong> {{ evento.titulo }}</p>
+    <div class="info-basica">
+      <div class="info-item">
+        <span class="icono">📅</span>
+        <strong>Fecha:</strong> {{ evento()!.fecha | date : "dd/MM/yyyy" }}
+      </div>
+      <div class="info-item">
+        <span class="icono">🕐</span>
+        <strong>Hora:</strong> {{ evento()!.hora }}
+      </div>
+      <div class="info-item">
+        <span class="icono">📍</span>
+        <strong>Lugar:</strong> {{ evento()!.lugar }}
+      </div>
+      <div class="info-item">
+        <span class="icono">🎭</span>
+        <strong>Categoría:</strong> {{ evento()!.categoria }}
+      </div>
+    </div>
 
-
-<div class="info-principal">
-  @if (evento.imagen) {
-  <img [src]="evento.imagen" [alt]="evento.titulo">
-  } @else {
-  <div class="sin-imagen">Sin imagen disponible</div>
-  }
-
-  <div class="datos">
-    <p><strong>Fecha:</strong> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Hora:</strong> {{ evento.hora }}</p>
-    <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
-    <p><strong>Modo de venta:</strong> {{ evento.modoVenta }}</p>
-  </div>
-</div>
-
-@if (evento.modoVenta === 'sector') {
-<h3>Sectores</h3>
-@if (evento.sectores && evento.sectores.length > 0) {
-<table class="tabla">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Capacidad</th>
-      <th>Precio</th>
-      <th>Cantidad</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (s of evento.sectores; track s.nombre) {
-    <tr>
-      <td>{{ s.nombre }}</td>
-      <td>{{ s.capacidad }}</td>
-      <td>${{ s.precio }}</td>
-      <td>
-        <input type="number" [(ngModel)]="cantidadSeleccionada" min="1" [max]="s.capacidad" style="width: 60px;">
-      </td>
-      <td>
-        @if(usuario()?.rol === 'admin'){
-        <div>
-          <button (click)="toggleEdit()">Editar</button>
-          <button (click)="deleteMovie()" [disabled]="isEditing()">Eliminar</button>
+    @if (evento()!.modoVenta === 'butaca') {
+      <!-- MAPA DE BUTACAS -->
+      <div class="mapa-butacas">
+        <h2>Selecciona tus butacas</h2>
+        
+        <div class="escenario">
+          <span>ESCENARIO</span>
         </div>
-        }
-        @else if(usuario()?.rol === 'usuario'){
-        <button (click)="agregarSectorAlCarrito(s)" class="btn-agregar-carrito">
-          🛒 Agregar al Carrito
-        </button>
-        }
-      </td>
-    </tr>
-    }
-  </tbody>
-</table>
-} @else {
-<p>No hay sectores configurados.</p>
-}
-}
 
-@if (evento.modoVenta === 'butaca') {
-<h3>Butacas</h3>
-@if (evento.butacas && evento.butacas.length > 0) {
-<table class="tabla">
-  <thead>
-    <tr>
-      <th>Fila</th>
-      <th>Número</th>
-      <th>Precio</th>
-      <th>Disponible</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (b of evento.butacas; track b.numero) {
-    <tr [class.butaca-ocupada]="!b.disponible">
-      <td>{{ b.fila }}</td>
-      <td>{{ b.numero }}</td>
-      <td>${{ b.precio }}</td>
-      <td>{{ b.disponible ? 'Sí' : 'No' }}</td>
-      <td>
-        @if(usuario()?.rol === 'admin'){
-        <div>
-          <button (click)="toggleEdit()">Editar</button>
-          <button (click)="deleteMovie()" [disabled]="isEditing()">Eliminar</button>
+        <div class="butacas-container">
+          @for (fila of filasOrdenadas(); track fila) {
+            <div class="butacas-fila">
+              <span class="fila-label">{{ fila }}</span>
+              <div class="asientos">
+                @for (butaca of butacasPorFila()[fila]; track butaca.numero) {
+                  <button
+                    class="butaca"
+                    [class.disponible]="butaca.disponible"
+                    [class.ocupada]="!butaca.disponible"
+                    [class.seleccionada]="estaSeleccionada(fila, butaca.numero)"
+                    [disabled]="!butaca.disponible"
+                    (click)="seleccionarButaca(fila, butaca.numero, butaca.disponible)"
+                    [title]="'Fila ' + fila + ' - Asiento ' + butaca.numero + ' - $' + butaca.precio"
+                  >
+                    {{ butaca.numero }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
         </div>
+
+        <div class="leyenda">
+          <div class="leyenda-item">
+            <span class="butaca-ejemplo disponible"></span>
+            <span>Disponible</span>
+          </div>
+          <div class="leyenda-item">
+            <span class="butaca-ejemplo seleccionada"></span>
+            <span>Seleccionada</span>
+          </div>
+          <div class="leyenda-item">
+            <span class="butaca-ejemplo ocupada"></span>
+            <span>Ocupada</span>
+          </div>
+        </div>
+
+        @if (butacasSeleccionadas().length > 0) {
+          <div class="resumen-seleccion">
+            <h3>Butacas Seleccionadas</h3>
+            <div class="butacas-seleccionadas-lista">
+              @for (butaca of butacasSeleccionadas(); track butaca.fila + '-' + butaca.numero) {
+                <span class="butaca-tag">
+                  Fila {{ butaca.fila }} - Asiento {{ butaca.numero }}
+                </span>
+              }
+            </div>
+            <div class="total-container">
+              <span class="total-label">Total:</span>
+              <span class="total-precio">{{ totalButacas() | currency }}</span>
+            </div>
+            <div class="acciones">
+              <button (click)="limpiarSeleccion()" class="btn-limpiar">
+                Limpiar Selección
+              </button>
+              <button (click)="agregarAlCarrito()" class="btn-agregar">
+                Agregar al Carrito
+              </button>
+            </div>
+          </div>
         }
-        @else if(usuario()?.rol === 'usuario'){
-        <button (click)="agregarButacaAlCarrito(b)" [disabled]="!b.disponible" class="btn-agregar-carrito">
-          🛒 Agregar al Carrito
-        </button>
+      </div>
+    } @else {
+      <!-- SELECCIÓN POR SECTORES -->
+      <div class="sectores-container">
+        <h2>Selecciona tu sector</h2>
+        
+        <div class="sectores-grid">
+          @for (sector of evento()!.sectores; track sector.nombre) {
+            <div 
+              class="sector-card"
+              [class.seleccionado]="sectorSeleccionado() === sector.nombre"
+              [class.sin-capacidad]="sector.capacidad === 0"
+              (click)="sector.capacidad > 0 && seleccionarSector(sector.nombre)"
+            >
+              <h3>{{ sector.nombre }}</h3>
+              <div class="sector-precio">{{ sector.precio | currency }}</div>
+              <div class="sector-capacidad">
+                <div class="capacidad-barra">
+                  <div 
+                    class="capacidad-progreso"
+                    [style.width.%]="(sector.capacidad / getCapacidadDisponible(sector.nombre)) * 100"
+                  ></div>
+                </div>
+                <span class="capacidad-texto">
+                  {{ sector.capacidad }} disponibles
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (sectorSeleccionado()) {
+          <div class="cantidad-selector">
+            <h3>¿Cuántas entradas?</h3>
+            <div class="contador">
+              <button 
+                (click)="disminuirCantidad()" 
+                [disabled]="cantidadSector() <= 1"
+                class="btn-contador"
+              >
+                −
+              </button>
+              <span class="cantidad-display">{{ cantidadSector() }}</span>
+              <button 
+                (click)="aumentarCantidad()" 
+                [disabled]="cantidadSector() >= getCapacidadDisponible(sectorSeleccionado())"
+                class="btn-contador"
+              >
+                +
+              </button>
+            </div>
+            <div class="total-container">
+              <span class="total-label">Total:</span>
+              <span class="total-precio">{{ totalSector() | currency }}</span>
+            </div>
+            <button (click)="agregarAlCarrito()" class="btn-agregar">
+              Agregar al Carrito
+            </button>
+          </div>
         }
-      </td>
-    </tr>
+      </div>
     }
-  </tbody>
-</table>
-} @else {
-<p>No hay butacas configuradas.</p>
-}
-}
-
-
-@if (isEditing()) {
-  <p>Editando</p>
-  <app-admin-eventos id="form-edicion" [isEditing]="true" [evento]="evento" (edited)="handleEdit($event)" (cancelled)="toggleEdit()"></app-admin-eventos>
-}@else {
-  @if(usuario()?.rol === 'admin'){
-  <div class="acciones">
-  <a routerLink="/lista-eventos" class="btn volver-btn">Volver a la lista</a>
   </div>
-  }
-  @else if(usuario()?.rol === 'usuario'){
-  <div class="acciones">
-  <a routerLink="/menu-principal" class="btn volver-btn">Volver al menu</a>
-  </div>
-  }
-
-}
-
-
-} @else {
-  <p>No se encontró el evento.</p>
 }

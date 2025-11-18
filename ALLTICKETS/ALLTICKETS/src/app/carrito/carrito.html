@@ -50,12 +50,9 @@
 
             <div class="item-cantidad">
               <label>Cantidad:</label>
-              <input 
-                type="number" 
-                [value]="item.cantidad" 
-                min="1" 
-                (change)="actualizarCantidad($index, $event)"
-                class="input-cantidad">
+              <div>
+                {{ item.cantidad }}
+              </div>
             </div>
 
             <div class="item-precio">
@@ -237,11 +234,6 @@
                 </div>
               </form>
             }
-          } @else {
-            <div class="sin-login">
-              <p>Debes iniciar sesión para continuar con la compra</p>
-              <a routerLink="/login" class="btn-login">Iniciar Sesión</a>
-            </div>
           }
         </div>
 

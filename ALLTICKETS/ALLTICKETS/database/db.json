@@ -47,18 +47,967 @@
       "sectores": [
         {
           "nombre": "CAMPÓ VIP",
-          "capacidad": 5000,
+          "capacidad": 4990,
           "precio": 50000
         },
         {
           "nombre": "CAMPO",
-          "capacidad": 20000,
+          "capacidad": -480004,
           "precio": 25000
         },
         {
           "nombre": "PLATEA",
           "capacidad": 25000,
           "precio": 35000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "514d",
+      "titulo": "Luciano Mellera",
+      "fecha": "2026-02-23",
+      "hora": "21:30",
+      "lugar": "Teatro Roxy, Mar del Plata",
+      "imagen": "https://www.movistararena.com.ar/static/artistas/BDFE1_LucianoMellera_FileFotoFichaDesktop",
+      "categoria": "Comedia",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
+        {
+          "fila": "A",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "A",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "A",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "A",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "C",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "C",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "C",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": false
+        },
+        {
+          "fila": "E",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 1,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 2,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 3,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 4,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 5,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 6,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 7,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 8,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 9,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 10,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 11,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 12,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 13,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 14,
+          "precio": 25000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 15,
+          "precio": 25000,
+          "disponible": true
+        }
+      ]
+    },
+    {
+      "id": "69ba",
+      "titulo": "asd",
+      "fecha": "2025-11-30",
+      "hora": "21:10",
+      "lugar": "asdasd",
+      "imagen": "https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "test",
+          "capacidad": -3,
+          "precio": 123
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "1ea3",
+      "titulo": "TTTTTTT",
+      "fecha": "2025-12-25",
+      "hora": "19:22",
+      "lugar": "polo norte",
+      "imagen": "https://images.ecestaticos.com/7VSfh3KMvaFOJnfZFUqzVzWJ4q8=/0x0:1254x836/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F8fa%2F85a%2Fbfc%2F8fa85abfc917b8dc1ca3302aa931f18d.jpg",
+      "categoria": "Comedia",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "vip",
+          "capacidad": 5,
+          "precio": 1000
         }
       ],
       "butacas": []
@@ -85,7 +1034,250 @@
       "tipo": "Visa",
       "esPrincipal": true,
       "fechaAgregada": "2025-11-18T01:07:35.962Z"
+    },
+    {
+      "id": "g31j1uj",
+      "usuarioId": "8486",
+      "numeroTarjeta": "4214",
+      "titular": "valen carzon",
+      "vencimiento": "10/32",
+      "tipo": "Visa",
+      "esPrincipal": true,
+      "fechaAgregada": "2025-11-18T19:40:54.851Z"
     }
   ],
-  "ventas": []
+  "carritos": [
+    {
+      "usuarioId": "8486",
+      "items": [],
+      "fechaActualizacion": "2025-11-18T22:21:26.330Z",
+      "id": "cart-8486"
+    },
+    {
+      "usuarioId": "7083",
+      "items": [],
+      "fechaActualizacion": "2025-11-18T21:35:43.051Z",
+      "id": "bc05"
+    },
+    {
+      "usuarioId": "0ab4",
+      "items": [
+        {
+          "eventoId": "1ea3",
+          "cantidad": 2,
+          "tipoEntrada": "sector",
+          "detalleEntrada": "vip",
+          "precioUnitario": 1000
+        }
+      ],
+      "fechaActualizacion": "2025-11-18T22:20:42.818Z",
+      "id": "2d07"
+    }
+  ],
+  "ventas": [
+    {
+      "id": "312f",
+      "eventoId": "2fcd",
+      "usuarioId": "8486",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 3,
+      "fecha": "2025-11-18T19:41:10.151Z",
+      "total": 75000,
+      "tipo": "sector",
+      "detalle": "CAMPO",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPO",
+          "cantidad": 3
+        }
+      ]
+    },
+    {
+      "id": "2e2a",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T19:50:02.019Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila C - Butaca 5",
+      "butacasVendidas": [
+        {
+          "fila": "C",
+          "numero": 5
+        }
+      ]
+    },
+    {
+      "id": "0927",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T19:50:02.019Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila C - Butaca 7",
+      "butacasVendidas": [
+        {
+          "fila": "C",
+          "numero": 7
+        }
+      ]
+    },
+    {
+      "id": "e2c4",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T19:50:02.019Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila C - Butaca 6",
+      "butacasVendidas": [
+        {
+          "fila": "C",
+          "numero": 6
+        }
+      ]
+    },
+    {
+      "id": "4ea0",
+      "eventoId": "2fcd",
+      "usuarioId": "8486",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 500001,
+      "fecha": "2025-11-18T20:51:05.314Z",
+      "total": 12500025000,
+      "tipo": "sector",
+      "detalle": "CAMPO",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPO",
+          "cantidad": 500001
+        }
+      ]
+    },
+    {
+      "id": "723e",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T21:09:54.499Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila E - Butaca 8",
+      "butacasVendidas": [
+        {
+          "fila": "E",
+          "numero": 8
+        }
+      ]
+    },
+    {
+      "id": "c883",
+      "eventoId": "69ba",
+      "usuarioId": "7083",
+      "eventoTitulo": "asd",
+      "cantidad": 6,
+      "fecha": "2025-11-18T21:09:54.499Z",
+      "total": 738,
+      "tipo": "sector",
+      "detalle": "test",
+      "sectoresVendidos": [
+        {
+          "nombre": "test",
+          "cantidad": 6
+        }
+      ]
+    },
+    {
+      "id": "238b",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T21:10:59.501Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila E - Butaca 8",
+      "butacasVendidas": [
+        {
+          "fila": "E",
+          "numero": 8
+        }
+      ]
+    },
+    {
+      "id": "332a",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T21:11:28.347Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila E - Butaca 8",
+      "butacasVendidas": [
+        {
+          "fila": "E",
+          "numero": 8
+        }
+      ]
+    },
+    {
+      "id": "035d",
+      "eventoId": "2fcd",
+      "usuarioId": "7083",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 3,
+      "fecha": "2025-11-18T21:21:55.976Z",
+      "total": 150000,
+      "tipo": "sector",
+      "detalle": "CAMPÓ VIP",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPÓ VIP",
+          "cantidad": 3
+        }
+      ]
+    },
+    {
+      "id": "6015",
+      "eventoId": "2fcd",
+      "usuarioId": "7083",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 4,
+      "fecha": "2025-11-18T21:32:12.243Z",
+      "total": 200000,
+      "tipo": "sector",
+      "detalle": "CAMPÓ VIP",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPÓ VIP",
+          "cantidad": 4
+        }
+      ]
+    },
+    {
+      "id": "d65d",
+      "eventoId": "2fcd",
+      "usuarioId": "7083",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 3,
+      "fecha": "2025-11-18T21:35:43.044Z",
+      "total": 150000,
+      "tipo": "sector",
+      "detalle": "CAMPÓ VIP",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPÓ VIP",
+          "cantidad": 3
+        }
+      ]
+    }
+  ]
 }

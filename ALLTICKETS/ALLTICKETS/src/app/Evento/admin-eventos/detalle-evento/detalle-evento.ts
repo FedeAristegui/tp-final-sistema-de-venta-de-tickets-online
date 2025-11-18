@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, linkedSignal, signal} from '@angular/core';
+import { Component, inject, linkedSignal, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../../servicios/evento.servicio';
 import { CarritoServicio } from '../../../servicios/carrito.servicio';
@@ -6,12 +6,11 @@ import { Evento } from '../../../modelos/evento';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AdminEventos } from "../crear-evento/admin-eventos";
 import { Autenticador } from '../../../servicios/autenticador';
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, AdminEventos, CommonModule, FormsModule],
+  imports: [DatePipe, CommonModule, FormsModule, RouterLink],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
@@ -22,19 +21,44 @@ export class detalleEvento {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly id = this.route.snapshot.paramMap.get('id');
+  private readonly autenticador = inject(Autenticador);
 
   protected readonly eventoFuente = toSignal(this.cliente.obtenerEvento(this.id!));
   protected readonly evento = linkedSignal(() => this.eventoFuente());
   protected readonly isEditing = signal(false);
-  
-  private readonly autenticador = inject(Autenticador);
-
   protected readonly usuario = signal(this.autenticador.obtenerUsuarioActual());
 
-  // Variables para la compra
-  protected cantidadSeleccionada = signal<number>(1);
+  // ====== SISTEMA DE BUTACAS ======
+  protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
+
+  // Butacas agrupadas por fila
+  protected butacasPorFila = computed(() => {
+    const evento = this.evento();
+    if (!evento?.butacas) return {};
+
+    const agrupadas: { [fila: string]: any[] } = {};
+    
+    evento.butacas.forEach(butaca => {
+      if (!agrupadas[butaca.fila]) {
+        agrupadas[butaca.fila] = [];
+      }
+      agrupadas[butaca.fila].push(butaca);
+    });
+
+    Object.keys(agrupadas).forEach(fila => {
+      agrupadas[fila].sort((a, b) => a.numero - b.numero);
+    });
+
+    return agrupadas;
+  });
+
+  protected filasOrdenadas = computed(() => {
+    return Object.keys(this.butacasPorFila()).sort();
+  });
+
+  // ====== SISTEMA DE SECTORES ======
   protected sectorSeleccionado = signal<string>('');
-  protected butacaSeleccionada = signal<{ fila: string; numero: number; precio: number } | null>(null);
+  protected cantidadSector = signal<number>(1);
 
   toggleEdit(){
     this.isEditing.set(!this.isEditing());
@@ -49,29 +73,155 @@ export class detalleEvento {
   handleEdit(evento: Evento){
     this.evento.set(evento);
     this.toggleEdit();
-    
-
   }
 
-  deleteMovie(){
+  // ====== MÉTODOS DE BUTACAS ======
+  seleccionarButaca(fila: string, numero: number, disponible: boolean): void {
+    if (!disponible) {
+      alert('⚠️ Esta butaca no está disponible');
+      return;
+    }
 
-    if(confirm('Desea borrar la pelicula?')){
-      this.cliente.borrarEvento(this.id!).subscribe(() =>{
-        alert('Pelicula borrada con exito');
-        this.router.navigateByUrl('/cartelera');
-      })
+    const butacas = this.butacasSeleccionadas();
+    const index = butacas.findIndex(b => b.fila === fila && b.numero === numero);
+
+    if (index >= 0) {
+      this.butacasSeleccionadas.update(lista => 
+        lista.filter(b => !(b.fila === fila && b.numero === numero))
+      );
+    } else {
+      this.butacasSeleccionadas.update(lista => [...lista, { fila, numero }]);
     }
   }
 
-  // Agregar sector al carrito
-  agregarSectorAlCarrito(sector: { nombre: string; capacidad: number; precio: number }): void {
+  estaSeleccionada(fila: string, numero: number): boolean {
+    return this.butacasSeleccionadas().some(b => b.fila === fila && b.numero === numero);
+  }
+
+  protected totalButacas = computed(() => {
+    const evento = this.evento();
+    if (!evento?.butacas) return 0;
+
+    return this.butacasSeleccionadas().reduce((total, sel) => {
+      const butaca = evento.butacas.find(b => b.fila === sel.fila && b.numero === sel.numero);
+      return total + (butaca?.precio || 0);
+    }, 0);
+  });
+
+  limpiarSeleccion(): void {
+    this.butacasSeleccionadas.set([]);
+  }
+
+  // ====== MÉTODOS DE SECTORES ======
+  getCapacidadDisponible(nombreSector: string): number {
+    const evento = this.evento();
+    const sector = evento?.sectores.find(s => s.nombre === nombreSector);
+    return sector?.capacidad || 0;
+  }
+
+  seleccionarSector(nombreSector: string): void {
+    this.sectorSeleccionado.set(nombreSector);
+    this.cantidadSector.set(1);
+  }
+
+  aumentarCantidad(): void {
+    const sector = this.evento()?.sectores.find(s => s.nombre === this.sectorSeleccionado());
+    if (!sector) return;
+    
+    const disponible = this.getCapacidadDisponible(sector.nombre);
+    if (this.cantidadSector() < disponible) {
+      this.cantidadSector.update(c => c + 1);
+    }
+  }
+
+  disminuirCantidad(): void {
+    if (this.cantidadSector() > 1) {
+      this.cantidadSector.update(c => c - 1);
+    }
+  }
+
+  protected totalSector = computed(() => {
+    const evento = this.evento();
+    const sectorNombre = this.sectorSeleccionado();
+    if (!evento || !sectorNombre) return 0;
+
+    const sector = evento.sectores.find(s => s.nombre === sectorNombre);
+    return (sector?.precio || 0) * this.cantidadSector();
+  });
+
+  // ====== AGREGAR AL CARRITO ======
+  agregarAlCarrito(): void {
     const evento = this.evento();
     if (!evento) return;
 
-    const cantidad = this.cantidadSeleccionada();
+    if (!this.usuario()) {
+      alert('⚠️ Debes iniciar sesión para agregar al carrito');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (evento.modoVenta === 'butaca') {
+      this.agregarButacasAlCarrito();
+    } else {
+      this.agregarSectorAlCarrito();
+    }
+  }
+
+  private agregarButacasAlCarrito(): void {
+    const butacas = this.butacasSeleccionadas();
+    if (butacas.length === 0) {
+      alert('⚠️ Debes seleccionar al menos una butaca');
+      return;
+    }
+
+    const evento = this.evento()!;
     
-    if (cantidad <= 0 || cantidad > sector.capacidad) {
-      alert(`La cantidad debe estar entre 1 y ${sector.capacidad}`);
+    butacas.forEach(sel => {
+      const butaca = evento.butacas.find(b => b.fila === sel.fila && b.numero === sel.numero);
+      if (butaca) {
+        this.carritoServicio.agregarAlCarrito({
+          evento: evento,
+          cantidad: 1,
+          tipoEntrada: 'butaca',
+          detalleEntrada: `Fila ${butaca.fila} - Butaca ${butaca.numero}`,
+          precioUnitario: butaca.precio
+        });
+      }
+    });
+
+    alert(`✅ ${butacas.length} butaca(s) agregada(s) al carrito`);
+    this.limpiarSeleccion();
+
+    // Sincronizar carrito con servidor si hay usuario logueado
+    const usuarioLocal = this.usuario();
+    if (usuarioLocal && usuarioLocal.id) {
+      try {
+        this.carritoServicio.sincronizarConServidor(String(usuarioLocal.id)).subscribe({
+          next: () => {},
+          error: (err) => console.error('Error sincronizando carrito (butacas):', err)
+        });
+      } catch (e) {
+        console.error('Error iniciando sincronización de carrito (butacas):', e);
+      }
+    }
+  }
+
+  private agregarSectorAlCarrito(): void {
+    const sectorNombre = this.sectorSeleccionado();
+    if (!sectorNombre) {
+      alert('⚠️ Debes seleccionar un sector');
+      return;
+    }
+
+    const evento = this.evento()!;
+    const sector = evento.sectores.find(s => s.nombre === sectorNombre);
+    if (!sector) return;
+
+    const cantidad = this.cantidadSector();
+    const disponible = this.getCapacidadDisponible(sector.nombre);
+
+    if (cantidad > disponible) {
+      alert(`⚠️ Solo hay ${disponible} entradas disponibles`);
       return;
     }
 
@@ -83,29 +233,39 @@ export class detalleEvento {
       precioUnitario: sector.precio
     });
 
-    alert(`Se agregaron ${cantidad} entrada(s) para ${sector.nombre} al carrito`);
-    this.cantidadSeleccionada.set(1);
-  }
+    alert(`✅ ${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`);
+    this.sectorSeleccionado.set('');
+    this.cantidadSector.set(1);
 
-  // Agregar butaca al carrito
-  agregarButacaAlCarrito(butaca: { fila: string; numero: number; precio: number; disponible: boolean }): void {
-    const evento = this.evento();
-    if (!evento) return;
-
-    if (!butaca.disponible) {
-      alert('Esta butaca no está disponible');
-      return;
+    // Sincronizar carrito con servidor si hay usuario logueado
+    const usuarioLocal = this.usuario();
+    if (usuarioLocal && usuarioLocal.id) {
+      try {
+        this.carritoServicio.sincronizarConServidor(String(usuarioLocal.id)).subscribe({
+          next: () => {},
+          error: (err) => console.error('Error sincronizando carrito (sector):', err)
+        });
+      } catch (e) {
+        console.error('Error iniciando sincronización de carrito (sector):', e);
+      }
     }
-
-    this.carritoServicio.agregarAlCarrito({
-      evento: evento,
-      cantidad: 1,
-      tipoEntrada: 'butaca',
-      detalleEntrada: `Fila ${butaca.fila} - Butaca ${butaca.numero}`,
-      precioUnitario: butaca.precio
-    });
-
-    alert(`Butaca Fila ${butaca.fila} - Número ${butaca.numero} agregada al carrito`);
   }
-  
+
+  deleteMovie(){
+    if(confirm('Desea borrar el evento?')){
+      this.cliente.borrarEvento(this.id!).subscribe(() =>{
+        alert('Evento borrado con éxito');
+        this.router.navigateByUrl('/menu-principal');
+      })
+    }
+  }
+
+  volverAtras(): void {
+    const usuario = this.usuario();
+    if (usuario?.rol === 'admin') {
+      this.router.navigate(['/lista-eventos']);
+    } else {
+      this.router.navigate(['/menu-principal']);
+    }
+  }
 }
