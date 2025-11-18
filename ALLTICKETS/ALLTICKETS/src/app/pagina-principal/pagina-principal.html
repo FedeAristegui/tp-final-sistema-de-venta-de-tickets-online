@@ -95,13 +95,7 @@
               <p><span class="icono">🕐</span> {{ evento.hora }}</p>
               <p><span class="icono">📍</span> {{ evento.lugar }}</p>
             </div>
-            <div class="evento-tipo">
-              @if (evento.categoria) {
-                <span class="badge badge-categoria">{{ evento.categoria }}</span>
-              } @else {
-                <span class="badge badge-sin-categoria">Sin categoría</span>
-              }
-            </div>
+
             <button class="btn-ver-mas">Ver Detalles →</button>
           </div>
         </div>

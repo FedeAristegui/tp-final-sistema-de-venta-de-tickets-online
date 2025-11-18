@@ -91,12 +91,14 @@
               <span class="total-precio">{{ totalButacas() | currency }}</span>
             </div>
             <div class="acciones">
-              <button (click)="limpiarSeleccion()" class="btn-limpiar">
+              @if (usuario()?.rol !== 'admin') {
+                <button (click)="limpiarSeleccion()" class="btn-limpiar">
                 Limpiar Selección
               </button>
               <button (click)="agregarAlCarrito()" class="btn-agregar">
                 Agregar al Carrito
               </button>
+              }  
             </div>
           </div>
         }
@@ -133,7 +135,7 @@
 
         @if (sectorSeleccionado()) {
           <div class="cantidad-selector">
-            <h3>¿Cuántas entradas?</h3>
+            <h3>¿Cuántas entradas? (Máximo 10 entradas)</h3>
             <div class="contador">
               <button 
                 (click)="disminuirCantidad()" 
@@ -146,6 +148,7 @@
               <button 
                 (click)="aumentarCantidad()" 
                 [disabled]="cantidadSector() >= getCapacidadDisponible(sectorSeleccionado())"
+                [disabled]="cantidadSector() > 9"
                 class="btn-contador"
               >
                 +
@@ -155,9 +158,11 @@
               <span class="total-label">Total:</span>
               <span class="total-precio">{{ totalSector() | currency }}</span>
             </div>
-            <button (click)="agregarAlCarrito()" class="btn-agregar">
+            @if (usuario()?.rol !== 'admin') {
+              <button (click)="agregarAlCarrito()" class="btn-agregar">
               Agregar al Carrito
             </button>
+            } 
           </div>
         }
       </div>

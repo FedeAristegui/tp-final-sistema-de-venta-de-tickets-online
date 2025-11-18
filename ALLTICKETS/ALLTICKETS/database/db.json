@@ -156,13 +156,13 @@
           "fila": "A",
           "numero": 14,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "A",
           "numero": 15,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "B",
@@ -660,7 +660,7 @@
           "fila": "G",
           "numero": 8,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "G",
@@ -672,7 +672,7 @@
           "fila": "G",
           "numero": 10,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "G",
@@ -1050,7 +1050,7 @@
     {
       "usuarioId": "8486",
       "items": [],
-      "fechaActualizacion": "2025-11-18T22:21:26.330Z",
+      "fechaActualizacion": "2025-11-18T23:49:10.662Z",
       "id": "cart-8486"
     },
     {
@@ -1068,10 +1068,43 @@
           "tipoEntrada": "sector",
           "detalleEntrada": "vip",
           "precioUnitario": 1000
+        },
+        {
+          "eventoId": "2fcd",
+          "cantidad": 2,
+          "tipoEntrada": "sector",
+          "detalleEntrada": "PLATEA",
+          "precioUnitario": 35000
         }
       ],
-      "fechaActualizacion": "2025-11-18T22:20:42.818Z",
+      "fechaActualizacion": "2025-11-18T22:35:36.681Z",
       "id": "2d07"
+    }
+  ],
+  "descuentos": [
+    {
+      "codigo": "hola",
+      "porcentaje": 10,
+      "fechaInicio": "2025-11-18",
+      "fechaFin": "2025-12-06",
+      "activo": true,
+      "id": "f627"
+    },
+    {
+      "id": "4bb0",
+      "codigo": "chau",
+      "porcentaje": 10,
+      "fechaInicio": "2025-11-25",
+      "fechaFin": "2025-12-07",
+      "activo": true
+    },
+    {
+      "id": "b266",
+      "codigo": "bye",
+      "porcentaje": 20,
+      "fechaInicio": "2025-11-22",
+      "fechaFin": "2025-12-06",
+      "activo": true
     }
   ],
   "ventas": [
@@ -1276,6 +1309,74 @@
         {
           "nombre": "CAMPÓ VIP",
           "cantidad": 3
+        }
+      ]
+    },
+    {
+      "id": "be38",
+      "eventoId": "514d",
+      "usuarioId": "8486",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T23:23:45.633Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila G - Butaca 10",
+      "butacasVendidas": [
+        {
+          "fila": "G",
+          "numero": 10
+        }
+      ]
+    },
+    {
+      "id": "273d",
+      "eventoId": "514d",
+      "usuarioId": "8486",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T23:42:00.704Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila G - Butaca 8",
+      "butacasVendidas": [
+        {
+          "fila": "G",
+          "numero": 8
+        }
+      ]
+    },
+    {
+      "id": "d7d6",
+      "eventoId": "514d",
+      "usuarioId": "8486",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T23:42:35.706Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila A - Butaca 15",
+      "butacasVendidas": [
+        {
+          "fila": "A",
+          "numero": 15
+        }
+      ]
+    },
+    {
+      "id": "5f91",
+      "eventoId": "514d",
+      "usuarioId": "8486",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-18T23:49:10.654Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila A - Butaca 14",
+      "butacasVendidas": [
+        {
+          "fila": "A",
+          "numero": 14
         }
       ]
     }

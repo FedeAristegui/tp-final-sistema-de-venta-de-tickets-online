@@ -2,7 +2,7 @@ import { Component, effect, EventEmitter, inject, input, Output, output } from '
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ClienteDescuento } from '../cliente-descuento';
 import { Descuento } from '../../modelos/descuento';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 // Validador: fecha inicio no puede ser pasada (sí permite hoy)
 export const minDateTodayValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -48,6 +48,7 @@ export class FormularioDescuento {
   private readonly formBuilder = inject(FormBuilder);
   private readonly descuentoClient = inject(ClienteDescuento);
   @Output() cancelled = new EventEmitter<void>();
+  protected readonly router = inject(Router);
 
 
   // 🔹 Inputs y Outputs
@@ -93,6 +94,7 @@ export class FormularioDescuento {
         // Crear nuevo descuento
         this.descuentoClient.agregarDescuento(descuento).subscribe(() => {
           alert('🎉 Descuento creado con éxito');
+          this.router.navigateByUrl('/lista-descuento');
           this.form.reset({ activo: true });
         });
       } else if (this.descuento()) {

@@ -28,14 +28,14 @@
           <li><a routerLink="/mis-tarjetas">💳 Mis Tarjetas</a></li>
           <li><a routerLink="/carrito">🛒 Carrito</a></li>
           <li><a routerLink="/historial-compras">🛍️ Mis compras</a></li>
-          <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+          <li><a class="btn-cerrar" routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
         </ul>
       </nav>
     }
   } @else {
     <!-- Menú para visitantes (sin sesión) -->
     <nav class="menu-visitante">
-      <h1>🎫 AllTickets - Eventos en Vivo</h1>
+      <h1>🎫 AllTickets</h1>
       <ul>
         <li><a routerLink="/login">Iniciar Sesión</a></li>
         <li><a routerLink="/registro">Registrarse</a></li>

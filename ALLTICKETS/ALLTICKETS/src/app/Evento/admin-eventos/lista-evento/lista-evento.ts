@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lista-evento',
-  imports: [DatePipe, RouterLink, FormsModule],
+  imports: [DatePipe, FormsModule],
   templateUrl: './lista-evento.html',
   styleUrl: './lista-evento.css',
 })

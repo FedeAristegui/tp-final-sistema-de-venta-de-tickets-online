@@ -42,6 +42,12 @@ export class CarritoServicio {
     );
 
     if (indiceExistente !== -1) {
+      // Si es butaca, no incrementar cantidad (cada butaca es única)
+      if (item.tipoEntrada === 'butaca') {
+        console.warn('Esta butaca ya está en el carrito');
+        return;
+      }
+      // Si es sector, incrementar cantidad
       const nuevosItems = [...items];
       nuevosItems[indiceExistente].cantidad += item.cantidad;
       this.itemsCarrito.set(nuevosItems);

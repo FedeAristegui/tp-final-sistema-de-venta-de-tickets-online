@@ -130,7 +130,7 @@ export class detalleEvento {
     
     const disponible = this.getCapacidadDisponible(sector.nombre);
     if (this.cantidadSector() < disponible) {
-      this.cantidadSector.update(c => c + 1);
+        this.cantidadSector.update(c => c + 1);
     }
   }
 
@@ -175,21 +175,45 @@ export class detalleEvento {
     }
 
     const evento = this.evento()!;
+    const itemsCarrito = this.carritoServicio.obtenerItems()();
+    const butacasYaEnCarrito: string[] = [];
+    const butacasAgregadas: string[] = [];
     
     butacas.forEach(sel => {
       const butaca = evento.butacas.find(b => b.fila === sel.fila && b.numero === sel.numero);
       if (butaca) {
-        this.carritoServicio.agregarAlCarrito({
-          evento: evento,
-          cantidad: 1,
-          tipoEntrada: 'butaca',
-          detalleEntrada: `Fila ${butaca.fila} - Butaca ${butaca.numero}`,
-          precioUnitario: butaca.precio
-        });
+        const detalleButaca = `Fila ${butaca.fila} - Butaca ${butaca.numero}`;
+        
+        // Verificar si esta butaca específica ya está en el carrito
+        const yaExiste = itemsCarrito.some(item => 
+          item.evento.id === evento.id && 
+          item.detalleEntrada === detalleButaca
+        );
+        
+        if (yaExiste) {
+          butacasYaEnCarrito.push(detalleButaca);
+        } else {
+          this.carritoServicio.agregarAlCarrito({
+            evento: evento,
+            cantidad: 1,
+            tipoEntrada: 'butaca',
+            detalleEntrada: detalleButaca,
+            precioUnitario: butaca.precio
+          });
+          butacasAgregadas.push(detalleButaca);
+        }
       }
     });
 
-    alert(`✅ ${butacas.length} butaca(s) agregada(s) al carrito`);
+    // Mostrar mensaje apropiado
+    if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
+      alert(`✅ ${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
+    } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
+      alert(`✅ ${butacasAgregadas.length} butaca(s) agregada(s) al carrito\n\n⚠️ ${butacasYaEnCarrito.length} butaca(s) ya estaba(n) en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+    } else {
+      alert(`⚠️ Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+    }
+
     this.limpiarSeleccion();
 
     // Sincronizar carrito con servidor si hay usuario logueado

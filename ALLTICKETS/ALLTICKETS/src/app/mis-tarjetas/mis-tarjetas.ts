@@ -1,9 +1,33 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { Tarjeta } from '../modelos/tarjeta';
+
+export const tarjetaNoVencidaValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) return null;
+  
+  const match = control.value.match(/^(\d{2})\/(\d{2})$/);
+  if (!match) return null; 
+  
+  const mes = parseInt(match[1], 10);
+  const año = parseInt(match[2], 10) + 2000;
+  
+  const hoy = new Date();
+  const mesActual = hoy.getMonth() + 1; 
+  const añoActual = hoy.getFullYear();
+  
+  if (año < añoActual) {
+    return { tarjetaVencida: true };
+  }
+  
+  if (año === añoActual && mes < mesActual) {
+    return { tarjetaVencida: true };
+  }
+  
+  return null;
+};
 
 @Component({
   selector: 'app-mis-tarjetas',
@@ -28,11 +52,15 @@ export class MisTarjetas implements OnInit {
     this.tarjetaForm = this.fb.group({
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
       titular: ['', [Validators.required, Validators.minLength(3)]],
-      vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
-      cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+      vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), tarjetaNoVencidaValidator]],
+      cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
       tipo: ['Visa', Validators.required],
       esPrincipal: [false]
     });
+  }
+
+  get vencimiento(){
+    return this.tarjetaForm.controls['vencimiento'];
   }
 
   ngOnInit() {

@@ -4,6 +4,7 @@
   align-items: center;  
   height: 100vh;           
   background-color: #667eea;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .login-container h2 {
@@ -20,6 +21,7 @@
   border: 1px solid #d0d0d0;
   outline: none;
   font-size: 14px;
+  margin-bottom: 15px;
 }
 
 .login-container {
@@ -64,8 +66,10 @@ input[type="password"] {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
+  font-weight: bold;
   transition: 0.2s;
+
 }
 
 a button {
