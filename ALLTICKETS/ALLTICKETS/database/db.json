@@ -13,13 +13,13 @@
     },
     {
       "id": "8486",
-      "nombre": "uuu",
-      "apellido": "uuu",
+      "nombre": "Probando",
+      "apellido": "ghhgmhmg",
       "email": "uuu@gmail.com",
       "contrasena": "hola123",
       "rol": "usuario",
       "fechaRegistro": "2025-11-17T21:21:50.643Z",
-      "ultimaActividad": "2025-11-17T21:21:50.643Z",
+      "ultimaActividad": "2025-11-18T18:52:09.468Z",
       "activo": true
     },
     {
@@ -64,11 +64,7 @@
       "butacas": []
     }
   ],
-
-  "favoritos": [
-   
-    
-  ],
+  "favoritos": [],
   "tarjetas": [
     {
       "id": "zu06ses",
@@ -91,9 +87,5 @@
       "fechaAgregada": "2025-11-18T01:07:35.962Z"
     }
   ],
-  "ventas": [
-  
-   
-   
-  ]
+  "ventas": []
 }

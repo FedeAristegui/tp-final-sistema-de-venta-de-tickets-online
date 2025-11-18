@@ -1,10 +1,9 @@
 <div class="contenedor-estadisticas">
   <div class="header">
     <h1>📊 Estadísticas de Ventas</h1>
-    <p class="subtitulo">Panel de control de entradas vendidas por evento</p>
   </div>
 
-  @if (isLoading) {
+  @if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>
       <p>Cargando estadísticas...</p>
@@ -14,40 +13,36 @@
     <!-- Resumen General -->
     <div class="resumen-general">
       <div class="tarjeta-resumen">
-        <div class="icono">🎫</div>
         <div class="contenido">
-          <h3>{{ totalEntradasVendidas }}</h3>
+          <h3>{{ totalEntradasVendidas() }}</h3>
           <p>Entradas Vendidas</p>
         </div>
       </div>
 
       <div class="tarjeta-resumen">
-        <div class="icono">💰</div>
         <div class="contenido">
-          <h3>${{ totalRecaudadoGeneral | number:'1.2-2' }}</h3>
+          <h3>${{ totalRecaudadoGeneral() | number:'1.2-2' }}</h3>
           <p>Total Recaudado</p>
         </div>
       </div>
 
       <div class="tarjeta-resumen">
-        <div class="icono">📈</div>
         <div class="contenido">
-          <h3>{{ promedioOcupacion | number:'1.0-0' }}%</h3>
+          <h3>{{ promedioOcupacion() | number:'1.0-0' }}%</h3>
           <p>Ocupación Promedio</p>
         </div>
       </div>
 
       <div class="tarjeta-resumen">
-        <div class="icono">🎪</div>
         <div class="contenido">
-          <h3>{{ estadisticas.length }}</h3>
+          <h3>{{ estadisticas().length }}</h3>
           <p>Eventos Totales</p>
         </div>
       </div>
     </div>
 
     <!-- Tabla de Estadísticas por Evento -->
-    @if (estadisticas.length > 0) {
+    @if (estadisticas().length > 0) {
       <div class="tabla-container">
         <h2>Detalle por Evento</h2>
         <table class="tabla-estadisticas">
@@ -62,7 +57,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (stat of estadisticas; track stat.eventoId) {
+            @for (stat of estadisticas(); track stat.eventoId) {
               <tr>
                 <td class="evento-titulo">
                   <strong>{{ stat.eventoTitulo }}</strong>
@@ -143,13 +138,13 @@
       <div class="grafico-barras">
         <h2>Ranking de Eventos Más Vendidos</h2>
         <div class="barras-container">
-          @for (stat of estadisticas.slice(0, 5); track stat.eventoId) {
+          @for (stat of estadisticas().slice(0, 5); track stat.eventoId) {
             <div class="barra-item">
               <div class="barra-label">{{ stat.eventoTitulo }}</div>
               <div class="barra-visual">
                 <div 
                   class="barra-fill" 
-                  [style.width.%]="(stat.totalVendidas / estadisticas[0].totalVendidas) * 100">
+                  [style.width.%]="(stat.totalVendidas / estadisticas()[0].totalVendidas) * 100">
                   <span class="barra-valor">{{ stat.totalVendidas }}</span>
                 </div>
               </div>
@@ -165,9 +160,5 @@
       </div>
     }
 
-    <div class="acciones">
-      <button routerLink="/menu-principal" class="btn-volver">← Volver al Menú Principal</button>
-      <button (click)="cargarEstadisticas()" class="btn-actualizar">🔄 Actualizar Datos</button>
-    </div>
   }
 </div>

@@ -39,7 +39,7 @@ export const dateFinValidator: ValidatorFn = (group: AbstractControl): Validatio
 
 @Component({
   selector: 'app-formulario-descuento',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './formulario-descuento.html',
   styleUrl: './formulario-descuento.css',
 })

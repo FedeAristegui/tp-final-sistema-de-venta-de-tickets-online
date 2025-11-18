@@ -1,22 +1,26 @@
 <div class="perfil-container">
   
-  <h1>Mi Perfil</h1>
+  <div class="header">
+    <h1>🧍🏻‍♂️ Mi Perfil</h1>
+    <p>Bienvenido a tu perfil personal. Aquí puedes ver y editar tu información</p>
+  </div>  
 
   @if (mensaje) {
     <div class="mensaje">{{ mensaje }}</div>
   }
 
+
   @if (usuario) {
+    
     <div class="perfil-card">
+      
     @if (!editando) {
+
       <div class="campo">
         <strong>Nombre:</strong> {{ usuario.nombre }} {{ usuario.apellido }}
       </div>
       <div class="campo">
         <strong>Email:</strong> {{ usuario.email }}
-      </div>
-      <div class="campo">
-        <strong>Rol:</strong> {{ usuario.rol }}
       </div>
       <div class="campo">
         <strong>Fecha de Registro:</strong> {{ usuario.fechaRegistro | date: 'dd/MM/yyyy' }}

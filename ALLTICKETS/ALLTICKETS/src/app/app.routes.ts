@@ -17,6 +17,7 @@ import { clienteGuard } from './guards/cliente.guard';
 import { authGuard } from './guards/auth.guard';
 import { formIncompletoGuard } from './guards/form.incompleto.guard';
 import { HistorialCompras } from './historial-compras/historial-compras';
+import { Estadisticas } from './estadisticas/estadisticas';
 
 
 
@@ -89,6 +90,11 @@ export const routes: Routes = [
     path: 'historial-compras', component: HistorialCompras,
     title: 'Historial de Compras',
     canActivate: [clienteGuard]
+  },
+  {
+    path: 'estadisticas', component: Estadisticas,
+    title: 'Estadísticas',
+    canActivate: [adminGuard]
   },
   { 
     path: '**', redirectTo: 'menu-principal' 

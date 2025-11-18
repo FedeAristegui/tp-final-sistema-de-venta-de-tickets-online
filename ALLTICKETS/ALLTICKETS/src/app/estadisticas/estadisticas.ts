@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { VentaServicio } from '../servicios/venta.servicio';
@@ -7,7 +7,7 @@ import { EstadisticaEvento } from '../modelos/venta';
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './estadisticas.html',
   styleUrls: ['./estadisticas.css']
 })
@@ -15,35 +15,35 @@ export class Estadisticas implements OnInit {
   
   private readonly ventaService = inject(VentaServicio);
   
-  protected estadisticas: EstadisticaEvento[] = [];
-  protected isLoading = true;
-  protected totalEntradasVendidas = 0;
-  protected totalRecaudadoGeneral = 0;
-  protected promedioOcupacion = 0;
+  protected estadisticas = signal<EstadisticaEvento[]>([]);
+  protected isLoading = signal(false);
+  protected totalEntradasVendidas = signal(0);
+  protected totalRecaudadoGeneral = signal(0);
+  protected promedioOcupacion = signal(0);
 
   ngOnInit(): void {
     this.cargarEstadisticas();
   }
 
   cargarEstadisticas(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     console.log('Cargando estadísticas...');
     
     this.ventaService.obtenerEstadisticas().subscribe({
       next: (stats) => {
         console.log('Estadísticas recibidas:', stats);
-        this.estadisticas = stats.sort((a, b) => b.totalVendidas - a.totalVendidas);
+        this.estadisticas.set(stats.sort((a, b) => b.totalVendidas - a.totalVendidas));
         this.calcularTotales();
-        this.isLoading = false;
+        this.isLoading.set(false);
         console.log('Carga completada');
       },
       error: (err) => {
         console.error('Error completo:', err);
-        this.estadisticas = [];
-        this.totalEntradasVendidas = 0;
-        this.totalRecaudadoGeneral = 0;
-        this.promedioOcupacion = 0;
-        this.isLoading = false;
+        this.estadisticas.set([]);
+        this.totalEntradasVendidas.set(0);
+        this.totalRecaudadoGeneral.set(0);
+        this.promedioOcupacion.set(0);
+        this.isLoading.set(false);
         
         if (err.status === 0) {
           alert('⚠️ No se puede conectar al servidor.\n\nAsegúrate de ejecutar:\njson-server --watch db.json');
@@ -55,11 +55,12 @@ export class Estadisticas implements OnInit {
   }
 
   calcularTotales(): void {
-    this.totalEntradasVendidas = this.estadisticas.reduce((sum, e) => sum + e.totalVendidas, 0);
-    this.totalRecaudadoGeneral = this.estadisticas.reduce((sum, e) => sum + e.totalRecaudado, 0);
+    const stats = this.estadisticas();
+    this.totalEntradasVendidas.set(stats.reduce((sum, e) => sum + e.totalVendidas, 0));
+    this.totalRecaudadoGeneral.set(stats.reduce((sum, e) => sum + e.totalRecaudado, 0));
     
-    if (this.estadisticas.length > 0) {
-      this.promedioOcupacion = this.estadisticas.reduce((sum, e) => sum + e.porcentajeOcupacion, 0) / this.estadisticas.length;
+    if (stats.length > 0) {
+      this.promedioOcupacion.set(stats.reduce((sum, e) => sum + e.porcentajeOcupacion, 0) / stats.length);
     }
   }
 
