@@ -227,23 +227,6 @@
       "modoVenta": "butaca",
       "sectores": [],
       "butacas": []
-    },
-    {
-      "id": "243d",
-      "titulo": "asdmk",
-      "fecha": "2025-11-27",
-      "hora": "11:11",
-      "lugar": "2390",
-      "imagen": "https://inkscape.app/wp-content/uploads/imagen-vectorial.webp",
-      "modoVenta": "sector",
-      "sectores": [
-        {
-          "nombre": "VIP",
-          "capacidad": 300,
-          "precio": 300
-        }
-      ],
-      "butacas": []
     }
   ],
   "descuentos": [
