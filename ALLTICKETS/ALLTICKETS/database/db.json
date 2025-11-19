@@ -36,40 +36,12 @@
   ],
   "eventos": [
     {
-      "id": "2fcd",
-      "titulo": "AIRBAG",
-      "fecha": "2025-12-17",
-      "hora": "21:00",
-      "lugar": "Estadio River, Buenos Aires",
-      "imagen": "https://cdn.getcrowder.com/images/1488569407500-test-pos-airbag--640x640-30-jun_(1)-min.jpg",
-      "categoria": "Música",
-      "modoVenta": "sector",
-      "sectores": [
-        {
-          "nombre": "CAMPÓ VIP",
-          "capacidad": 4987,
-          "precio": 50000
-        },
-        {
-          "nombre": "CAMPO",
-          "capacidad": -480004,
-          "precio": 25000
-        },
-        {
-          "nombre": "PLATEA",
-          "capacidad": 24998,
-          "precio": 35000
-        }
-      ],
-      "butacas": []
-    },
-    {
-      "id": "514d",
-      "titulo": "Luciano Mellera",
-      "fecha": "2026-02-23",
-      "hora": "21:30",
-      "lugar": "Teatro Roxy, Mar del Plata",
-      "imagen": "https://www.movistararena.com.ar/static/artistas/BDFE1_LucianoMellera_FileFotoFichaDesktop",
+      "id": "1a23",
+      "titulo": "ROCKY",
+      "fecha": "2025-11-21",
+      "hora": "17:30",
+      "lugar": "TEATRO LOLA MEMBRIVES, CABA",
+      "imagen": "https://imgplateanet.com.ar/imagenes/img/imagenes/1440x500/rocky.jpg",
       "categoria": "Comedia",
       "modoVenta": "butaca",
       "sectores": [],
@@ -77,937 +49,3559 @@
         {
           "fila": "A",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 2,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "A",
           "numero": 3,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "A",
           "numero": 4,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "A",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 8,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "A",
           "numero": 10,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
-        },
-        {
-          "fila": "A",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "A",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "A",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "A",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": false
-        },
-        {
-          "fila": "A",
-          "numero": 15,
-          "precio": 25000,
-          "disponible": false
         },
         {
           "fila": "B",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 8,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "B",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "B",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "B",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "B",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "B",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "B",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 5,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "C",
           "numero": 6,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "C",
           "numero": 7,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "C",
           "numero": 8,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "C",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "C",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "C",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "C",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "C",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "C",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 8,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "D",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "D",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "D",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "D",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "D",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "D",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 8,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "E",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "E",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "E",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "E",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "E",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "E",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "E",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 6,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "F",
           "numero": 7,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "F",
           "numero": 8,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "F",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "F",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "F",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "F",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "F",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "F",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "F",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 8,
-          "precio": 25000,
-          "disponible": false
+          "precio": 30000,
+          "disponible": true
         },
         {
           "fila": "G",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "G",
           "numero": 10,
-          "precio": 25000,
-          "disponible": false
-        },
-        {
-          "fila": "G",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "G",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "G",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "G",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "G",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 1,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 2,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 3,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 4,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 5,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 6,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 7,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 8,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 9,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         },
         {
           "fila": "H",
           "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "H",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "H",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "H",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "H",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "H",
-          "numero": 15,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 1,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 2,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 3,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 4,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 5,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 6,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 7,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 8,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 9,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "I",
-          "numero": 15,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 1,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 2,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 3,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 4,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 5,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 6,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 7,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 8,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 9,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 10,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 11,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 12,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 13,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 14,
-          "precio": 25000,
-          "disponible": true
-        },
-        {
-          "fila": "J",
-          "numero": 15,
-          "precio": 25000,
+          "precio": 30000,
           "disponible": true
         }
       ]
     },
     {
-      "id": "69ba",
-      "titulo": "asd",
-      "fecha": "2025-11-30",
-      "hora": "21:10",
-      "lugar": "asdasd",
-      "imagen": "https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "categoria": "Deportes",
+      "id": "2e6a",
+      "titulo": "PAPA POR SIEMPRE",
+      "fecha": "2025-11-24",
+      "hora": "20:00",
+      "lugar": "TEATRO LICEO, CABA",
+      "imagen": "https://imgplateanet.com.ar/imagenes/img/imagenes/1440x500/papa-por-siempre.jpg",
+      "categoria": "Comedia",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
+        {
+          "fila": "A",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 11,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 12,
+          "precio": 50000,
+          "disponible": true
+        }
+      ]
+    },
+    {
+      "id": "b455",
+      "titulo": "Coldplay",
+      "fecha": "2025-11-29",
+      "hora": "19:30",
+      "lugar": "Monumental",
+      "imagen": "https://tse4.mm.bing.net/th/id/OIP.nDmcSdZvjp4y37k8LMOqQQHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Música",
       "modoVenta": "sector",
       "sectores": [
         {
-          "nombre": "test",
-          "capacidad": -3,
-          "precio": 123
+          "nombre": "VIP",
+          "capacidad": 5000,
+          "precio": 200000
+        },
+        {
+          "nombre": "CAMPO DELANTERO",
+          "capacidad": 20000,
+          "precio": 80000
+        },
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 15000,
+          "precio": 100000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 10000,
+          "precio": 120000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 15000,
+          "precio": 100000
+        },
+        {
+          "nombre": "CAMPO TRASERO",
+          "capacidad": 20000,
+          "precio": 80000
         }
       ],
       "butacas": []
     },
     {
-      "id": "1ea3",
-      "titulo": "TTTTTTT",
-      "fecha": "2025-12-25",
-      "hora": "19:22",
-      "lugar": "polo norte",
-      "imagen": "https://images.ecestaticos.com/7VSfh3KMvaFOJnfZFUqzVzWJ4q8=/0x0:1254x836/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F8fa%2F85a%2Fbfc%2F8fa85abfc917b8dc1ca3302aa931f18d.jpg",
-      "categoria": "Comedia",
+      "id": "77f4",
+      "titulo": "La Beriso",
+      "fecha": "2025-12-10",
+      "hora": "21:30",
+      "lugar": "Estadio Obras",
+      "imagen": "https://tse3.mm.bing.net/th/id/OIP.osdqQ_qzNuWaIGXfVLQE9wHaFB?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Música",
       "modoVenta": "sector",
       "sectores": [
         {
-          "nombre": "vip",
-          "capacidad": 3,
-          "precio": 1000
+          "nombre": "CAMPO",
+          "capacidad": 15000,
+          "precio": 60000
+        },
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 5000,
+          "precio": 80000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 5000,
+          "precio": 80000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 2500,
+          "precio": 120000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "ec65",
+      "titulo": "EL JEFE DEL JEFE",
+      "fecha": "2025-11-23",
+      "hora": "14:40",
+      "lugar": "TEATRO PASEO LA PLAZA, CABA",
+      "imagen": "https://imgplateanet.com.ar/imagenes/img/imagenes/1440x500/el-jefe-del-jefe.jpg",
+      "categoria": "Comedia",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
+        {
+          "fila": "A",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 1,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 2,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 3,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 4,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 5,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 6,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 7,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 8,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 9,
+          "precio": 50000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 10,
+          "precio": 50000,
+          "disponible": true
+        }
+      ]
+    },
+    {
+      "id": "b427",
+      "titulo": "Boca Junior vs Talleres de cordoba",
+      "fecha": "2025-11-23",
+      "hora": "20:00",
+      "lugar": "Bombonera",
+      "imagen": "https://tse2.mm.bing.net/th/id/OIP.yyN2ZxvEM-ujL6z7w4IisQHaEE?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 20000,
+          "precio": 100000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 20000,
+          "precio": 100000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 10000,
+          "precio": 120000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 5000,
+          "precio": 200000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "f66d",
+      "titulo": "Racing vs. River Plate",
+      "fecha": "2025-12-24",
+      "hora": "19:15",
+      "lugar": "Estadio Presidente Perón",
+      "imagen": "https://tse4.mm.bing.net/th/id/OIP.Duc58vwSb7HSInT18PUXKgHaEk?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 15000,
+          "precio": 150000
+        },
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 15000,
+          "precio": 150000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 25000,
+          "precio": 200000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 5000,
+          "precio": 300000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "a63e",
+      "titulo": "Vélez Sarsfield vs Argentinos Juniors",
+      "fecha": "2025-11-22",
+      "hora": "20:00",
+      "lugar": "Estadio José Amalfitani",
+      "imagen": "https://tse1.mm.bing.net/th/id/OIP.NoQdEJqSIAVDucBRrFrhfwHaD5?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 15000,
+          "precio": 50000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 10000,
+          "precio": 50000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 8000,
+          "precio": 60000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 3000,
+          "precio": 80000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "653f",
+      "titulo": "AGUSTIN -RADA- ARISTARAN ES CHANTA",
+      "fecha": "2025-11-22",
+      "hora": "22:00",
+      "lugar": "TEATRO METROPOLITAN, CABA",
+      "imagen": "https://imgplateanet.com.ar/imagenes/img/imagenes/1440x500/agustin--rada--aristaran-es-chanta.jpg",
+      "categoria": "Comedia",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
+        {
+          "fila": "A",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 1,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 2,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 3,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 4,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 5,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 6,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 7,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 8,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 9,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 10,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 11,
+          "precio": 40000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 12,
+          "precio": 40000,
+          "disponible": true
+        }
+      ]
+    },
+    {
+      "id": "0d75",
+      "titulo": "LA FUNCION QUE SALE MAL",
+      "fecha": "2025-11-29",
+      "hora": "20:30",
+      "lugar": "TEATRO MULTITEATRO, CABA",
+      "imagen": "https://imgplateanet.com.ar/imagenes/img/imagenes/1440x500/la-funcion-que-sale-mal.jpg",
+      "categoria": "Comedia",
+      "modoVenta": "butaca",
+      "sectores": [],
+      "butacas": [
+        {
+          "fila": "A",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "A",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "B",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "C",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "D",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "E",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "F",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "G",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "H",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "I",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "J",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "K",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 1,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 2,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 3,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 4,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 5,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 6,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 7,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 8,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 9,
+          "precio": 35000,
+          "disponible": true
+        },
+        {
+          "fila": "L",
+          "numero": 10,
+          "precio": 35000,
+          "disponible": true
+        }
+      ]
+    },
+    {
+      "id": "bbbb",
+      "titulo": "Atlético Lanus vs CA Tigre",
+      "fecha": "2025-11-26",
+      "hora": "21:30",
+      "lugar": "Estadio Ciudad de Lanús - Néstor Díaz Pérez",
+      "imagen": "https://www.ole.com.ar/images/2024/08/03/ZMrkJ3Hl-_1200x630__1.jpg",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 10000,
+          "precio": 40000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 10000,
+          "precio": 40000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 8000,
+          "precio": 50000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 5000,
+          "precio": 70000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "a539",
+      "titulo": "Maria Becerra",
+      "fecha": "2025-12-13",
+      "hora": "21:00",
+      "lugar": "Monumental",
+      "imagen": "https://cdn.getcrowder.com/images/edb3f5ff-8851-4abc-a9a8-4092cf669beb-mb-1312-banneraa-1920x720.jpg",
+      "categoria": "Música",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "CAMPO DELANTERO",
+          "capacidad": 20000,
+          "precio": 60000
+        },
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 20000,
+          "precio": 80000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 20000,
+          "precio": 80000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 10000,
+          "precio": 100000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 5000,
+          "precio": 150000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "36bc",
+      "titulo": "CA Rosario Central vs Estudiantes de La Plata",
+      "fecha": "2025-11-23",
+      "hora": "17:30",
+      "lugar": "Estadio Gigante de Arroyito",
+      "imagen": "https://tse4.mm.bing.net/th/id/OIP.2FW3yL5OpKit7vI2tshCnAHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "categoria": "Deportes",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA ALTA",
+          "capacidad": 15000,
+          "precio": 60000
+        },
+        {
+          "nombre": "PLATEA BAJA",
+          "capacidad": 15000,
+          "precio": 60000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 20000,
+          "precio": 80000
+        },
+        {
+          "nombre": "VIP",
+          "capacidad": 10000,
+          "precio": 100000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "43db",
+      "titulo": "Miranda!",
+      "fecha": "2025-11-22",
+      "hora": "20:00",
+      "lugar": "Estadio Arquitecto Ricardo Etcheverri",
+      "imagen": "https://th.bing.com/th/id/R.b5d487636e0752d6bc776d4dd53cb866?rik=%2foY9Go34eYTtMg&pid=ImgRaw&r=0",
+      "categoria": "Música",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "CAMPO VIP",
+          "capacidad": 5000,
+          "precio": 140000
+        },
+        {
+          "nombre": "CAMPO",
+          "capacidad": 10000,
+          "precio": 112000
+        },
+        {
+          "nombre": "POPULAR",
+          "capacidad": 6000,
+          "precio": 113000
+        },
+        {
+          "nombre": "PALCO",
+          "capacidad": 2000,
+          "precio": 139000
+        }
+      ],
+      "butacas": []
+    },
+    {
+      "id": "1a59",
+      "titulo": "Los Fundamentalistas del Aire Acondicionado",
+      "fecha": "2025-12-07",
+      "hora": "20:30",
+      "lugar": "Estadio Unico Ciudad de La Plata",
+      "imagen": "https://www.prensar.net/wp-content/uploads/2022/10/los-fundamentalistas-del-aire-acondicionado-huracan-entradas.jpg",
+      "categoria": "Música",
+      "modoVenta": "sector",
+      "sectores": [
+        {
+          "nombre": "PLATEA A",
+          "capacidad": 10000,
+          "precio": 100000
+        },
+        {
+          "nombre": "PLATEA B",
+          "capacidad": 10000,
+          "precio": 120000
+        },
+        {
+          "nombre": "CAMPO",
+          "capacidad": 15000,
+          "precio": 98000
+        },
+        {
+          "nombre": "CABECERA SUR",
+          "capacidad": 8000,
+          "precio": 100000
+        },
+        {
+          "nombre": "CABECERA NORTE",
+          "capacidad": 8000,
+          "precio": 100000
         }
       ],
       "butacas": []
@@ -1227,7 +3821,7 @@
     },
     {
       "id": "c883",
-      "eventoId": "69ba",
+      "eventoId": null,
       "usuarioId": "7083",
       "eventoTitulo": "asd",
       "cantidad": 6,
@@ -1482,7 +4076,7 @@
     },
     {
       "id": "7ff2",
-      "eventoId": "1ea3",
+      "eventoId": null,
       "usuarioId": "7083",
       "eventoTitulo": "TTTTTTT",
       "cantidad": 2,
