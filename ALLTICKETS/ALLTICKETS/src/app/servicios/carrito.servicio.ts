@@ -27,7 +27,7 @@ export class CarritoServicio {
     return this.itemsCarrito.asReadonly();
   }
 
-  // Permite reemplazar el contenido local del carrito (útil al cargar desde servidor)
+ 
   setItemsDirect(items: ItemCarrito[]) {
     this.itemsCarrito.set(items);
     this.guardarCarritoEnLocalStorage();
@@ -42,12 +42,12 @@ export class CarritoServicio {
     );
 
     if (indiceExistente !== -1) {
-      // Si es butaca, no incrementar cantidad (cada butaca es única)
+     
       if (item.tipoEntrada === 'butaca') {
         console.warn('Esta butaca ya está en el carrito');
         return;
       }
-      // Si es sector, incrementar cantidad
+      
       const nuevosItems = [...items];
       nuevosItems[indiceExistente].cantidad += item.cantidad;
       this.itemsCarrito.set(nuevosItems);
@@ -82,7 +82,7 @@ export class CarritoServicio {
     this.guardarCarritoEnLocalStorage();
   }
 
-  // --- Backend sync methods ---
+  
   obtenerCarritos(): Observable<Carrito[]> {
     return this.http.get<Carrito[]>(this.urlBase);
   }
@@ -110,7 +110,7 @@ export class CarritoServicio {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
-  // Sincroniza el carrito local (signal) con el backend para el usuario dado.
+  
   sincronizarConServidor(usuarioId: string): Observable<Carrito> {
     const itemsLocal = this.itemsCarrito();
     type CarritoItem = {
@@ -140,7 +140,7 @@ export class CarritoServicio {
         if (existing && existing.id) {
           return this.actualizarCarrito(existing.id, { ...payload, id: existing.id });
         } else {
-          // crear nuevo carrito (omitimos id so json-server assigns it)
+         
           const toCreate: Carrito = { ...payload };
           return this.agregarCarrito(toCreate);
         }

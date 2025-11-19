@@ -21,7 +21,7 @@
     <!-- Menú que aparece solo para usuario común -->
     @if (usuario.rol === 'usuario') {
       <nav class="menu-usuario">
-        <h2>Bienvenido, {{ usuario.nombre }}</h2>
+        
         <ul>
           <li><a routerLink="/perfil/:id">🧍🏻‍♂️ Mi Perfil</a></li>
           <li><a routerLink="/favoritos">❤️ Mis Favoritos</a></li>

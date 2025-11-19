@@ -7,7 +7,7 @@ import { Evento } from '../modelos/evento';
   providedIn: 'root'
 })
 export class EventoServicio {
-  private urlBase = 'http://localhost:3000/eventos';  // ajustá el endpoint
+  private urlBase = 'http://localhost:3000/eventos'; 
 
   constructor(private http: HttpClient) {}
 

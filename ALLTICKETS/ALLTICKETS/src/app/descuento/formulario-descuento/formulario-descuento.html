@@ -11,7 +11,7 @@
 
       <!-- Campos -->
       <label for="codigo">Código:</label>
-      <input id="codigo" formControlName="codigo" />
+      <input id="codigo" type="text" formControlName="codigo" />
       @if (codigo.invalid && (codigo.dirty || codigo.touched)) {
         <div class="error">
           @if (codigo.errors?.['required']) {

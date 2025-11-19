@@ -19,10 +19,10 @@ export class PaginaPrincipal implements OnInit {
   eventos = signal<Evento[]>([]);
   eventosFiltrados = signal<Evento[]>([]);
   isLoading = signal(false);  
-  favoritosUsuario = signal<string[]>([]); // IDs de eventos favoritos del usuario
+  favoritosUsuario = signal<string[]>([]); 
   protected readonly categorias = ['Deportes', 'Música', 'Comedia'];
 
-  // Formulario de filtros
+  
   filtrosForm: FormGroup;
 
   private readonly eventoService = inject(EventoServicio);
@@ -32,14 +32,14 @@ export class PaginaPrincipal implements OnInit {
   
 
   constructor() {
-    // Inicializar formulario reactivo
+    
     this.filtrosForm = this.fb.group({
       nombre: [''],
       fecha: [''],
       categoria: ['']
     });
 
-    // Escuchar cambios en el formulario
+    
     this.filtrosForm.valueChanges.subscribe(() => {
       this.aplicarFiltros();
     });
@@ -137,7 +137,7 @@ export class PaginaPrincipal implements OnInit {
   }
 
   toggleFavorito(evento: Evento, event: Event): void {
-    event.stopPropagation(); // Evitar que se active el click del card
+    event.stopPropagation(); // Evitar que se active el click del evento 
     
     if (!this.usuario()) {
       alert('Debes iniciar sesión para agregar favoritos');
@@ -150,7 +150,7 @@ export class PaginaPrincipal implements OnInit {
     const eventoId = String(evento.id);
     
     if (this.esFavorito(evento.id)) {
-      // Quitar de favoritos
+      // Eliminar de favoritos
       this.favoritoService.verificarFavorito(this.usuario().id, eventoId).subscribe({
         next: (favoritos) => {
           if (favoritos.length > 0 && favoritos[0].id) {

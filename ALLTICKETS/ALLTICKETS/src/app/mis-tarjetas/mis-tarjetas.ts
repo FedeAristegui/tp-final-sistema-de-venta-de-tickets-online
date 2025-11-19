@@ -107,7 +107,7 @@ export class MisTarjetas implements OnInit {
 
     const formValue = this.tarjetaForm.value;
     
-    // Obtener solo los últimos 4 dígitos para almacenar
+    // Obtener solo los últimos 4 dígitos para guardar
     const ultimosDigitos = formValue.numeroTarjeta.slice(-4);
 
     const nuevaTarjeta: Tarjeta = {
@@ -166,7 +166,7 @@ export class MisTarjetas implements OnInit {
   }
 
   private actualizarTarjetasPrincipales(tarjetaPrincipalId: string): void {
-    // Actualizar localmente
+   
     this.tarjetas.update(tarjetas => 
       tarjetas.map(t => ({
         ...t,
@@ -174,7 +174,7 @@ export class MisTarjetas implements OnInit {
       }))
     );
 
-    // Actualizar en el servidor
+   
     this.tarjetas().forEach(t => {
       if (t.id) {
         this.tarjetaService.actualizarTarjeta(t).subscribe({

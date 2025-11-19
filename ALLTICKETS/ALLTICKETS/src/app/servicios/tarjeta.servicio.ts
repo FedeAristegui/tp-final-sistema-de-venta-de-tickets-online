@@ -40,7 +40,7 @@ export class TarjetaServicio {
   }
 
   establecerTarjetaPrincipal(usuarioId: string, tarjetaId: string): Observable<any> {
-    // Primero obtener todas las tarjetas del usuario
+    
     return this.obtenerTarjetasPorUsuario(usuarioId);
   }
 

@@ -1,6 +1,4 @@
-/********************************
- *  CONTENEDOR PRINCIPAL
- ********************************/
+
 .contenedor {
   display: flex;
   justify-content: center;
@@ -16,9 +14,6 @@
   box-shadow: 0 10px 40px rgba(0,0,0,0.12);
 }
 
-/********************************
- *  TITULO
- ********************************/
 h3 {
   font-size: 1.8rem;
   text-align: center;
@@ -30,9 +25,6 @@ h3 {
   box-shadow: 0 5px 15px rgba(102,126,234,0.35);
 }
 
-/********************************
- *  FORMULARIO
- ********************************/
 form {
   display: flex;
   flex-direction: column;
@@ -63,20 +55,14 @@ input:focus {
   box-shadow: 0 0 6px rgba(102,126,234,0.4);
 }
 
-/********************************
- *  CHECKBOX
- ********************************/
+
 label input[type="checkbox"] {
   width: 16px;
   height: 16px;
   margin-right: 6px;
 }
 
-/********************************
- *  BOTONES
- ********************************/
 
-/* BOTÓN PRINCIPAL (Guardar / Crear) */
 button[type="submit"] {
   padding: 14px;
   margin-top: 20px;
@@ -95,7 +81,7 @@ button[type="submit"]:hover {
   box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
-/* BOTÓN CANCELAR */
+
 .cancelar-btn {
   margin-top: 10px;
   padding: 12px;
@@ -111,7 +97,7 @@ button[type="submit"]:hover {
   background: #c53030;
 }
 
-/* BOTÓN VOLVER */
+
 .volver-btn {
   margin-top: 25px;
   padding: 14px;
@@ -128,9 +114,7 @@ button[type="submit"]:hover {
   background: #718096;
 }
 
-/********************************
- *  RESPONSIVE
- ********************************/
+
 @media (max-width: 768px) {
   .formulario-container {
     padding: 25px;
@@ -139,4 +123,10 @@ button[type="submit"]:hover {
   h3 {
     font-size: 1.5rem;
   }
+
+  
+}
+
+span {
+  color: red;
 }

@@ -71,11 +71,12 @@ input[type="password"] {
   transition: 0.2s;
 
 }
-
-a button {
-  background-color: #777;
-  margin-top: 10px;
+ 
+.iniciar-sesion:disabled {
+   background:#e3dbf7;
+  cursor: not-allowed;
 }
+
 
 .error {
   font-size: 13px;

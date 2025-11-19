@@ -8,7 +8,7 @@
       "contrasena": "hola123",
       "rol": "admin",
       "fechaRegistro": "2025-11-17T21:20:13.945Z",
-      "ultimaActividad": "2025-11-17T21:20:13.945Z",
+      "ultimaActividad": "2025-11-19T20:16:03.430Z",
       "activo": true
     },
     {
@@ -31,6 +31,17 @@
       "rol": "usuario",
       "fechaRegistro": "2025-11-17T21:31:04.502Z",
       "ultimaActividad": "2025-11-17T21:31:04.502Z",
+      "activo": true
+    },
+    {
+      "id": "b9e8",
+      "nombre": "Agustin",
+      "apellido": "Demarco",
+      "email": "Agustindemarco32@gmail.com",
+      "contrasena": "hola123",
+      "rol": "usuario",
+      "fechaRegistro": "2025-11-19T17:49:11.872Z",
+      "ultimaActividad": "2025-11-19T20:16:36.355Z",
       "activo": true
     }
   ],
@@ -591,7 +602,7 @@
           "fila": "A",
           "numero": 9,
           "precio": 50000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "A",
@@ -1273,7 +1284,7 @@
       "sectores": [
         {
           "nombre": "VIP",
-          "capacidad": 5000,
+          "capacidad": 4999,
           "precio": 200000
         },
         {
@@ -2013,7 +2024,7 @@
     {
       "id": "b427",
       "titulo": "Boca Junior vs Talleres de cordoba",
-      "fecha": "2025-11-23",
+      "fecha": "2025-11-18",
       "hora": "20:00",
       "lugar": "Bombonera",
       "imagen": "https://tse2.mm.bing.net/th/id/OIP.yyN2ZxvEM-ujL6z7w4IisQHaEE?rs=1&pid=ImgDetMain&o=7&rm=3",
@@ -2055,7 +2066,7 @@
       "sectores": [
         {
           "nombre": "PLATEA BAJA",
-          "capacidad": 15000,
+          "capacidad": 14998,
           "precio": 150000
         },
         {
@@ -3638,6 +3649,16 @@
       "tipo": "Visa",
       "esPrincipal": true,
       "fechaAgregada": "2025-11-18T19:40:54.851Z"
+    },
+    {
+      "id": "l8r4he5",
+      "usuarioId": "b9e8",
+      "numeroTarjeta": "1111",
+      "titular": "agus demarco",
+      "vencimiento": "12/25",
+      "tipo": "Mastercard",
+      "esPrincipal": true,
+      "fechaAgregada": "2025-11-19T17:52:38.972Z"
     }
   ],
   "carritos": [
@@ -3688,6 +3709,12 @@
       ],
       "fechaActualizacion": "2025-11-18T22:35:36.681Z",
       "id": "2d07"
+    },
+    {
+      "usuarioId": "b9e8",
+      "items": [],
+      "fechaActualizacion": "2025-11-19T19:08:04.787Z",
+      "id": "5f21"
     }
   ],
   "descuentos": [
@@ -3716,380 +3743,5 @@
       "activo": true
     }
   ],
-  "ventas": [
-    {
-      "id": "312f",
-      "eventoId": "2fcd",
-      "usuarioId": "8486",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 3,
-      "fecha": "2025-11-18T19:41:10.151Z",
-      "total": 75000,
-      "tipo": "sector",
-      "detalle": "CAMPO",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPO",
-          "cantidad": 3
-        }
-      ]
-    },
-    {
-      "id": "2e2a",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T19:50:02.019Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila C - Butaca 5",
-      "butacasVendidas": [
-        {
-          "fila": "C",
-          "numero": 5
-        }
-      ]
-    },
-    {
-      "id": "0927",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T19:50:02.019Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila C - Butaca 7",
-      "butacasVendidas": [
-        {
-          "fila": "C",
-          "numero": 7
-        }
-      ]
-    },
-    {
-      "id": "e2c4",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T19:50:02.019Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila C - Butaca 6",
-      "butacasVendidas": [
-        {
-          "fila": "C",
-          "numero": 6
-        }
-      ]
-    },
-    {
-      "id": "4ea0",
-      "eventoId": "2fcd",
-      "usuarioId": "8486",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 500001,
-      "fecha": "2025-11-18T20:51:05.314Z",
-      "total": 12500025000,
-      "tipo": "sector",
-      "detalle": "CAMPO",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPO",
-          "cantidad": 500001
-        }
-      ]
-    },
-    {
-      "id": "723e",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T21:09:54.499Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila E - Butaca 8",
-      "butacasVendidas": [
-        {
-          "fila": "E",
-          "numero": 8
-        }
-      ]
-    },
-    {
-      "id": "c883",
-      "eventoId": null,
-      "usuarioId": "7083",
-      "eventoTitulo": "asd",
-      "cantidad": 6,
-      "fecha": "2025-11-18T21:09:54.499Z",
-      "total": 738,
-      "tipo": "sector",
-      "detalle": "test",
-      "sectoresVendidos": [
-        {
-          "nombre": "test",
-          "cantidad": 6
-        }
-      ]
-    },
-    {
-      "id": "238b",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T21:10:59.501Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila E - Butaca 8",
-      "butacasVendidas": [
-        {
-          "fila": "E",
-          "numero": 8
-        }
-      ]
-    },
-    {
-      "id": "332a",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T21:11:28.347Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila E - Butaca 8",
-      "butacasVendidas": [
-        {
-          "fila": "E",
-          "numero": 8
-        }
-      ]
-    },
-    {
-      "id": "035d",
-      "eventoId": "2fcd",
-      "usuarioId": "7083",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 3,
-      "fecha": "2025-11-18T21:21:55.976Z",
-      "total": 150000,
-      "tipo": "sector",
-      "detalle": "CAMPÓ VIP",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPÓ VIP",
-          "cantidad": 3
-        }
-      ]
-    },
-    {
-      "id": "6015",
-      "eventoId": "2fcd",
-      "usuarioId": "7083",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 4,
-      "fecha": "2025-11-18T21:32:12.243Z",
-      "total": 200000,
-      "tipo": "sector",
-      "detalle": "CAMPÓ VIP",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPÓ VIP",
-          "cantidad": 4
-        }
-      ]
-    },
-    {
-      "id": "d65d",
-      "eventoId": "2fcd",
-      "usuarioId": "7083",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 3,
-      "fecha": "2025-11-18T21:35:43.044Z",
-      "total": 150000,
-      "tipo": "sector",
-      "detalle": "CAMPÓ VIP",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPÓ VIP",
-          "cantidad": 3
-        }
-      ]
-    },
-    {
-      "id": "be38",
-      "eventoId": "514d",
-      "usuarioId": "8486",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T23:23:45.633Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila G - Butaca 10",
-      "butacasVendidas": [
-        {
-          "fila": "G",
-          "numero": 10
-        }
-      ]
-    },
-    {
-      "id": "273d",
-      "eventoId": "514d",
-      "usuarioId": "8486",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T23:42:00.704Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila G - Butaca 8",
-      "butacasVendidas": [
-        {
-          "fila": "G",
-          "numero": 8
-        }
-      ]
-    },
-    {
-      "id": "d7d6",
-      "eventoId": "514d",
-      "usuarioId": "8486",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T23:42:35.706Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila A - Butaca 15",
-      "butacasVendidas": [
-        {
-          "fila": "A",
-          "numero": 15
-        }
-      ]
-    },
-    {
-      "id": "5f91",
-      "eventoId": "514d",
-      "usuarioId": "8486",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-18T23:49:10.654Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila A - Butaca 14",
-      "butacasVendidas": [
-        {
-          "fila": "A",
-          "numero": 14
-        }
-      ]
-    },
-    {
-      "id": "18f9",
-      "eventoId": "2fcd",
-      "usuarioId": "7083",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 3,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 150000,
-      "tipo": "sector",
-      "detalle": "CAMPÓ VIP",
-      "sectoresVendidos": [
-        {
-          "nombre": "CAMPÓ VIP",
-          "cantidad": 3
-        }
-      ]
-    },
-    {
-      "id": "ee43",
-      "eventoId": "2fcd",
-      "usuarioId": "7083",
-      "eventoTitulo": "AIRBAG",
-      "cantidad": 2,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 70000,
-      "tipo": "sector",
-      "detalle": "PLATEA",
-      "sectoresVendidos": [
-        {
-          "nombre": "PLATEA",
-          "cantidad": 2
-        }
-      ]
-    },
-    {
-      "id": "9553",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila F - Butaca 6",
-      "butacasVendidas": [
-        {
-          "fila": "F",
-          "numero": 6
-        }
-      ]
-    },
-    {
-      "id": "c568",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila F - Butaca 7",
-      "butacasVendidas": [
-        {
-          "fila": "F",
-          "numero": 7
-        }
-      ]
-    },
-    {
-      "id": "c5f6",
-      "eventoId": "514d",
-      "usuarioId": "7083",
-      "eventoTitulo": "Luciano Mellera",
-      "cantidad": 1,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 25000,
-      "tipo": "butaca",
-      "detalle": "Fila F - Butaca 8",
-      "butacasVendidas": [
-        {
-          "fila": "F",
-          "numero": 8
-        }
-      ]
-    },
-    {
-      "id": "7ff2",
-      "eventoId": null,
-      "usuarioId": "7083",
-      "eventoTitulo": "TTTTTTT",
-      "cantidad": 2,
-      "fecha": "2025-11-19T14:39:32.830Z",
-      "total": 2000,
-      "tipo": "sector",
-      "detalle": "vip",
-      "sectoresVendidos": [
-        {
-          "nombre": "vip",
-          "cantidad": 2
-        }
-      ]
-    }
-  ]
+  "ventas": []
 }

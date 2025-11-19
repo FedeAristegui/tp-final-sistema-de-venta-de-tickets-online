@@ -6,13 +6,13 @@
     @if (form.get('nombre')?.invalid && (form.get('nombre')?.dirty || form.get('nombre')?.touched)) {
         <div class="error-message">
           @if (form.get('nombre')?.errors?.['required']) {
-            <span>El nombre es obligatorio.</span>
+            <span>El nombre es obligatorio</span>
           }
           @if (form.get('nombre')?.errors?.['minlength']) {
-            <span>Debe tener al menos 2 caracteres.</span>
+            <span>Debe tener al menos 2 caracteres</span>
           }
           @if (form.get('nombre')?.errors?.['pattern']) {
-            <span>El nombre no debe contener números.</span>
+            <span>El nombre no debe contener números</span>
           }
         </div>
     }
@@ -21,13 +21,13 @@
     @if (form.get('apellido')?.invalid && (form.get('apellido')?.dirty || form.get('apellido')?.touched)) {
         <div class="error-message">
           @if (form.get('apellido')?.errors?.['required']) {
-            <span>El apellido es obligatorio.</span>
+            <span>El apellido es obligatorio</span>
           }
           @if (form.get('apellido')?.errors?.['minlength']) {
-            <span>Debe tener al menos 2 caracteres.</span>
+            <span>Debe tener al menos 2 caracteres</span>
           }
           @if (form.get('apellido')?.errors?.['pattern']) {
-            <span>El apellido no debe contener números.</span>
+            <span>El apellido no debe contener números</span>
           }
         </div>
     }
@@ -36,10 +36,10 @@
     @if (form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)) {
         <div class="error-message">
           @if (form.get('email')?.errors?.['required']) {
-            <span>El email es obligatorio.</span>
+            <span>El email es obligatorio</span>
           }
           @if (form.get('email')?.errors?.['email']) {
-            <span>El formato del email no es válido.</span>
+            <span>El formato del email no es válido</span>
           }
         </div>
     }
@@ -48,13 +48,13 @@
     @if (form.get('contrasena')?.invalid && (form.get('contrasena')?.dirty || form.get('contrasena')?.touched)) {
         <div class="error-message">
           @if (form.get('contrasena')?.errors?.['required']) {
-            <span>La contraseña es obligatoria.</span>
+            <span>La contraseña es obligatoria</span>
           }
           @if (form.get('contrasena')?.errors?.['minlength']) {
-            <span>La contraseña debe tener entre 6 y 20 caracteres.</span>
+            <span>La contraseña debe tener entre 6 y 20 caracteres</span>
           }
           @if (form.get('contrasena')?.errors?.['maxlength']) {
-            <span>La contraseña debe tener entre 6 y 20 caracteres.</span>
+            <span>La contraseña debe tener entre 6 y 20 caracteres</span>
           }
         </div>
     }

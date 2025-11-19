@@ -44,14 +44,14 @@ export const dateFinValidator: ValidatorFn = (group: AbstractControl): Validatio
   styleUrl: './formulario-descuento.css',
 })
 export class FormularioDescuento {
-  // 🔹 Inyecciones
+  
   private readonly formBuilder = inject(FormBuilder);
   private readonly descuentoClient = inject(ClienteDescuento);
   @Output() cancelled = new EventEmitter<void>();
   protected readonly router = inject(Router);
 
 
-  // 🔹 Inputs y Outputs
+  
   readonly isEditing = input(false);
   readonly descuento = input<Descuento>();
   readonly edited = output<Descuento>();
@@ -65,7 +65,7 @@ export class FormularioDescuento {
     });
   }
 
-  // 🔹 Definición del formulario reactivo
+  
   protected readonly form = this.formBuilder.nonNullable.group({
     codigo: ['', Validators.required],
     porcentaje: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
@@ -74,13 +74,13 @@ export class FormularioDescuento {
     activo: [true]
   }, { validators: [dateFinValidator] });
 
-  // 🔹 Getters de conveniencia
+  
   get codigo() { return this.form.controls.codigo; }
   get porcentaje() { return this.form.controls.porcentaje; }
   get fechaInicio() { return this.form.controls.fechaInicio; }
   get fechaFin() { return this.form.controls.fechaFin; }
 
-  // 🔹 Manejo del envío del formulario
+  //  Manejo del envío del formulario
   handleSubmit() {
     if (this.form.invalid) {
       alert('Por favor completá todos los campos correctamente.');

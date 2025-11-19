@@ -1,6 +1,6 @@
-/********************************
- *  CONTENEDOR PRINCIPAL
- ********************************/
+
+ /*  CONTENEDOR PRINCIPAL */
+
 .contenedor {
   display: flex;
   justify-content: center;
@@ -16,9 +16,7 @@
   box-shadow: 0 10px 40px rgba(0,0,0,0.12);
 }
 
-/********************************
- *  TITULO
- ********************************/
+/* TITULO*/
 h3 {
   font-size: 1.8rem;
   text-align: center;
@@ -30,9 +28,7 @@ h3 {
   box-shadow: 0 5px 15px rgba(102,126,234,0.35);
 }
 
-/********************************
- *  FORMULARIO
- ********************************/
+/* Formulario */
 form {
   display: flex;
   flex-direction: column;
@@ -62,9 +58,7 @@ select:focus {
   box-shadow: 0 0 6px rgba(102,126,234,0.4);
 }
 
-/********************************
- *  BLOQUES DE CONFIGURACIÓN
- ********************************/
+
 .sectores-block,
 .butacas-block,
 .generador-butacas {
@@ -81,9 +75,7 @@ h4, h5 {
   color: #764ba2;
 }
 
-/********************************
- *  SECTORES
- ********************************/
+/*Sectores*/
 .sector-item {
   display: grid;
   grid-template-columns: repeat(3, 1fr) 120px;
@@ -93,6 +85,37 @@ h4, h5 {
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   margin-bottom: 12px;
+  align-items: start;
+}
+
+.sector-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sector-item label {
+  margin-bottom: 0;
+}
+
+.sector-item input {
+  margin-bottom: 0;
+}
+
+.error-inline {
+  color: #e53e3e;
+  font-size: 0.75rem;
+  min-height: 16px;
+  display: block;
+  margin-top: 2px;
+}
+
+span.error-inline {
+  color: #e53e3e;
+  font-size: 0.75rem;
+  min-height: 16px;
+  display: block;
+  margin-top: 2px;
 }
 
 .btn-eliminar-item {
@@ -102,15 +125,16 @@ h4, h5 {
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  align-self: flex-end;
+  padding: 10px 15px;
+  height: fit-content;
 }
 
 .btn-eliminar-item:hover {
   background: #c53030;
 }
 
-/********************************
- *  GENERADOR AUTOMÁTICO DE BUTACAS
- ********************************/
+/*generador de butacas*/
 .generador-butacas {
   border-left: 6px solid #764ba2;
 }
@@ -157,9 +181,7 @@ h4, h5 {
   box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
-/********************************
- *  LISTA DE BUTACAS
- ********************************/
+/*Butacas*/
 .butacas-header {
   display: flex;
   justify-content: space-between;
@@ -239,9 +261,7 @@ h4, h5 {
   margin-top: 10px;
 }
 
-/********************************
- *  ESTADO VACÍO
- ********************************/
+
 .sin-butacas {
   text-align: center;
   padding: 20px;
@@ -250,9 +270,7 @@ h4, h5 {
   border-radius: 12px;
 }
 
-/********************************
- *  BOTONES DE ENVÍO
- ********************************/
+
 button[type="submit"] {
   padding: 14px;
   margin-top: 20px;
@@ -304,9 +322,7 @@ button[type="submit"]:hover {
   background: #718096;
 }
 
-/********************************
- *  RESPONSIVE
- ********************************/
+
 @media (max-width: 768px) {
 
   .sector-item {

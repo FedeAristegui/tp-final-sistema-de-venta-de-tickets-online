@@ -1,4 +1,4 @@
-/* Reset y estilos base */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,7 +12,7 @@
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Contenedor de eventos */
+
 .eventos-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -29,7 +29,7 @@
   letter-spacing: -0.5px;
 }
 
-/* Sección de Filtros */
+
 .filtros-container {
   background: white;
   border-radius: 20px;
@@ -125,7 +125,7 @@
   border-radius: 8px;
 }
 
-/* Badge de categoría en la tarjeta */
+
 .categoria-badge {
   position: absolute;
   top: 15px;
@@ -140,7 +140,7 @@
   z-index: 10;
 }
 
-/* Botón de favorito */
+
 .btn-favorito {
   position: absolute;
   top: 15px;
@@ -177,7 +177,7 @@
   75% { transform: scale(1.25); }
 }
 
-/* Estado de carga */
+
 .loading {
   text-align: center;
   padding: 100px 20px;
@@ -203,7 +203,7 @@
   font-weight: 500;
 }
 
-/* Grid de eventos */
+
 .eventos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -211,7 +211,7 @@
   padding: 20px 0;
 }
 
-/* Tarjeta de evento */
+
 .evento-card {
   background: white;
   border-radius: 20px;
@@ -276,7 +276,7 @@
   letter-spacing: 2px;
 }
 
-/* Información del evento */
+
 .evento-info {
   padding: 25px;
 }
@@ -372,7 +372,7 @@
   transform: translateY(-1px);
 }
 
-/* Sin eventos */
+
 .sin-eventos {
   text-align: center;
   padding: 100px 40px;
@@ -395,7 +395,7 @@
   margin-bottom: 10px;
 }
 
-/* Responsive */
+
 @media (max-width: 1200px) {
   .eventos-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

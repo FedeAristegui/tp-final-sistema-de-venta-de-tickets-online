@@ -310,6 +310,7 @@
 .cupon-input-group {
   display: flex;
   gap: 8px;
+  width: 100%;
 }
 
 .input-cupon {
@@ -319,6 +320,7 @@
   border-radius: 6px;
   font-size: 0.95rem;
   text-transform: uppercase;
+  min-width: 0;
 }
 
 .input-cupon:focus {
@@ -327,7 +329,7 @@
 }
 
 .btn-aplicar-cupon {
-  padding: 10px 20px;
+  padding: 10px 15px;
   background: #4CAF50;
   color: white;
   border: none;
@@ -335,6 +337,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-aplicar-cupon:hover {
@@ -616,6 +620,7 @@
   text-align: center;
   text-decoration: none;
   display: block;
+  box-sizing: border-box;
 }
 
 .btn-pagar {

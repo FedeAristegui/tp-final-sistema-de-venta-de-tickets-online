@@ -186,8 +186,12 @@
                       placeholder="MM/YY"
                       maxlength="5"
                       class="input-tarjeta">
-                    @if (tarjetaForm.get('vencimiento')?.invalid && tarjetaForm.get('vencimiento')?.touched) {
-                      <span class="error-msg">Formato MM/YY</span>
+                    @if (tarjetaForm.get('vencimiento')?.touched) {
+                      @if (tarjetaForm.get('vencimiento')?.errors?.['tarjetaVencida']) {
+                        <span class="error-msg">La tarjeta está vencida</span>
+                      } @else if (tarjetaForm.get('vencimiento')?.invalid) {
+                        <span class="error-msg">Formato MM/YY</span>
+                      }
                     }
                   </div>
 
@@ -197,7 +201,7 @@
                       type="text" 
                       formControlName="cvv"
                       placeholder="123"
-                      maxlength="4"
+                      maxlength="3"
                       class="input-tarjeta">
                     @if (tarjetaForm.get('cvv')?.invalid && tarjetaForm.get('cvv')?.touched) {
                       <span class="error-msg">CVV inválido</span>

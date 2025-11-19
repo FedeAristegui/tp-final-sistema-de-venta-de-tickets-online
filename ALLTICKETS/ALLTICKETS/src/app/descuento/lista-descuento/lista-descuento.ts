@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-lista-descuento',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe],
   templateUrl: './lista-descuento.html',
   styleUrl: './lista-descuento.css',
 })

@@ -79,6 +79,22 @@ button.editar:disabled {
   font-size: 1.5rem;
 }
 
+.imagen-evento {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.imagen-evento img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  display: block;
+}
+
 .info-basica {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

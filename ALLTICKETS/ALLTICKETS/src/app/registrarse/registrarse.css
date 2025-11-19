@@ -61,8 +61,11 @@ form{
 }
 
 button:disabled {
-  background:#7c4dff;
+  background:#e3dbf7;
   cursor: not-allowed;
 }
 
 
+button {
+  background:#4b41c4;
+}

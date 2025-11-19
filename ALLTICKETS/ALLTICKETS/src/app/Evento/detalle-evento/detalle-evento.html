@@ -10,6 +10,12 @@
       <h1>{{ evento()!.titulo }}</h1>
     </div>
 
+    @if (evento()!.imagen) {
+      <div class="imagen-evento">
+        <img [src]="evento()!.imagen" [alt]="evento()!.titulo" />
+      </div>
+    }
+
     <div class="info-basica">
       <div class="info-item">
         <span class="icono">📅</span>

@@ -144,7 +144,7 @@ export class AdminEventos implements OnInit {
   ];
 
    
-  // 🔹 Formulario generador de butacas
+  //  Formulario generador de butacas
   protected readonly generadorButacas = this.fb.group({
     filas: ['', [Validators.required, validFilasValidator]],
     butacasPorFila: [0, [Validators.required, positiveNumberValidator]],
@@ -325,9 +325,8 @@ export class AdminEventos implements OnInit {
     }
   }
 
-  // 🔹 Generar butacas automáticamente
+  //  Generar butacas automáticamente
   generarButacas(){
-    // Validar que el formulario generador sea válido
     if (this.generadorButacas.invalid) {
       alert('⚠️ Por favor completa correctamente los campos del generador de butacas.');
       this.generadorButacas.markAllAsTouched();

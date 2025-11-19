@@ -1,12 +1,12 @@
-<!-- Galería de Eventos -->
+
 <div class="eventos-container">
   <h2 class="titulo-seccion">Próximos Eventos</h2>
   
-  <!-- Sección de Filtros -->
+ 
   <div class="filtros-container">
     <form [formGroup]="filtrosForm">
       <div class="filtros-grid">
-        <!-- Filtro por nombre -->
+       
         <div class="filtro-item">
           <label for="filtroNombre">🔍 Buscar por nombre o lugar</label>
           <input 
@@ -18,7 +18,7 @@
           />
         </div>
 
-        <!-- Filtro por fecha -->
+        
         <div class="filtro-item">
           <label for="filtroFecha">📅 Filtrar por fecha</label>
           <input 
@@ -29,7 +29,7 @@
           />
         </div>
 
-        <!-- Filtro por categoría -->
+        
         <div class="filtro-item">
           <label for="filtroCategoria">🎭 Categoría</label>
           <select 
@@ -46,7 +46,7 @@
       </div>
     </form>
 
-    <!-- Botón limpiar filtros -->
+    
     <div class="filtros-acciones">
       <button (click)="limpiarFiltros()" class="btn-limpiar">
         🗑️ Limpiar Filtros
@@ -67,7 +67,7 @@
       @for (evento of eventosFiltrados(); track evento.id) {
 
         <div class="evento-card" (click)="verDetalleEvento(evento.id)">
-          <!-- Botón de favorito -->
+          
           @if (usuario() && usuario().rol === 'usuario') {
             <button 
               class="btn-favorito" 
@@ -95,8 +95,11 @@
               <p><span class="icono">🕐</span> {{ evento.hora }}</p>
               <p><span class="icono">📍</span> {{ evento.lugar }}</p>
             </div>
-
+            @if(usuario() && usuario().rol === 'usuario') {
+               <button class="btn-ver-mas">Comprar →</button>
+            }@else if (usuario() && usuario().rol === 'admin' || !usuario()) {
             <button class="btn-ver-mas">Ver Detalles →</button>
+            }
           </div>
         </div>
       }

@@ -11,7 +11,7 @@ import { AdminEventos } from '../crear-evento/admin-eventos';
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, CommonModule, FormsModule, RouterLink, AdminEventos],
+  imports: [DatePipe, CommonModule, FormsModule, AdminEventos],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
@@ -29,7 +29,7 @@ export class detalleEvento {
   protected readonly isEditing = signal(false);
   protected readonly usuario = signal(this.autenticador.obtenerUsuarioActual());
 
-  // ====== SISTEMA DE BUTACAS ======
+  
   protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
 
   // Butacas agrupadas por fila
@@ -57,7 +57,7 @@ export class detalleEvento {
     return Object.keys(this.butacasPorFila()).sort();
   });
 
-  // ====== SISTEMA DE SECTORES ======
+  
   protected sectorSeleccionado = signal<string>('');
   protected cantidadSector = signal<number>(1);
 
@@ -206,7 +206,7 @@ export class detalleEvento {
       }
     });
 
-    // Mostrar mensaje apropiado
+    
     if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
       alert(`✅ ${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
@@ -262,7 +262,7 @@ export class detalleEvento {
     this.sectorSeleccionado.set('');
     this.cantidadSector.set(1);
 
-    // Sincronizar carrito con servidor si hay usuario logueado
+    
     const usuarioLocal = this.usuario();
     if (usuarioLocal && usuarioLocal.id) {
       try {
@@ -276,14 +276,7 @@ export class detalleEvento {
     }
   }
 
-  deleteMovie(){
-    if(confirm('Desea borrar el evento?')){
-      this.cliente.borrarEvento(this.id!).subscribe(() =>{
-        alert('Evento borrado con éxito');
-        this.router.navigateByUrl('/menu-principal');
-      })
-    }
-  }
+  
 
   volverAtras(): void {
     const usuario = this.usuario();

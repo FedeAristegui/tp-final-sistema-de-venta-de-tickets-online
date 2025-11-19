@@ -1,11 +1,11 @@
-/* Contenedor principal */
+
 .tarjetas-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 40px 20px;
 }
 
-/* Header */
+
 .header {
   text-align: center;
   color: white;
@@ -46,7 +46,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Formulario */
+
 .formulario-tarjeta {
   background: white;
   border-radius: 20px;
@@ -146,7 +146,7 @@
   cursor: not-allowed;
 }
 
-/* Loading */
+
 .loading {
   text-align: center;
   padding: 100px 20px;
@@ -167,7 +167,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Grid de tarjetas */
 .tarjetas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -176,7 +175,6 @@
   margin: 0 auto;
 }
 
-/* Card de tarjeta */
 .tarjeta-card {
   background: linear-gradient(135deg, #434343 0%, #000000 100%);
   border-radius: 20px;
@@ -260,7 +258,7 @@
   font-weight: 600;
 }
 
-/* Detalles completos expandibles */
+
 .tarjeta-detalles-completos {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -354,7 +352,7 @@
   background: rgba(229, 62, 62, 1);
 }
 
-/* Sin tarjetas */
+
 .sin-tarjetas {
   text-align: center;
   padding: 100px 40px;
@@ -401,7 +399,7 @@
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
 }
 
-/* Nota de seguridad */
+
 .nota-seguridad {
   max-width: 800px;
   margin: 40px auto 0;
@@ -424,7 +422,7 @@
   margin: 0;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .tarjetas-grid {
     grid-template-columns: 1fr;

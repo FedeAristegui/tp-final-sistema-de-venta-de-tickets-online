@@ -13,6 +13,7 @@ import { Tarjeta } from '../modelos/tarjeta';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Evento } from '../modelos/evento';
+import { tarjetaNoVencidaValidator } from '../mis-tarjetas/mis-tarjetas';
 
 @Component({
   selector: 'app-carrito',
@@ -62,8 +63,8 @@ export class Carrito implements OnInit {
     this.tarjetaForm = this.fb.group({
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
       titular: ['', [Validators.required, Validators.minLength(3)]],
-      vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
-      cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+      vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), tarjetaNoVencidaValidator]],
+      cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
       tipo: ['Visa', Validators.required]
     });
   }
@@ -455,14 +456,20 @@ export class Carrito implements OnInit {
   }
 
   private crearVentas(items: ItemCarrito[]) {
+    const descuentoAplicado = this.descuentoPorcentaje();
+    const factorDescuento = 1 - (descuentoAplicado / 100);
+    
     const ventas: Venta[] = items.map(item => {
+      const totalSinDescuento = item.precioUnitario * item.cantidad;
+      const totalConDescuento = totalSinDescuento * factorDescuento;
+      
       const venta: Venta = {
         eventoId: item.evento.id!,
         usuarioId: this.usuario.id,
         eventoTitulo: item.evento.titulo,
         cantidad: item.cantidad,
         fecha: new Date().toISOString(),
-        total: item.precioUnitario * item.cantidad,
+        total: totalConDescuento,
         tipo: item.tipoEntrada,
         detalle: item.detalleEntrada
       };

@@ -1,7 +1,7 @@
 export interface Descuento {
     id?: number | string;
     codigo: string;
-    porcentaje: number; // o 'descuentoPorcentaje'
+    porcentaje: number; 
     fechaInicio: string;
     fechaFin: string;
     activo: boolean;

@@ -7,7 +7,7 @@
     </button>
   </div>
 
-  <!-- Formulario para agregar tarjeta -->
+  
   @if (mostrarFormulario()) {
     <div class="formulario-tarjeta">
       <h2>Nueva Tarjeta</h2>
@@ -112,7 +112,7 @@
     </div>
   }
 
-  <!-- Lista de tarjetas -->
+ 
   @if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>
@@ -146,7 +146,7 @@
             </div>
           </div>
 
-          <!-- Detalles expandibles -->
+          
           @if (mostrarDetalles(tarjeta.id)) {
             <div class="tarjeta-detalles-completos">
               <div class="detalle-row">

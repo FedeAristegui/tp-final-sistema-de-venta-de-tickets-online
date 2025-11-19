@@ -31,7 +31,7 @@ export class PerfilUsuario implements OnInit {
     this.cargarPerfil();
   }
 
-  // RF22 - Ver perfil del cliente
+ 
   cargarPerfil() {
     this.usuario = this.autenticador.obtenerUsuarioActual();
     if (!this.usuario) {
@@ -54,7 +54,7 @@ export class PerfilUsuario implements OnInit {
     this.cargarPerfil();
   }
 
-  // RF23 - Modificar datos del cliente
+  
   guardarCambios() {
     if (this.perfilForm.invalid) {
       this.perfilForm.markAllAsTouched();

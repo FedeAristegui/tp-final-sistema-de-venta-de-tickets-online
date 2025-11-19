@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
 import { inject } from '@angular/core';
@@ -8,7 +8,7 @@ import { inject } from '@angular/core';
 @Component({
   selector: 'app-iniciar-sesion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './iniciar-sesion.html',
   styleUrls: ['./iniciar-sesion.css']
 })

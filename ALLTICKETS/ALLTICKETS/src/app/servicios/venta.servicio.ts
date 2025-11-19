@@ -50,12 +50,12 @@ export class VentaServicio {
         }
 
         return eventos.map(evento => {
-          // Comparar IDs de forma flexible (string o number)
+          
           const ventasEvento = ventas.filter(v => String(v.eventoId) === String(evento.id));
           const totalVendidas = ventasEvento.reduce((sum, v) => sum + (v.cantidad || 0), 0);
           const totalRecaudado = ventasEvento.reduce((sum, v) => sum + (v.total || 0), 0);
 
-          // Calcular capacidad total
+          
           let capacidadTotal = 0;
           if (evento.modoVenta === 'sector' && evento.sectores) {
             capacidadTotal = evento.sectores.reduce((sum, s) => sum + (s.capacidad || 0), 0);
@@ -67,11 +67,11 @@ export class VentaServicio {
             ? (totalVendidas / capacidadTotal) * 100 
             : 0;
 
-          // Agrupar detalles de ventas
+          
           let detalleVentas: any = {};
 
           if (evento.modoVenta === 'butaca' && ventasEvento.length > 0) {
-            // Agrupar butacas vendidas por fila
+            
             const butacasMap = new Map<string, Set<number>>();
             ventasEvento.forEach(venta => {
               if (venta.butacasVendidas && Array.isArray(venta.butacasVendidas)) {
@@ -92,7 +92,7 @@ export class VentaServicio {
               }));
             }
           } else if (evento.modoVenta === 'sector' && ventasEvento.length > 0) {
-            // Agrupar sectores vendidos
+          
             const sectoresMap = new Map<string, number>();
             ventasEvento.forEach(venta => {
               if (venta.sectoresVendidos && Array.isArray(venta.sectoresVendidos)) {
