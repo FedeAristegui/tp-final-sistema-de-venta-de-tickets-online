@@ -470,6 +470,6 @@ Este proyecto es un trabajo académico desarrollado como proyecto final.
 **Equipo de Desarrollo AllTickets**
 
 -  Email: agus@gmail.com
--  GitHub: [tu-usuario](https://github.com/tu-usuario)
+
 
 **Link del Proyecto**: [https://github.com/tu-usuario/tp-final-sistema-de-venta-de-tickets-online](https://github.com/tu-usuario/tp-final-sistema-de-venta-de-tickets-online)
