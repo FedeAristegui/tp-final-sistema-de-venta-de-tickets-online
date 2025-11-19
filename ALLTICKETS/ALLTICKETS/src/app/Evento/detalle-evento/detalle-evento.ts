@@ -1,16 +1,17 @@
 import { Component, inject, linkedSignal, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { EventoServicio } from '../../../servicios/evento.servicio';
-import { CarritoServicio } from '../../../servicios/carrito.servicio';
-import { Evento } from '../../../modelos/evento';
+import { EventoServicio } from '../../servicios/evento.servicio';
+import { CarritoServicio } from '../../servicios/carrito.servicio';
+import { Evento } from '../../modelos/evento';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Autenticador } from '../../../servicios/autenticador';
+import { Autenticador } from '../../servicios/autenticador';
+import { AdminEventos } from '../crear-evento/admin-eventos';
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, CommonModule, FormsModule, RouterLink],
+  imports: [DatePipe, CommonModule, FormsModule, RouterLink, AdminEventos],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })

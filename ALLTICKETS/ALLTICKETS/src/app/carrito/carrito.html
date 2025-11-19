@@ -8,7 +8,6 @@
       
       @if (detalleCompra(); as detalle) {
         <div class="detalle-compra-exitosa">
-          <p><strong>Ventas procesadas:</strong> {{ detalle.ventasProcesadas }}</p>
           @if (detalle.descuentoAplicado > 0) {
             <p><strong>Descuento aplicado:</strong> {{ detalle.descuentoAplicado }}%</p>
           }
@@ -25,6 +24,7 @@
         </button>
       </div>
     </div>
+    <h2 class="mensaje-compra-exitosa">Recibirá sus entradas por correo electrónico</h2>
   }
 
   @if (items().length === 0 && !compraExitosa()) {

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import { CarritoServicio, ItemCarrito } from '../servicios/carrito.servicio';
 import { VentaServicio } from '../servicios/venta.servicio';
-import { ClienteDescuento } from '../descuento/cliente-descuento';
+import { ClienteDescuento } from '../servicios/cliente-descuento';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { Venta } from '../modelos/venta';
@@ -71,6 +71,9 @@ export class Carrito implements OnInit {
   ngOnInit(): void {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
+
+    // Limpiar carrito local para evitar mezclar datos entre usuarios
+    this.carritoServicio.vaciarCarrito();
 
     if (this.usuario) {
       this.cargarTarjetasUsuario();
@@ -200,10 +203,18 @@ export class Carrito implements OnInit {
 
     this.carritoServicio.obtenerCarritosPorUsuario(this.usuario.id).subscribe({
       next: (carritos) => {
-        if (!carritos || carritos.length === 0) return;
+        if (!carritos || carritos.length === 0) {
+          // Usuario no tiene carrito en servidor, asegurar que el local esté vacío
+          this.carritoServicio.vaciarCarrito();
+          return;
+        }
 
         const backend = carritos[0];
-        if (!backend.items || backend.items.length === 0) return;
+        if (!backend.items || backend.items.length === 0) {
+          // Carrito del usuario está vacío en servidor
+          this.carritoServicio.vaciarCarrito();
+          return;
+        }
 
         // Pedir todos los eventos y reconstruir los ItemCarrito locales
         const eventosObs = backend.items.map(i => this.eventoServicio.obtenerEvento(String(i.eventoId)));

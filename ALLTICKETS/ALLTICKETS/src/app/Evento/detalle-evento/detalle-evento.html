@@ -4,9 +4,9 @@
       <button (click)="volverAtras()" class="btn-volver">
         <span>←</span> Volver
       </button>
-      @if(usuario()?.rol === 'usuario') {
-        <button routerLink="/carrito">Ver Carrito</button>  
-      }        
+      @if (usuario()?.rol === 'admin') {
+        <button class="editar" (click)="toggleEdit()" [disabled]="isEditing()">Editar</button>
+      }
       <h1>{{ evento()!.titulo }}</h1>
     </div>
 
@@ -168,4 +168,14 @@
       </div>
     }
   </div>
+  @if (isEditing()) {
+    <app-admin-eventos
+      id="form-edicion"
+      [isEditing]="true"
+      [evento]="evento()" 
+      (edited)="handleEdit($event)" 
+      (cancelled)="toggleEdit()">
+        </app-admin-eventos>
+    }
+
 }

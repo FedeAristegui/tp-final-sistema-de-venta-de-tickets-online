@@ -1,9 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
-import { EventoServicio } from '../../../servicios/evento.servicio';
+import { EventoServicio } from '../../servicios/evento.servicio';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Evento } from '../../../modelos/evento';
+import { Evento } from '../../modelos/evento';
 import { FormsModule } from '@angular/forms';
 
 @Component({

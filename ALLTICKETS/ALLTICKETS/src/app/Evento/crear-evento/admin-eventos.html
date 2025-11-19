@@ -10,8 +10,8 @@
     </h3>
 
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario-evento">
-      <label>Título:</label>
-      <input formControlName="titulo" placeholder="Título del evento" />
+      <label for="titulo">Título:</label>
+      <input id="titulo" formControlName="titulo" placeholder="Título del evento" />
       @if (titulo.dirty || titulo.touched) {
         @if (titulo.hasError('required')) {
           <span>El titulo es requerido</span>
@@ -21,8 +21,8 @@
         }
       }
 
-      <label>Fecha:</label>
-      <input formControlName="fecha" type="date" />
+      <label for="fecha">Fecha:</label>
+      <input id="fecha" formControlName="fecha" type="date" />
       @if (fecha.dirty || fecha.touched) {
         @if (fecha.hasError('required')) {
           <span>La fecha es requerida</span>
@@ -32,16 +32,16 @@
         }
       }
 
-      <label>Hora:</label>
-      <input formControlName="hora" type="time" />
+      <label for="hora">Hora:</label>
+      <input id="hora" formControlName="hora" type="time" />
       @if (hora.dirty || hora.touched) {
         @if (hora.hasError('required')) {
           <span>La hora es requerida</span>
         }
       }
 
-      <label>Lugar:</label>
-      <input formControlName="lugar" placeholder="Lugar del evento" />
+      <label for="lugar">Lugar:</label>
+      <input id="lugar" formControlName="lugar" placeholder="Lugar del evento" />
       @if (lugar.dirty || lugar.touched) {
         @if (lugar.hasError('required')) {
           <span>El lugar es requerido</span>
@@ -54,7 +54,7 @@
         }
       }
 
-      <label>Categoría: </label>
+      <label for="categoria">Categoría: </label>
       <select id = "categoria" formControlName = "categoria">
       <option value="" disabled selected>Seleccione una categoria</option>
       @for (categoria of categorias; track $index) {
@@ -67,8 +67,8 @@
       }
     }
 
-      <label>Imagen (URL):</label>
-      <input formControlName="imagen" placeholder="https://..." />
+      <label for="imagen">Imagen (URL):</label>
+      <input id="imagen" formControlName="imagen" placeholder="https://..." />
         @if (imagen.dirty || imagen.touched) {
         @if (imagen.hasError('required')) {
           <span>La foto es requerida</span>
@@ -78,8 +78,8 @@
         }
       }
   
-      <label>Modo de Venta:</label>
-      <select formControlName="modoVenta" (change)="cambiarModoVenta()">
+      <label for="modoVenta">Modo de Venta:</label>
+      <select id="modoVenta" formControlName="modoVenta" (change)="cambiarModoVenta()">
         <option value="sector">Venta por Sector</option>
         <option value="butaca">Venta por Butaca</option>
       </select>
@@ -91,8 +91,8 @@
           <div formArrayName="sectores">
             @for (s of sectores.controls; track $index; let i = $index) {
               <div [formGroupName]="i" class="sector-item">
-                <label>Nombre:</label>
-                <input formControlName="nombre" placeholder="Ej: VIP" />
+                <label for="nombre">Nombre:</label>
+                <input id="nombre" formControlName="nombre" placeholder="Ej: VIP" />
                 @if (s.get('nombre')?.dirty || s.get('nombre')?.touched) {
                   @if (s.get('nombre')?.hasError('required')) {
                     <span class="error-inline">El nombre es requerido</span>
@@ -101,8 +101,8 @@
                     <span class="error-inline">El nombre solo puede contener letras</span>
                   }
                 }
-                <label>Capacidad:</label>
-                <input formControlName="capacidad" type="number" />
+                <label for="capacidad">Capacidad:</label>
+                <input id="capacidad" formControlName="capacidad" type="number" />
                 @if (s.get('capacidad')?.dirty || s.get('capacidad')?.touched) {
                   @if (s.get('capacidad')?.hasError('required')) {
                     <span class="error-inline">La capacidad es requerida</span>
@@ -111,8 +111,8 @@
                     <span class="error-inline">La capacidad debe ser mayor a 0</span>
                   }
                 }
-                <label>Precio:</label>
-                <input formControlName="precio" type="number" />
+                <label for="precio">Precio:</label>
+                <input id="precio" formControlName="precio" type="number" />
                 @if (s.get('precio')?.dirty || s.get('precio')?.touched) {
                   @if (s.get('precio')?.hasError('required')) {
                     <span class="error-inline">El precio es requerido</span>
@@ -138,8 +138,8 @@
             </p>
             <div class="generador-campos">
               <div>
-                <label>Filas <small>(A,B,C o A-E)</small>:</label>
-                <input formControlName="filas" placeholder="Ejemplo: A-E" />
+                <label for="filas">Filas <small>(A,B,C o A-E)</small>:</label>
+                <input id="filas" formControlName="filas" placeholder="Ejemplo: A-E" />
                 <small class="hint">💡 Usa comas (A,B,C) o guión (A-E)</small>
                 @if (generadorButacas.get('filas')?.dirty || generadorButacas.get('filas')?.touched) {
                   @if (generadorButacas.get('filas')?.hasError('required')) {
@@ -151,8 +151,8 @@
                 }
               </div>
               <div>
-                <label>Butacas por fila:</label>
-                <input formControlName="butacasPorFila" type="number" placeholder="Ej: 10" min="1" />
+                <label for="butacasPorFila">Butacas por fila:</label>
+                <input id="butacasPorFila" formControlName="butacasPorFila" type="number" placeholder="Ej: 10" min="1" />
                 <small class="hint">💡 Cantidad de asientos por fila</small>
                 @if (generadorButacas.get('butacasPorFila')?.dirty || generadorButacas.get('butacasPorFila')?.touched) {
                   @if (generadorButacas.get('butacasPorFila')?.hasError('required')) {
@@ -164,8 +164,8 @@
                 }
               </div>
               <div>
-                <label>Precio por butaca ($):</label>
-                <input formControlName="precioBase" type="number" placeholder="Ej: 1000" min="0" />
+                <label for="precioBase">Precio por butaca ($):</label>
+                <input id="precioBase" formControlName="precioBase" type="number" placeholder="Ej: 1000" min="0" />
                 <small class="hint">💡 Precio base para todas las butacas</small>
                 @if (generadorButacas.get('precioBase')?.dirty || generadorButacas.get('precioBase')?.touched) {
                   @if (generadorButacas.get('precioBase')?.hasError('required')) {

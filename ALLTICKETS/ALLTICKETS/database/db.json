@@ -47,7 +47,7 @@
       "sectores": [
         {
           "nombre": "CAMPÓ VIP",
-          "capacidad": 4990,
+          "capacidad": 4987,
           "precio": 50000
         },
         {
@@ -57,7 +57,7 @@
         },
         {
           "nombre": "PLATEA",
-          "capacidad": 25000,
+          "capacidad": 24998,
           "precio": 35000
         }
       ],
@@ -558,19 +558,19 @@
           "fila": "F",
           "numero": 6,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "F",
           "numero": 7,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "F",
           "numero": 8,
           "precio": 25000,
-          "disponible": true
+          "disponible": false
         },
         {
           "fila": "F",
@@ -1006,7 +1006,7 @@
       "sectores": [
         {
           "nombre": "vip",
-          "capacidad": 5,
+          "capacidad": 3,
           "precio": 1000
         }
       ],
@@ -1049,14 +1049,29 @@
   "carritos": [
     {
       "usuarioId": "8486",
-      "items": [],
-      "fechaActualizacion": "2025-11-18T23:49:10.662Z",
+      "items": [
+        {
+          "eventoId": "1ea3",
+          "cantidad": 3,
+          "tipoEntrada": "sector",
+          "detalleEntrada": "vip",
+          "precioUnitario": 1000
+        },
+        {
+          "eventoId": "514d",
+          "cantidad": 1,
+          "tipoEntrada": "butaca",
+          "detalleEntrada": "Fila E - Butaca 11",
+          "precioUnitario": 25000
+        }
+      ],
+      "fechaActualizacion": "2025-11-19T14:37:03.753Z",
       "id": "cart-8486"
     },
     {
       "usuarioId": "7083",
       "items": [],
-      "fechaActualizacion": "2025-11-18T21:35:43.051Z",
+      "fechaActualizacion": "2025-11-19T14:39:32.844Z",
       "id": "bc05"
     },
     {
@@ -1377,6 +1392,108 @@
         {
           "fila": "A",
           "numero": 14
+        }
+      ]
+    },
+    {
+      "id": "18f9",
+      "eventoId": "2fcd",
+      "usuarioId": "7083",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 3,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 150000,
+      "tipo": "sector",
+      "detalle": "CAMPÓ VIP",
+      "sectoresVendidos": [
+        {
+          "nombre": "CAMPÓ VIP",
+          "cantidad": 3
+        }
+      ]
+    },
+    {
+      "id": "ee43",
+      "eventoId": "2fcd",
+      "usuarioId": "7083",
+      "eventoTitulo": "AIRBAG",
+      "cantidad": 2,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 70000,
+      "tipo": "sector",
+      "detalle": "PLATEA",
+      "sectoresVendidos": [
+        {
+          "nombre": "PLATEA",
+          "cantidad": 2
+        }
+      ]
+    },
+    {
+      "id": "9553",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila F - Butaca 6",
+      "butacasVendidas": [
+        {
+          "fila": "F",
+          "numero": 6
+        }
+      ]
+    },
+    {
+      "id": "c568",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila F - Butaca 7",
+      "butacasVendidas": [
+        {
+          "fila": "F",
+          "numero": 7
+        }
+      ]
+    },
+    {
+      "id": "c5f6",
+      "eventoId": "514d",
+      "usuarioId": "7083",
+      "eventoTitulo": "Luciano Mellera",
+      "cantidad": 1,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 25000,
+      "tipo": "butaca",
+      "detalle": "Fila F - Butaca 8",
+      "butacasVendidas": [
+        {
+          "fila": "F",
+          "numero": 8
+        }
+      ]
+    },
+    {
+      "id": "7ff2",
+      "eventoId": "1ea3",
+      "usuarioId": "7083",
+      "eventoTitulo": "TTTTTTT",
+      "cantidad": 2,
+      "fecha": "2025-11-19T14:39:32.830Z",
+      "total": 2000,
+      "tipo": "sector",
+      "detalle": "vip",
+      "sectoresVendidos": [
+        {
+          "nombre": "vip",
+          "cantidad": 2
         }
       ]
     }

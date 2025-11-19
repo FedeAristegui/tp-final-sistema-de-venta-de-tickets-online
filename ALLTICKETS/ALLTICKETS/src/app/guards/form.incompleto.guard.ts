@@ -1,5 +1,5 @@
 import { CanDeactivateFn } from '@angular/router';
-import {AdminEventos} from '../Evento/admin-eventos/crear-evento/admin-eventos';
+import {AdminEventos} from '../Evento/crear-evento/admin-eventos';
 
 export const formIncompletoGuard: CanDeactivateFn<AdminEventos> = (component, currentRoute, currentState, nextState) => {
   // Accede al formulario usando la propiedad correcta

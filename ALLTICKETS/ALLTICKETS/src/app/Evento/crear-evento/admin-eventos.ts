@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, signal, Input, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { CanDeactivateFn } from '@angular/router';
 
 // Validador: rechaza números en texto (para título y lugar)
 export const noNumbersValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -96,8 +95,8 @@ export const requireSectorOrButacaByModo: ValidatorFn = (group: AbstractControl)
   return (sectoresCount === 0 && butacasCount === 0) ? { requireSectorOrButaca: true } : null;
 };
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { EventoServicio } from '../../../servicios/evento.servicio';
-import { Evento } from '../../../modelos/evento';
+import { EventoServicio } from '../../servicios/evento.servicio';
+import { Evento } from '../../modelos/evento';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -232,6 +231,7 @@ export class AdminEventos implements OnInit {
       fecha: ev.fecha,
       hora: ev.hora,
       lugar: ev.lugar,
+      categoria: ev.categoria,
       imagen: ev.imagen,
       modoVenta: ev.modoVenta
     });

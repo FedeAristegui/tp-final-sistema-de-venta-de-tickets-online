@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Autenticador } from '../../servicios/autenticador';
-import { usuario } from '../../modelos/usuario';
-import { PaginaPrincipal } from '../../pagina-principal/pagina-principal';
+import { Autenticador } from '../servicios/autenticador';
+import { usuario } from '../modelos/usuario';
+import { PaginaPrincipal } from '../pagina-principal/pagina-principal';
 
 @Component({
   selector: 'app-perfil-usuario',

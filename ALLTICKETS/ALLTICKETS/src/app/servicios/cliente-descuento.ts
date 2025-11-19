@@ -10,7 +10,7 @@ export class ClienteDescuento {
 
   private readonly http = inject(HttpClient);
 
-  private readonly baseUrl = 'http://localhost:3000/descuentos';//URL DEL JSON SERVER
+  private readonly baseUrl = 'http://localhost:3000/descuentos';
   
   obtenerDescuentos(): Observable<Descuento[]>{
     return this.http.get<Descuento[]>(this.baseUrl);

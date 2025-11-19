@@ -1,5 +1,5 @@
 import { Component, inject, linkedSignal, signal } from '@angular/core';
-import { ClienteDescuento } from '../cliente-descuento';
+import { ClienteDescuento } from '../../servicios/cliente-descuento';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Descuento } from '../../modelos/descuento';

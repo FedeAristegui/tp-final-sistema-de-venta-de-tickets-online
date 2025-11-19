@@ -1,6 +1,6 @@
 import { Component, effect, EventEmitter, inject, input, Output, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { ClienteDescuento } from '../cliente-descuento';
+import { ClienteDescuento } from '../../servicios/cliente-descuento';
 import { Descuento } from '../../modelos/descuento';
 import { Router, RouterLink } from '@angular/router';
 
