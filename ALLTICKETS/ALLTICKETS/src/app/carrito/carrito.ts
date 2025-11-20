@@ -44,14 +44,14 @@ export class Carrito implements OnInit {
     tarjetaUsada?: string;
   } | null>(null);
   
-  // Sistema de tarjetas
+  // tarjetas
   usuario: any = null;
   tarjetasUsuario = signal<Tarjeta[]>([]);
   tarjetaSeleccionada = signal<Tarjeta | null>(null);
   mostrarFormularioTarjeta = signal<boolean>(false);
   tarjetaForm: FormGroup;
   
-  // Sistema de cupones
+  // cupones
   codigoCupon = signal<string>('');
   cuponAplicado = signal<Descuento | null>(null);
   mensajeCupon = signal<string>('');
@@ -73,7 +73,6 @@ export class Carrito implements OnInit {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
 
-    // Limpiar carrito local para evitar mezclar datos entre usuarios
     this.carritoServicio.vaciarCarrito();
 
     if (this.usuario) {
@@ -92,7 +91,6 @@ export class Carrito implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error al cargar tarjetas:', err);
         this.tarjetasUsuario.set([]);
       }
     });
@@ -136,10 +134,9 @@ export class Carrito implements OnInit {
         this.tarjetaSeleccionada.set(tarjeta);
         this.mostrarFormularioTarjeta.set(false);
         this.tarjetaForm.reset({ tipo: 'Visa' });
-        alert('Tarjeta agregada correctamente ✅');
+        alert('Tarjeta agregada correctamente');
       },
       error: (err) => {
-        console.error('Error al agregar tarjeta:', err);
         alert('Error al agregar tarjeta');
       }
     });
@@ -151,9 +148,6 @@ export class Carrito implements OnInit {
 
   obtenerIconoTarjeta(tipo: string){
     switch (tipo) {
-      case 'Visa': return '💳';
-      case 'Mastercard': return '💳';
-      case 'American Express': return '💳';
       default: return '💳';
     }
   }
@@ -164,7 +158,7 @@ export class Carrito implements OnInit {
       if (this.usuario) {
         this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
           next: () => {},
-          error: (err) => console.error('Error sincronizando carrito tras eliminar item:', err)
+          error: (err) => {}
         });
       }
     }
@@ -179,7 +173,7 @@ export class Carrito implements OnInit {
       if (this.usuario) {
         this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
           next: () => {},
-          error: (err) => console.error('Error sincronizando carrito tras actualizar cantidad:', err)
+          error: (err) => {}
         });
       }
     }
@@ -193,7 +187,7 @@ export class Carrito implements OnInit {
       if (this.usuario) {
         this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
           next: () => {},
-          error: (err) => console.error('Error sincronizando carrito tras vaciar:', err)
+          error: (err) => {}
         });
       }
     }
@@ -205,19 +199,16 @@ export class Carrito implements OnInit {
     this.carritoServicio.obtenerCarritosPorUsuario(this.usuario.id).subscribe({
       next: (carritos) => {
         if (!carritos || carritos.length === 0) {
-          // Usuario no tiene carrito en servidor, asegurar que el local esté vacío
           this.carritoServicio.vaciarCarrito();
           return;
         }
 
         const backend = carritos[0];
         if (!backend.items || backend.items.length === 0) {
-          // Carrito del usuario está vacío en servidor
           this.carritoServicio.vaciarCarrito();
           return;
         }
 
-        // Pedir todos los eventos y reconstruir los ItemCarrito locales
         const eventosObs = backend.items.map(i => this.eventoServicio.obtenerEvento(String(i.eventoId)));
         forkJoin(eventosObs).subscribe({
           next: (eventos) => {
@@ -231,10 +222,10 @@ export class Carrito implements OnInit {
 
             this.carritoServicio.setItemsDirect(items);
           },
-          error: (err) => console.error('Error cargando eventos para carrito:', err)
+          error: (err) => {}
         });
       },
-      error: (err) => console.error('Error al obtener carritos del servidor:', err)
+      error: (err) => {}
     });
   }
 
@@ -263,13 +254,13 @@ export class Carrito implements OnInit {
         );
 
         if (!cuponEncontrado) {
-          this.mensajeCupon.set('❌ Cupón no válido');
+          this.mensajeCupon.set('Cupón no válido');
           this.cuponAplicado.set(null);
           return;
         }
 
         if (!cuponEncontrado.activo) {
-          this.mensajeCupon.set('❌ Este cupón ya no está disponible');
+          this.mensajeCupon.set('Este cupón ya no está disponible');
           this.cuponAplicado.set(null);
           return;
         }
@@ -278,22 +269,21 @@ export class Carrito implements OnInit {
         const fechaFin = new Date(cuponEncontrado.fechaFin);
 
         if (hoy < fechaInicio) {
-          this.mensajeCupon.set('❌ Este cupón aún no es válido');
+          this.mensajeCupon.set('Este cupón aún no es válido');
           this.cuponAplicado.set(null);
           return;
         }
 
         if (hoy > fechaFin) {
-          this.mensajeCupon.set('❌ Este cupón ha expirado');
+          this.mensajeCupon.set('Este cupón ha expirado');
           this.cuponAplicado.set(null);
           return;
         }
         this.cuponAplicado.set(cuponEncontrado);
-        this.mensajeCupon.set(`✅ Cupón aplicado: ${cuponEncontrado.porcentaje}% de descuento`);
+        this.mensajeCupon.set(`Cupón aplicado: ${cuponEncontrado.porcentaje}% de descuento`);
       },
       error: (error) => {
-        console.error('Error al validar cupón:', error);
-        this.mensajeCupon.set('❌ Error al validar el cupón');
+        this.mensajeCupon.set('Error al validar el cupón');
         this.cuponAplicado.set(null);
       }
     });
@@ -301,7 +291,7 @@ export class Carrito implements OnInit {
 
   borrarCupon(){
     this.limpiarCupon();
-    this.mensajeCupon.set('Cupón removido');
+    this.mensajeCupon.set('Cupón borrado');
   }
 
   private limpiarCupon(){
@@ -329,32 +319,26 @@ export class Carrito implements OnInit {
 
     this.procesandoCompra.set(true);
 
-    // Antes de intentar actualizar y generar ventas, validar disponibilidad actual en el servidor
+    // Antes de intentar comprar, valida si la entrada está disponible
     this.validarDisponibilidad(items).then(() => {
-      // Primero actualizamos los eventos para bloquear las butacas/sectores
       this.actualizarEventosDisponibilidad(items).subscribe({
         next: () => {
-          // Luego creamos las ventas
           this.crearVentas(items);
         },
         error: (error) => {
-          console.error('Error al actualizar disponibilidad:', error);
           this.procesandoCompra.set(false);
           alert('Error al procesar la compra. Por favor, intenta nuevamente.');
         }
       });
     }).catch((msg) => {
-      // Si falla la validación, informar al usuario y detener el flujo
       this.procesandoCompra.set(false);
       const texto = typeof msg === 'string' ? msg : 'Algunos artículos ya no están disponibles.';
       alert(texto);
     });
   }
 
-  // Valida contra el servidor que todos los items del carrito estén disponibles
   private validarDisponibilidad(items: ItemCarrito[]): Promise<void> {
     return new Promise((resolve, reject) => {
-      // Agrupar por evento
       const itemsPorEvento = new Map<string, ItemCarrito[]>();
       items.forEach(item => {
         const eventoId = String(item.evento.id);
@@ -365,7 +349,6 @@ export class Carrito implements OnInit {
       const checks = Array.from(itemsPorEvento.entries()).map(([eventoId, itemsEvento]) =>
         this.eventoServicio.obtenerEvento(eventoId).pipe(
           map((evento: Evento) => {
-            // Para cada item de este evento validar
             for (const item of itemsEvento) {
               if (item.tipoEntrada === 'butaca') {
                 const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
@@ -396,7 +379,6 @@ export class Carrito implements OnInit {
   }
 
   private actualizarEventosDisponibilidad(items: ItemCarrito[]) {
-    // Agrupar items por evento para actualizar cada evento solo una vez
     const itemsPorEvento = new Map<string, ItemCarrito[]>();
     
     items.forEach(item => {
@@ -407,14 +389,12 @@ export class Carrito implements OnInit {
       itemsPorEvento.get(eventoId)!.push(item);
     });
 
-    // Crear una actualización por cada evento único
     const actualizaciones = Array.from(itemsPorEvento.entries()).map(([eventoId, itemsEvento]) => {
       return new Promise((resolve, reject) => {
         this.eventoServicio.obtenerEvento(eventoId).subscribe({
           next: (evento) => {
             let eventoModificado = { ...evento };
 
-            // Procesar todos los items de este evento
             itemsEvento.forEach(item => {
               if (item.tipoEntrada === 'butaca') {
                 const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
@@ -441,7 +421,6 @@ export class Carrito implements OnInit {
               }
             });
 
-            // Actualizar el evento con todas las modificaciones
             this.eventoServicio.actualizarEvento(eventoModificado, evento.id!).subscribe({
               next: () => resolve(true),
               error: (err) => reject(err)
@@ -505,7 +484,6 @@ export class Carrito implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error al procesar venta:', error);
           ventasFallidas++;
           
           if (ventasExitosas + ventasFallidas === ventas.length) {
@@ -533,16 +511,13 @@ export class Carrito implements OnInit {
       
       this.carritoServicio.vaciarCarrito();
       this.limpiarCupon();
-      // Sincronizar con servidor para reflejar el carrito vacío
       if (this.usuario && this.usuario.id) {
         try {
           this.carritoServicio.sincronizarConServidor(String(this.usuario.id)).subscribe({
             next: () => {},
-            error: (err) => console.error('Error sincronizando carrito tras compra exitosa:', err)
+            error: (err) => {}
           });
-        } catch (e) {
-          console.error('Error iniciando sincronización de carrito tras compra exitosa:', e);
-        }
+        } catch (e) {}
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -560,16 +535,13 @@ export class Carrito implements OnInit {
       
       this.carritoServicio.vaciarCarrito();
       this.limpiarCupon();
-      // Sincronizar con servidor para reflejar el carrito vacío (compra parcial también vacía los items)
       if (this.usuario && this.usuario.id) {
         try {
           this.carritoServicio.sincronizarConServidor(String(this.usuario.id)).subscribe({
             next: () => {},
-            error: (err) => console.error('Error sincronizando carrito tras compra parcial:', err)
+            error: (err) => {}
           });
-        } catch (e) {
-          console.error('Error iniciando sincronización de carrito tras compra parcial:', e);
-        }
+        } catch (e) {}
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -1,5 +1,4 @@
 <div class="contenedor">
-  <!-- Formulario -->
   <div class="formulario-container">
     <h3>
       @if(isEditing) {
@@ -142,7 +141,6 @@
         <div class="butacas-block">
           <h4>Configuración de Butacas</h4>
           
-          <!--  Generador Automático de Butacas -->
           <div class="generador-butacas" [formGroup]="generadorButacas">
             <h5>🎫 Generador Automático de Butacas</h5>
             <p class="info-ayuda">
@@ -205,7 +203,6 @@
 
           <hr />
 
-          <!-- Vista previa de butacas -->
           <div formArrayName="butacas">
             @if (butacas.length > 0) {
               <div class="butacas-header">
@@ -213,13 +210,11 @@
                 <div class="info-butacas">Total: {{ butacas.length }} butacas</div>
               </div>
               
-              <!-- Opción de edición manual -->
               <div class="opciones-butacas">
                 <button type="button" (click)="agregarButaca()" class="btn-agregar">+ Agregar Butaca Manual</button>
                 <button type="button" (click)="limpiarButacas()" class="btn-limpiar">🗑️ Limpiar Todas</button>
               </div>
               
-              <!-- Lista de butacas (solo mostrar primeras 20 para no saturar) -->
               <div class="lista-butacas">
                 @for (b of butacas.controls; track $index; let i = $index) {
                   @if (i < 20 || mostrarTodasButacas()) {

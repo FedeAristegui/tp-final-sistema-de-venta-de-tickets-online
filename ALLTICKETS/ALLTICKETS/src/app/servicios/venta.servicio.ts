@@ -24,28 +24,21 @@ export class VentaServicio {
   }
 
   obtenerEstadisticas(): Observable<EstadisticaEvento[]> {
-    console.log('Iniciando carga de estadísticas...');
-    
     return forkJoin({
       ventas: this.http.get<Venta[]>(`${this.urlBase}/ventas`).pipe(
         catchError(err => {
-          console.error('Error al obtener ventas:', err);
           return of([]);
         })
       ),
       eventos: this.http.get<Evento[]>(`${this.urlBase}/eventos`).pipe(
         catchError(err => {
-          console.error('Error al obtener eventos:', err);
           return of([]);
         })
       )
     }).pipe(
       map(({ ventas, eventos }) => {
-        console.log('Ventas recibidas:', ventas);
-        console.log('Eventos recibidos:', eventos);
         
         if (!eventos || eventos.length === 0) {
-          console.warn('No hay eventos disponibles');
           return [];
         }
 
@@ -122,7 +115,6 @@ export class VentaServicio {
         });
       }),
       catchError(err => {
-        console.error('Error en el procesamiento:', err);
         return of([]);
       })
     );

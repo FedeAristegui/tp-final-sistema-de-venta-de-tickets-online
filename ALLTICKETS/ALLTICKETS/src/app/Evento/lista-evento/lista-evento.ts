@@ -28,7 +28,7 @@ export class ListaEvento {
 
   ordenarPor(campo: string) {
   if (this.ordenActual === campo) {
-    // Si vuelve a hacer click → invertimos la dirección
+    // Si vuelve a hacer click, invierte la dirección
     this.direccion = this.direccion === 'asc' ? 'desc' : 'asc';
   } else {
     // Si cambia de columna, arranca ascendente
@@ -40,7 +40,7 @@ export class ListaEvento {
     let valorA = a[campo];
     let valorB = b[campo];
 
-    // Si es fecha, convertir a Date
+    // Si es fecha, convertie a Date
     if (campo === 'fecha') {
       valorA = new Date(valorA);
       valorB = new Date(valorB);
@@ -52,10 +52,8 @@ export class ListaEvento {
   });
 }
 
-// propiedad para el filtro
   filtroTitulo: string = '';
 
-  // Computed: eventos filtrados automáticamente
   get eventosFiltrados(): Evento[] {
     const todos = this.eventosOriginales() ?? [];
     if (!this.filtroTitulo) return todos;
@@ -68,28 +66,20 @@ export class ListaEvento {
     if (id == null) return;
     this.router.navigate(['/ficha-evento', id]);
   }
+  
 eliminarEvento(id: number | string) {
   if (id == null) return;
   
-
   if (!confirm('¿Estás seguro de eliminar este evento?')) {
     return; 
   }
-  
- 
+   
   this.client.borrarEvento(id).subscribe({
     next: () => {
-     
-      
-      
-      
-      
-      window.location.reload();
-      
+     window.location.reload();
     },
     error: (err) => {
-      console.error('Error al eliminar:', err);
-      alert('❌ Error al eliminar el evento');
+      alert('Error al eliminar el evento');
     }
   });
 }

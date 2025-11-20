@@ -64,7 +64,6 @@ export class Autenticador {
   }
 
   obtenerUsuarioActual(): usuario | null {
-    console.log('aca estamos')
     const data = localStorage.getItem('usuarioLogueado');
     return data ? JSON.parse(data) : null;
   }

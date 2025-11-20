@@ -9,8 +9,6 @@ h1 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   font-weight: 800;
-
-  /* GRADIENTE DE TEXTO */
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text;
   -webkit-background-clip: text;
@@ -40,7 +38,6 @@ input[type="text"]:focus {
   box-shadow: 0 6px 18px rgba(102, 126, 234, 0.35);
 }
 
-/*Tabla*/
 table {
   width: 100%;
   border-collapse: collapse;
@@ -91,7 +88,6 @@ tbody tr:hover {
   justify-content: center;
 }
 
-/* Botón Ver */
 .btn-ver {
   padding: 10px 16px;
   border: none;
@@ -133,9 +129,7 @@ tbody tr:hover {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   color: #222;
-  /* TEXTO OSCURO */
   border: 2px solid rgba(0, 0, 0, 0.25);
-  /* BORDE VISIBILE */
   text-decoration: none;
   display: inline-block;
   backdrop-filter: blur(10px);

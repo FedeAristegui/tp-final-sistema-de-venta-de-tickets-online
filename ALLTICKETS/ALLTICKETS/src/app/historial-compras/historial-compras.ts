@@ -1,4 +1,3 @@
-// src/app/historial-compras/historial-compras.ts
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';

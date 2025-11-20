@@ -26,9 +26,7 @@ export class Registrarse {
     rol: ['usuario', Validators.required]
   });
 
- 
-
-  registrar() {
+   registrar() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       alert('Por favor, complete todos los campos correctamente.');
@@ -37,7 +35,7 @@ export class Registrarse {
 
     const nuevoUsuario: usuario = this.form.value as usuario;
 
-    // Verificar si el email ya está registrado
+    // Verifica si el email ya está registrado
     this.autenticador.obtenerUsuarios().subscribe({
       next: usuarios => {
         const existe = usuarios.some(u => u.email === nuevoUsuario.email);
@@ -46,21 +44,19 @@ export class Registrarse {
           return;
         }
 
-        // Si no existe, lo registramos
+        // Si no existe, registra el mail
         this.autenticador.registrarUsuario(nuevoUsuario).subscribe({
           next: () => {
-            alert('✅ Usuario registrado con éxito.');
+            alert('Usuario registrado con éxito.');
             this.form.reset({ rol: 'usuario' });
           },
           error: err => {
-            console.error('Error al registrar:', err);
-            alert('❌ Ocurrió un error al registrar el usuario.');
+            alert('Ocurrió un error al registrar el usuario.');
           }
         });
       },
       error: err => {
-        console.error('Error al verificar usuarios:', err);
-        alert('❌ No se pudo verificar el email.');
+        alert('No se pudo verificar el email.');
       }
     });
   }

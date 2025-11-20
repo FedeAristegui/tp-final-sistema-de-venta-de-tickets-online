@@ -27,18 +27,14 @@ export class Estadisticas implements OnInit {
 
   cargarEstadisticas(): void {
     this.isLoading.set(true);
-    console.log('Cargando estadísticas...');
     
     this.ventaService.obtenerEstadisticas().subscribe({
       next: (stats) => {
-        console.log('Estadísticas recibidas:', stats);
         this.estadisticas.set(stats.sort((a, b) => b.totalVendidas - a.totalVendidas));
         this.calcularTotales();
         this.isLoading.set(false);
-        console.log('Carga completada');
       },
       error: (err) => {
-        console.error('Error completo:', err);
         this.estadisticas.set([]);
         this.totalEntradasVendidas.set(0);
         this.totalRecaudadoGeneral.set(0);
@@ -46,7 +42,7 @@ export class Estadisticas implements OnInit {
         this.isLoading.set(false);
         
         if (err.status === 0) {
-          alert('⚠️ No se puede conectar al servidor.\n\nAsegúrate de ejecutar:\njson-server --watch db.json');
+          alert('No se puede conectar al servidor.\n\nAsegúrate de ejecutar:\njson-server --watch db.json');
         } else {
           alert('Error al cargar las estadísticas: ' + (err.message || 'Error desconocido'));
         }

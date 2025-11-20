@@ -9,8 +9,6 @@
       <p>Cargando estadísticas...</p>
     </div>
   } @else {
-    
-    <!-- Resumen General -->
     <div class="resumen-general">
       <div class="tarjeta-resumen">
         <div class="contenido">
@@ -40,8 +38,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Tabla de Estadísticas por Evento -->
     @if (estadisticas().length > 0) {
       <div class="tabla-container">
         <h2>Detalle por Evento</h2>
@@ -91,12 +87,10 @@
                   }
                 </td>
               </tr>
-              <!-- Fila expandible con detalles de ventas -->
               @if (stat.detalleVentas && stat.totalVendidas > 0) {
                 <tr class="fila-detalle">
                   <td colspan="6" class="celda-detalle">
                     <div class="detalle-ventas">
-                      <!-- Detalles por butacas -->
                       @if (stat.detalleVentas.butacas && stat.detalleVentas.butacas.length > 0) {
                         <div class="detalle-seccion">
                           <h4>🎫 Butacas Vendidas por Fila:</h4>
@@ -111,7 +105,6 @@
                         </div>
                       }
                       
-                      <!-- Detalles por sectores -->
                       @if (stat.detalleVentas.sectores && stat.detalleVentas.sectores.length > 0) {
                         <div class="detalle-seccion">
                           <h4>🎪 Entradas Vendidas por Sector:</h4>
@@ -134,7 +127,6 @@
         </table>
       </div>
 
-      <!-- Gráfico de Barras  -->
       <div class="grafico-barras">
         <h2>Ranking de Eventos Más Vendidos</h2>
         <div class="barras-container">

@@ -28,6 +28,5 @@ export class Cabecera implements OnInit{
     ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
-    console.log('[PaginaPrincipal] ngOnInit - usuario:', this.usuario);
     }
 }

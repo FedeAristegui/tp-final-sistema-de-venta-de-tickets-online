@@ -8,9 +8,8 @@ export interface Venta {
   total: number;
   tipo: 'sector' | 'butaca';
   detalle?: string; 
-  // Detalles específicos por tipo de venta
-  butacasVendidas?: { fila: string; numero: number }[]; // Para ventas por butaca
-  sectoresVendidos?: { nombre: string; cantidad: number }[]; // Para ventas por sector
+  butacasVendidas?: { fila: string; numero: number }[]; // se usa para ventas por butaca
+  sectoresVendidos?: { nombre: string; cantidad: number }[]; // se usa para ventas por sector
 }
 
 export interface EstadisticaEvento {

@@ -3,7 +3,6 @@
     <img class="logo" routerLink="/menu-principal" src="/assets/logo.png" alt="AllTickets Logo">
   
   @if (usuario) {
-    <!-- Menú que aparece solo para admin -->
     @if (usuario.rol === 'admin') {
       <nav class="menu-admin">
         <h2>Panel de Administración</h2>
@@ -18,7 +17,6 @@
       </nav>
     }
 
-    <!-- Menú que aparece solo para usuario común -->
     @if (usuario.rol === 'usuario') {
       <nav class="menu-usuario">
         
@@ -33,7 +31,6 @@
       </nav>
     }
   } @else {
-    <!-- Menú para visitantes (sin sesión) -->
     <nav class="menu-visitante">
       <h1>🎫 AllTickets</h1>
       <ul>

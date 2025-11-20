@@ -4,14 +4,12 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Título */
 h1 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 30px;
   font-weight: 800;
 
-  /* GRADIENTE DE TEXTO */
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text;
   -webkit-background-clip: text;
@@ -19,7 +17,6 @@ h1 {
   -webkit-text-fill-color: transparent;
 }
 
-/* Tabla */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -49,7 +46,6 @@ tbody tr:hover {
   background: rgba(102, 126, 234, 0.08);
 }
 
-/* Botón */
 button {
   padding: 10px 16px;
   border: none;
@@ -74,7 +70,6 @@ button:hover {
   border-radius: 12px;
   color: #222;
   border: 2px solid rgba(0, 0, 0, 0.25);
-  /* BORDE VISIBILE */
   text-decoration: none;
   display: inline-block;
   backdrop-filter: blur(10px);

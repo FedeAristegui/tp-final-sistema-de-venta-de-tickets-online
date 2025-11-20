@@ -37,40 +37,32 @@ export class ListaFavoritos implements OnInit {
 
   cargarFavoritos(): void {
     this.isLoading.set(true);
-    console.log('[ListaFavoritos] Iniciando carga de favoritos para usuario:', this.usuario.id);
 
     this.favoritoService.obtenerFavoritosPorUsuario(this.usuario.id).subscribe({
       next: (favoritos) => {
-        console.log('[ListaFavoritos] Favoritos recibidos:', favoritos);
+        
         
         if (favoritos.length === 0) {
-          console.log('[ListaFavoritos] No hay favoritos');
           this.eventosFavoritos.set([]);
           this.isLoading.set(false);
           return;
         }
 
-        // Cargar detalles de cada evento favorito usando forkJoin
-        const eventosObservables = favoritos.map(fav => {
-          console.log('[ListaFavoritos] Cargando evento:', fav.eventoId);
-          return this.eventoService.obtenerEvento(fav.eventoId);
-        });
+        // se cargan los detalles de cada evento favorito
+        const eventosObservables = favoritos.map(fav => this.eventoService.obtenerEvento(fav.eventoId));
 
         forkJoin(eventosObservables).subscribe({
           next: (eventos) => {
-            console.log('[ListaFavoritos] Eventos cargados:', eventos);
             this.eventosFavoritos.set(eventos);
             this.isLoading.set(false);
           },
           error: (err) => {
-            console.error('[ListaFavoritos] Error al cargar eventos favoritos:', err);
             this.eventosFavoritos.set([]);
             this.isLoading.set(false);
           }
         });
       },
       error: (err) => {
-        console.error('[ListaFavoritos] Error al cargar favoritos:', err);
         this.eventosFavoritos.set([]);
         this.isLoading.set(false);
       }
@@ -86,9 +78,8 @@ export class ListaFavoritos implements OnInit {
           this.favoritoService.eliminarFavorito(favoritos[0].id).subscribe({
             next: () => {
               this.eventosFavoritos.update(eventos => eventos.filter(e => e.id !== eventoId));
-              console.log('Favorito eliminado');
             },
-            error: (err) => console.error('Error al eliminar favorito:', err)
+            error: (err) => {}
           });
         }
       }

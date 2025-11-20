@@ -67,7 +67,7 @@ export const validFilasValidator: ValidatorFn = (control: AbstractControl): Vali
   if (filas.length === 0) return { invalidFilas: true };
 
   for (const fila of filas) {
-    // Rechaza si hay más de una letra (por ejemplo "AH" o "AHADJ")
+    // Rechaza si hay más de una letra
     if (fila.length !== 1) return { invalidFilas: true };
     const code = fila.charCodeAt(0);
     if (code < 65 || code > 90) return { invalidFilas: true };
@@ -202,7 +202,6 @@ export class AdminEventos implements OnInit {
       this.eventoService.obtenerEvento(id).subscribe({
         next: ev => this.cargarEventoEnFormulario(ev),
         error: err => {
-          console.error('Error al cargar evento:', err);
           alert('No se pudo cargar el evento para editar.');
           this.router.navigate(['/eventos']);
         }
@@ -216,7 +215,6 @@ export class AdminEventos implements OnInit {
         this.eventos.set(lista || []);
       },
       error: err => {
-        console.error('Error al cargar eventos:', err);
         this.eventos.set([]);
       }
     });
@@ -359,7 +357,7 @@ export class AdminEventos implements OnInit {
     const filas = this.parsearFilas(filasInput);
     
     if (filas.length === 0) {
-      alert('❌ Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-Z (rango de filas del alfabeto)');
+      alert('Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-Z (rango de filas del alfabeto)');
       return;
     }
 
@@ -392,7 +390,7 @@ export class AdminEventos implements OnInit {
     });
 
     this.mostrarTodasButacas.set(false);
-    alert(`✅ ${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`);
+    alert(`${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`);
   }
 
   private parsearFilas(input: string): string[] {
@@ -432,12 +430,10 @@ export class AdminEventos implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  // Método para manejar el submit del formulario
   handleSubmit(): void {
     this.guardarEvento();
   }
 
-  // Método para cancelar la edición
   cancelarEdicion(): void {
     this.modoEdicion.set(false);
     this.form.reset({ modoVenta: 'sector' });
@@ -456,11 +452,11 @@ export class AdminEventos implements OnInit {
       if (this.form.hasError('requireSectorOrButaca')) {
         const modo = this.form.get('modoVenta')?.value;
         if (modo === 'sector') {
-          alert('❌ Debes agregar al menos un sector para este evento.');
+          alert('Debes agregar al menos un sector para este evento.');
         } else if (modo === 'butaca') {
-          alert('❌ Debes agregar al menos una butaca para este evento.');
+          alert('Debes agregar al menos una butaca para este evento.');
         } else {
-          alert('❌ Debes agregar al menos un sector o una butaca para este evento.');
+          alert('Debes agregar al menos un sector o una butaca para este evento.');
         }
       } else {
         alert('Por favor completá todos los campos correctamente.');
@@ -496,7 +492,7 @@ export class AdminEventos implements OnInit {
             }
             return eventos;
           });
-          alert('✅ Evento actualizado con éxito');
+          alert('Evento actualizado con éxito');
           
           // Si viene desde @Input, emitir el evento actualizado
           if (this.isEditing) {
@@ -507,8 +503,7 @@ export class AdminEventos implements OnInit {
           this.cancelarEdicion();
         },
         error: err => {
-          console.error('Error al actualizar evento:', err);
-          alert('❌ Error al actualizar el evento.');
+          alert('Error al actualizar el evento.');
         }
       });
     } else {
@@ -520,8 +515,7 @@ export class AdminEventos implements OnInit {
           this.cancelarEdicion();
         },
         error: err => {
-          console.error('Error al crear evento:', err);
-          alert('❌ Hubo un error al crear el evento.');
+          alert('Hubo un error al crear el evento.');
         }
       });
     }
@@ -535,12 +529,11 @@ export class AdminEventos implements OnInit {
 
     this.eventoService.borrarEvento(id).subscribe({
       next: () => {
-        alert('🗑️ Evento eliminado');
+        alert('Evento eliminado');
       },
       error: err => {
         this.cargarEventos();
-        console.error('Error al eliminar evento:', err);
-        alert('❌ Error al eliminar el evento.');
+        alert('Error al eliminar el evento.');
       }
     });
   }

@@ -85,7 +85,6 @@ export class MisTarjetas implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Error al cargar tarjetas:', err);
         this.tarjetas.set([]);
         this.isLoading.set(false);
       }
@@ -122,7 +121,7 @@ export class MisTarjetas implements OnInit {
 
     this.tarjetaService.agregarTarjeta(nuevaTarjeta).subscribe({
       next: (tarjeta) => {
-        // Si es principal, desmarcar las demás
+        // Si es la tarjeta principal, desmarca las demás
         if (tarjeta.esPrincipal && this.tarjetas().length > 0) {
           this.actualizarTarjetasPrincipales(tarjeta.id!);
         }
@@ -130,10 +129,9 @@ export class MisTarjetas implements OnInit {
         this.tarjetas.update(tarjetas => [...tarjetas, tarjeta]);
         this.tarjetaForm.reset({ tipo: 'Visa', esPrincipal: false });
         this.mostrarFormulario.set(false);
-        alert('Tarjeta agregada correctamente ✅');
+        alert('Tarjeta agregada correctamente');
       },
       error: (err) => {
-        console.error('Error al agregar tarjeta:', err);
         alert('Error al agregar tarjeta');
       }
     });
@@ -151,7 +149,6 @@ export class MisTarjetas implements OnInit {
           alert('Tarjeta eliminada');
         },
         error: (err) => {
-          console.error('Error al eliminar tarjeta:', err);
           alert('Error al eliminar tarjeta');
         }
       });
@@ -161,7 +158,6 @@ export class MisTarjetas implements OnInit {
   establecerPrincipal(tarjeta: Tarjeta): void {
     if (!tarjeta.id) return;
 
-    // Actualizar todas las tarjetas del usuario
     this.actualizarTarjetasPrincipales(tarjeta.id);
   }
 
@@ -178,7 +174,7 @@ export class MisTarjetas implements OnInit {
     this.tarjetas().forEach(t => {
       if (t.id) {
         this.tarjetaService.actualizarTarjeta(t).subscribe({
-          error: (err) => console.error('Error al actualizar tarjeta:', err)
+          error: (err) => {}
         });
       }
     });
@@ -186,9 +182,6 @@ export class MisTarjetas implements OnInit {
 
   obtenerIconoTarjeta(tipo: string): string {
     switch (tipo) {
-      case 'Visa': return '💳';
-      case 'Mastercard': return '💳';
-      case 'American Express': return '💳';
       default: return '💳';
     }
   }

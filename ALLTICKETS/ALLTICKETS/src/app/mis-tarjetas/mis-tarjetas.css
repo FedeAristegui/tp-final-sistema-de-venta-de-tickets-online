@@ -5,7 +5,6 @@
   padding: 40px 20px;
 }
 
-
 .header {
   text-align: center;
   color: white;
@@ -399,7 +398,6 @@
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
 }
 
-
 .nota-seguridad {
   max-width: 800px;
   margin: 40px auto 0;
@@ -421,7 +419,6 @@
   font-size: 0.95rem;
   margin: 0;
 }
-
 
 @media (max-width: 768px) {
   .tarjetas-grid {

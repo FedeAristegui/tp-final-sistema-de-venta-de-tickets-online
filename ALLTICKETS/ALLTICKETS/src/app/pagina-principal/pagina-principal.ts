@@ -48,10 +48,8 @@ export class PaginaPrincipal implements OnInit {
   ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario.set(data ? JSON.parse(data) : null);
-    console.log('[PaginaPrincipal] ngOnInit - usuario:', this.usuario());
     this.cargarEventos();
     
-    // Cargar favoritos si hay usuario logueado
     if (this.usuario()) {
       this.cargarFavoritos();
     }
@@ -76,7 +74,6 @@ export class PaginaPrincipal implements OnInit {
         alert('Error al cargar eventos. Asegúrate de que json-server esté corriendo en http://localhost:3000');
       },
       complete: () => {
-        console.log('[PaginaPrincipal] Petición completada. isLoading:', this.isLoading(), 'eventos.length:', this.eventos().length);
       }
     });
     
@@ -124,7 +121,6 @@ export class PaginaPrincipal implements OnInit {
         
       },
       error: (err) => {
-        console.error('Error al cargar favoritos:', err);
         this.favoritosUsuario.set([]);
       }
     });
@@ -156,9 +152,8 @@ export class PaginaPrincipal implements OnInit {
             this.favoritoService.eliminarFavorito(favoritos[0].id).subscribe({
               next: () => {
                 this.favoritosUsuario.update(favs => favs.filter(id => id !== eventoId));
-                console.log('Favorito eliminado');
               },
-              error: (err) => console.error('Error al eliminar favorito:', err)
+              error: (err) => {}
             });
           }
         }
@@ -174,9 +169,8 @@ export class PaginaPrincipal implements OnInit {
       this.favoritoService.agregarFavorito(nuevoFavorito).subscribe({
         next: () => {
           this.favoritosUsuario.update(favs => [...favs, eventoId]);
-          console.log('Favorito agregado');
         },
-        error: (err) => console.error('Error al agregar favorito:', err)
+        error: (err) => {}
       });
     }
   }

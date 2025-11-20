@@ -11,7 +11,6 @@ h2{
   margin-bottom: 30px;
   font-weight: 800;
 
-  /* GRADIENTE DE TEXTO */
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text;
   -webkit-background-clip: text;
@@ -26,7 +25,6 @@ p {
     text-align: center;
 }
 
-/* Acciones */
 .acciones {
     margin: 30px auto;
     display: flex;
@@ -57,13 +55,11 @@ p {
     box-shadow: none;
 }
 
-/* Formulario embebido */
 app-formulario-descuento {
     display: block;
     margin-top: 30px;
 }
 
-/* Botón volver */
 .volver-btn {
     margin: 30px auto 0;
     padding: 12px 24px;
@@ -72,7 +68,6 @@ app-formulario-descuento {
     font-weight: 700;
     color: #222;
     border: 2px solid rgba(0, 0, 0, 0.25);
-    /* BORDE VISIBILE */
     text-decoration: none;
     display: inline-block;
     backdrop-filter: blur(10px);

@@ -8,8 +8,6 @@
     }
 
     <form [formGroup]="form" (ngSubmit)="handleSubmit()">
-
-      <!-- Campos -->
       <label for="codigo">Código:</label>
       <input id="codigo" type="text" formControlName="codigo" />
       @if (codigo.invalid && (codigo.dirty || codigo.touched)) {
@@ -68,13 +66,10 @@
         <input id="activo" type="checkbox" formControlName="activo" />
         Activo
       </label>
-
-      <!-- Guardar -->
       <button type="submit">
         {{ isEditing() ? 'Actualizar' : 'Crear' }} descuento
       </button>
 
-      <!-- Cancelar -->
       @if (isEditing()) {
         <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">
           Cancelar

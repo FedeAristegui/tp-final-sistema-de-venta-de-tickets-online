@@ -80,7 +80,6 @@ export class FormularioDescuento {
   get fechaInicio() { return this.form.controls.fechaInicio; }
   get fechaFin() { return this.form.controls.fechaFin; }
 
-  //  Manejo del envío del formulario
   handleSubmit() {
     if (this.form.invalid) {
       alert('Por favor completá todos los campos correctamente.');
@@ -100,7 +99,7 @@ export class FormularioDescuento {
       } else if (this.descuento()) {
         // Actualizar descuento existente
         this.descuentoClient.actualizarDescuento(descuento, this.descuento()?.id!).subscribe((d) => {
-          alert('✅ Descuento modificado con éxito');
+          alert('Descuento modificado con éxito');
           this.edited.emit(d);
         });
       }

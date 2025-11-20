@@ -56,7 +56,6 @@ export class IniciarSesion {
         }
       },
       error: (err) => {
-        console.error('Error en el servidor:', err);
         this.error = 'Error en el servidor. Intenta más tarde.';
       }
     });

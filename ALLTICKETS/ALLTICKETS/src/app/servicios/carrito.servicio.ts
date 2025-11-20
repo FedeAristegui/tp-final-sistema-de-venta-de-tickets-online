@@ -27,7 +27,7 @@ export class CarritoServicio {
     return this.itemsCarrito.asReadonly();
   }
 
- 
+  // reemplaza el contenido local del carrito
   setItemsDirect(items: ItemCarrito[]) {
     this.itemsCarrito.set(items);
     this.guardarCarritoEnLocalStorage();
@@ -42,12 +42,11 @@ export class CarritoServicio {
     );
 
     if (indiceExistente !== -1) {
-     
+      // Si es butaca, no incrementa la cantidad
       if (item.tipoEntrada === 'butaca') {
-        console.warn('Esta butaca ya está en el carrito');
         return;
       }
-      
+      // Si es sector, incrementa la cantidad
       const nuevosItems = [...items];
       nuevosItems[indiceExistente].cantidad += item.cantidad;
       this.itemsCarrito.set(nuevosItems);
@@ -173,7 +172,6 @@ export class CarritoServicio {
         const items = JSON.parse(carritoGuardado);
         this.itemsCarrito.set(items);
       } catch (error) {
-        console.error('Error al cargar el carrito:', error);
         this.itemsCarrito.set([]);
       }
     }

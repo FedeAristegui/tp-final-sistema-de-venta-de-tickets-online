@@ -75,13 +75,12 @@ export class PerfilUsuario implements OnInit {
         next: (usuario) => {
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
           this.usuario = usuario;
-          this.mensaje = '✅ Perfil actualizado correctamente';
+          this.mensaje = 'Perfil actualizado correctamente';
           this.editando = false;
           setTimeout(() => this.mensaje = '', 3000);
         },
         error: (err) => {
-          this.mensaje = '❌ Error al actualizar el perfil';
-          console.error(err);
+          this.mensaje = 'Error al actualizar el perfil';
           setTimeout(() => this.mensaje = '', 3000);
         }
       });

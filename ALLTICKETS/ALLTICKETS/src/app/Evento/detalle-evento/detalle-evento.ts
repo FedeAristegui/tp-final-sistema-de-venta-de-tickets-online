@@ -32,7 +32,6 @@ export class detalleEvento {
   
   protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
 
-  // Butacas agrupadas por fila
   protected butacasPorFila = computed(() => {
     const evento = this.evento();
     if (!evento?.butacas) return {};
@@ -76,7 +75,7 @@ export class detalleEvento {
     this.toggleEdit();
   }
 
-  // ====== MÉTODOS DE BUTACAS ======
+  // MÉTODOS DE BUTACAS
   seleccionarButaca(fila: string, numero: number, disponible: boolean): void {
     if (!disponible) {
       alert('⚠️ Esta butaca no está disponible');
@@ -113,7 +112,7 @@ export class detalleEvento {
     this.butacasSeleccionadas.set([]);
   }
 
-  // ====== MÉTODOS DE SECTORES ======
+  // MÉTODOS DE SECTORES
   getCapacidadDisponible(nombreSector: string): number {
     const evento = this.evento();
     const sector = evento?.sectores.find(s => s.nombre === nombreSector);
@@ -150,13 +149,13 @@ export class detalleEvento {
     return (sector?.precio || 0) * this.cantidadSector();
   });
 
-  // ====== AGREGAR AL CARRITO ======
+  // AGREGAR AL CARRITO
   agregarAlCarrito(): void {
     const evento = this.evento();
     if (!evento) return;
 
     if (!this.usuario()) {
-      alert('⚠️ Debes iniciar sesión para agregar al carrito');
+      alert('Debes iniciar sesión para agregar al carrito');
       this.router.navigate(['/login']);
       return;
     }
@@ -171,7 +170,7 @@ export class detalleEvento {
   private agregarButacasAlCarrito(): void {
     const butacas = this.butacasSeleccionadas();
     if (butacas.length === 0) {
-      alert('⚠️ Debes seleccionar al menos una butaca');
+      alert('Debes seleccionar al menos una butaca');
       return;
     }
 
@@ -208,11 +207,11 @@ export class detalleEvento {
 
     
     if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
-      alert(`✅ ${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
+      alert(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
-      alert(`✅ ${butacasAgregadas.length} butaca(s) agregada(s) al carrito\n\n⚠️ ${butacasYaEnCarrito.length} butaca(s) ya estaba(n) en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+      alert(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito\n\n ${butacasYaEnCarrito.length} butaca(s) ya estaba(n) en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
     } else {
-      alert(`⚠️ Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+      alert(`Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
     }
 
     this.limpiarSeleccion();
@@ -223,10 +222,10 @@ export class detalleEvento {
       try {
         this.carritoServicio.sincronizarConServidor(String(usuarioLocal.id)).subscribe({
           next: () => {},
-          error: (err) => console.error('Error sincronizando carrito (butacas):', err)
+          error: (err) => { }
         });
       } catch (e) {
-        console.error('Error iniciando sincronización de carrito (butacas):', e);
+
       }
     }
   }
@@ -234,7 +233,7 @@ export class detalleEvento {
   private agregarSectorAlCarrito(): void {
     const sectorNombre = this.sectorSeleccionado();
     if (!sectorNombre) {
-      alert('⚠️ Debes seleccionar un sector');
+      alert('Debes seleccionar un sector');
       return;
     }
 
@@ -246,7 +245,7 @@ export class detalleEvento {
     const disponible = this.getCapacidadDisponible(sector.nombre);
 
     if (cantidad > disponible) {
-      alert(`⚠️ Solo hay ${disponible} entradas disponibles`);
+      alert(`Solo hay ${disponible} entradas disponibles`);
       return;
     }
 
@@ -258,7 +257,7 @@ export class detalleEvento {
       precioUnitario: sector.precio
     });
 
-    alert(`✅ ${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`);
+    alert(`${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`);
     this.sectorSeleccionado.set('');
     this.cantidadSector.set(1);
 
@@ -268,15 +267,11 @@ export class detalleEvento {
       try {
         this.carritoServicio.sincronizarConServidor(String(usuarioLocal.id)).subscribe({
           next: () => {},
-          error: (err) => console.error('Error sincronizando carrito (sector):', err)
+          error: (err) => { }
         });
-      } catch (e) {
-        console.error('Error iniciando sincronización de carrito (sector):', e);
-      }
+      } catch (e) {}
     }
-  }
-
-  
+  }  
 
   volverAtras(): void {
     const usuario = this.usuario();

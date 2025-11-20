@@ -1,6 +1,4 @@
 
- /*  CONTENEDOR PRINCIPAL */
-
 .contenedor {
   display: flex;
   justify-content: center;
@@ -16,7 +14,6 @@
   box-shadow: 0 10px 40px rgba(0,0,0,0.12);
 }
 
-/* TITULO*/
 h3 {
   font-size: 1.8rem;
   text-align: center;
@@ -28,7 +25,6 @@ h3 {
   box-shadow: 0 5px 15px rgba(102,126,234,0.35);
 }
 
-/* Formulario */
 form {
   display: flex;
   flex-direction: column;
@@ -75,7 +71,6 @@ h4, h5 {
   color: #764ba2;
 }
 
-/*Sectores*/
 .sector-item {
   display: grid;
   grid-template-columns: repeat(3, 1fr) 120px;
@@ -134,7 +129,6 @@ span.error-inline {
   background: #c53030;
 }
 
-/*generador de butacas*/
 .generador-butacas {
   border-left: 6px solid #764ba2;
 }
@@ -181,7 +175,6 @@ span.error-inline {
   box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
-/*Butacas*/
 .butacas-header {
   display: flex;
   justify-content: space-between;
@@ -236,7 +229,6 @@ span.error-inline {
   cursor: pointer;
 }
 
-/* AGREGAR */
 .btn-agregar {
   background: #667eea;
   color: white;
@@ -246,7 +238,6 @@ span.error-inline {
   background: #564cd9;
 }
 
-/* LIMPIAR */
 .btn-limpiar {
   background: #f56565;
   color: white;
@@ -261,7 +252,6 @@ span.error-inline {
   margin-top: 10px;
 }
 
-
 .sin-butacas {
   text-align: center;
   padding: 20px;
@@ -269,7 +259,6 @@ span.error-inline {
   border: 1px solid #e2e8f0;
   border-radius: 12px;
 }
-
 
 button[type="submit"] {
   padding: 14px;
@@ -289,7 +278,6 @@ button[type="submit"]:hover {
   box-shadow: 0 6px 20px rgba(102,126,234,0.3);
 }
 
-/* CANCELAR */
 .cancelar-btn {
   margin-top: 10px;
   padding: 12px;
@@ -305,7 +293,6 @@ button[type="submit"]:hover {
   background: #c53030;
 }
 
-/* VOLVER */
 .volver-btn {
   margin-top: 20px;
   padding: 14px;
