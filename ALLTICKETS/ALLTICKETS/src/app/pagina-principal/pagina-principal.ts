@@ -20,7 +20,7 @@ export class PaginaPrincipal implements OnInit {
   eventosFiltrados = signal<Evento[]>([]);
   isLoading = signal(false);  
   favoritosUsuario = signal<string[]>([]); 
-  protected readonly categorias = ['Deportes', 'Música', 'Comedia'];
+  protected readonly categorias = ['Deportes', 'Música', 'Comedia', 'Teatro'];
 
   
   filtrosForm: FormGroup;
@@ -82,7 +82,6 @@ export class PaginaPrincipal implements OnInit {
     
     setTimeout(() => {
       if (this.isLoading()) {
-        console.warn('[PaginaPrincipal] ⚠️ Timeout: La petición está tomando demasiado tiempo');
         this.isLoading.set(false);
       }
     }, 10000);
@@ -122,7 +121,7 @@ export class PaginaPrincipal implements OnInit {
     this.favoritoService.obtenerFavoritosPorUsuario(this.usuario().id).subscribe({
       next: (favoritos) => {
         this.favoritosUsuario.set(favoritos.map(f => String(f.eventoId)));
-        console.log('[PaginaPrincipal] Favoritos cargados:', this.favoritosUsuario());
+        
       },
       error: (err) => {
         console.error('Error al cargar favoritos:', err);

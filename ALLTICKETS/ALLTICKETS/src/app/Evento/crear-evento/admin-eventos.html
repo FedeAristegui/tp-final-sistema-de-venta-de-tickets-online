@@ -173,6 +173,8 @@
                   @else if (generadorButacas.get('butacasPorFila')?.hasError('positiveNumber')) {
                     <span class="error-inline">Las butacas por fila deben ser mayor a 0</span>
                   }
+                   @else if (generadorButacas.get('butacasPorFila')?.hasError('max')) {
+                    <span class="error-inline">Las butacas por fila no pueden ser mayor a 30</span>}
                 }
               </div>
               <div>
@@ -224,25 +226,12 @@
                     <div [formGroupName]="i" class="butaca-item">
                       <div class="butaca-info">
                         <span class="butaca-label">Fila {{ b.get('fila')?.value }} - #{{ b.get('numero')?.value }}</span>
-                        <span class="butaca-precio">${{ b.get('precio')?.value }}</span>
+                        <div class="campo-precio">
+                          <label>Precio:</label>
+                          <input formControlName="precio" type="number" min="0" step="0.01" />
+                        </div>
                       </div>
                       <div class="butaca-errores">
-                        @if (b.get('fila')?.dirty || b.get('fila')?.touched) {
-                          @if (b.get('fila')?.hasError('required')) {
-                            <span class="error-inline">Fila requerida</span>
-                          }
-                          @else if (b.get('fila')?.hasError('onlyLetters')) {
-                            <span class="error-inline">Fila debe ser una letra</span>
-                          }
-                        }
-                        @if (b.get('numero')?.dirty || b.get('numero')?.touched) {
-                          @if (b.get('numero')?.hasError('required')) {
-                            <span class="error-inline">Número requerido</span>
-                          }
-                          @else if (b.get('numero')?.hasError('positiveNumber')) {
-                            <span class="error-inline">Número debe ser > 0</span>
-                          }
-                        }
                         @if (b.get('precio')?.dirty || b.get('precio')?.touched) {
                           @if (b.get('precio')?.hasError('required')) {
                             <span class="error-inline">Precio requerido</span>

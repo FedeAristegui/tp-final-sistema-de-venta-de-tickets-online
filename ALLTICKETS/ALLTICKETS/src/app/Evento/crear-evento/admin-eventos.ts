@@ -140,14 +140,14 @@ export class AdminEventos implements OnInit {
   }, { validators: [requireSectorOrButacaByModo] });
 
   protected readonly categorias = [
-    'Deportes', 'Música', 'Comedia'
+    'Deportes', 'Música', 'Comedia','Teatro'
   ];
 
    
   //  Formulario generador de butacas
   protected readonly generadorButacas = this.fb.group({
     filas: ['', [Validators.required, validFilasValidator]],
-    butacasPorFila: [0, [Validators.required, positiveNumberValidator]],
+    butacasPorFila: [0, [Validators.required, positiveNumberValidator, Validators.max(30)]],
     precioBase: [0, [Validators.required, positiveNumberValidator]]
   });
 
@@ -293,14 +293,32 @@ export class AdminEventos implements OnInit {
 
   agregarButaca(): void {
     const ultimaButaca = this.butacas.length > 0 ? this.butacas.at(this.butacas.length - 1).value : null;
-    const filaDefault = ultimaButaca?.fila || 'A';
-    const numeroDefault = ultimaButaca ? (ultimaButaca.numero + 1) : 1;
+    
+    let filaDefault = 'A';
+    let numeroDefault = 1;
+    
+    if (ultimaButaca?.fila) {
+      const filaActual = ultimaButaca.fila;
+      const numeroActual = ultimaButaca.numero || 0;
+      
+      // Si el número actual es menor que 10, continuar en la misma fila
+      if (numeroActual < 10) {
+        filaDefault = filaActual;
+        numeroDefault = numeroActual + 1;
+      } else {
+        // Si ya hay 10 butacas, cambiar a la siguiente fila
+        const codigoFila = filaActual.charCodeAt(0);
+        filaDefault = String.fromCharCode(codigoFila + 1);
+        numeroDefault = 1;
+      }
+    }
+    
     const precioDefault = ultimaButaca?.precio || 0;
 
     this.butacas.push(
       this.fb.group({
         fila: [filaDefault, [Validators.required, onlyLettersValidator]],
-        numero: [numeroDefault, [Validators.required, positiveNumberValidator]],
+        numero: [numeroDefault, [Validators.required, positiveNumberValidator,Validators.max(30)]],
         precio: [precioDefault, [Validators.required, positiveNumberValidator]],
         disponible: [true]
       })
@@ -328,7 +346,8 @@ export class AdminEventos implements OnInit {
   //  Generar butacas automáticamente
   generarButacas(){
     if (this.generadorButacas.invalid) {
-      alert('⚠️ Por favor completa correctamente los campos del generador de butacas.');
+      const cantidadControl = this.generadorButacas.get('butacasPorFila');
+      
       this.generadorButacas.markAllAsTouched();
       return;
     }
@@ -340,7 +359,7 @@ export class AdminEventos implements OnInit {
     const filas = this.parsearFilas(filasInput);
     
     if (filas.length === 0) {
-      alert('❌ Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-E (rango de filas)');
+      alert('❌ Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-Z (rango de filas del alfabeto)');
       return;
     }
 
