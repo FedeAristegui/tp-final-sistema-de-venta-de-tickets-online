@@ -55,17 +55,21 @@ thead {
   color: white;
 }
 
+th.sortable {
+  cursor: pointer;
+  position: relative;
+  padding-right: 22px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
 th.sortable::after {
-  content: "↕";
-  font-size: 0.8rem;
-  margin-left: 6px;
-  opacity: 0.5;
+  content: "▼▲";
+  font-size: 1rem;
+  margin-left: 8px;
+  opacity: 0.9;
 }
 
-
-th.sortable:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
 
 td {
   padding: 16px;
