@@ -68,7 +68,6 @@ export class PerfilUsuario implements OnInit {
         ...this.usuario,
         nombre: this.perfilForm.get('nombre')?.value,
         apellido: this.perfilForm.get('apellido')?.value,
-        email: this.perfilForm.get('email')?.value
       };
 
       this.autenticador.actualizarUsuario(usuarioActualizado).subscribe({

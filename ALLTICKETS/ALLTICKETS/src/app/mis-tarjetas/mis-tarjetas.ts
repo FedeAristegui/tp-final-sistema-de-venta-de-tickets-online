@@ -48,6 +48,9 @@ export class MisTarjetas implements OnInit {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
+  mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
+
   constructor() {
     this.tarjetaForm = this.fb.group({
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
@@ -68,7 +71,7 @@ export class MisTarjetas implements OnInit {
     this.usuario = data ? JSON.parse(data) : null;
 
     if (!this.usuario) {
-      alert('Debes iniciar sesión para administrar tus tarjetas');
+      this.mensaje = 'Debes iniciar sesión para ver tus tarjetas.';
       this.router.navigate(['/login']);
       return;
     }
@@ -129,10 +132,12 @@ export class MisTarjetas implements OnInit {
         this.tarjetas.update(tarjetas => [...tarjetas, tarjeta]);
         this.tarjetaForm.reset({ tipo: 'Visa', esPrincipal: false });
         this.mostrarFormulario.set(false);
-        alert('Tarjeta agregada correctamente');
+        this.mensaje = 'Tarjeta agregada con éxito';
+        this.tipoMensaje = 'success';
       },
       error: (err) => {
-        alert('Error al agregar tarjeta');
+        this.mensaje = 'Error al agregar la tarjeta';
+        this.tipoMensaje = 'error';
       }
     });
   }
@@ -146,10 +151,12 @@ export class MisTarjetas implements OnInit {
       this.tarjetaService.eliminarTarjeta(tarjeta.id).subscribe({
         next: () => {
           this.tarjetas.update(tarjetas => tarjetas.filter(t => t.id !== tarjeta.id));
-          alert('Tarjeta eliminada');
+          this.mensaje = 'Tarjeta eliminada con éxito';
+          this.tipoMensaje = 'success';
         },
         error: (err) => {
-          alert('Error al eliminar tarjeta');
+          this.mensaje = 'Error al eliminar la tarjeta';
+          this.tipoMensaje = 'error';
         }
       });
     }

@@ -154,6 +154,25 @@ export class Carrito implements OnInit {
 
   eliminarItem(index: number){
     if (confirm('¿Estás seguro de que deseas eliminar este item del carrito?')) {
+      const item = this.items()[index];
+      
+      // Si es una butaca, desmarcarla en la base de datos
+      if (item && item.tipoEntrada === 'butaca') {
+        const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
+        if (detalles) {
+          const fila = detalles[1];
+          const numero = parseInt(detalles[2], 10);
+          this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
+            next: () => {
+              // Butaca desmarcada exitosamente
+            },
+            error: (err) => {
+              console.error('Error desmarcando butaca:', err);
+            }
+          });
+        }
+      }
+      
       this.carritoServicio.eliminarDelCarrito(index);
       if (this.usuario) {
         this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
@@ -181,6 +200,24 @@ export class Carrito implements OnInit {
 
   vaciarCarrito() {
     if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+      // Desmarcar todas las butacas antes de vaciar
+      const items = this.items();
+      items.forEach(item => {
+        if (item.tipoEntrada === 'butaca') {
+          const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
+          if (detalles) {
+            const fila = detalles[1];
+            const numero = parseInt(detalles[2], 10);
+            this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
+              next: () => {},
+              error: (err) => {
+                console.error('Error desmarcando butaca:', err);
+              }
+            });
+          }
+        }
+      });
+
       this.carritoServicio.vaciarCarrito();
       this.limpiarCupon();
       this.resetearEstadoCompra();

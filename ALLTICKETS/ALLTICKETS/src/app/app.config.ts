@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, importProvidersFrom } from '../../node_modules/@angular/core';
 import { provideRouter } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 

@@ -17,10 +17,15 @@ export const minDateValidator: ValidatorFn = (control: AbstractControl): Validat
   return selectedDate <= today ? { minDate: true } : null;
 };
 
-// Validador: imagen debe empezar con "https://"
-export const httpsUrlValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+// Validador: imagen debe ser una URL HTTPS o una ruta local (base64 o archivo)
+export const imageValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   if (!control.value) return null;
-  return control.value.startsWith('https://') ? null : { invalidUrl: true };
+  // Aceptar URLs HTTPS, rutas locales con assets/, o data URLs (base64)
+  const value = control.value;
+  const isHttpsUrl = value.startsWith('https://');
+  const isLocalPath = value.startsWith('assets/');
+  const isDataUrl = value.startsWith('data:image/');
+  return (isHttpsUrl || isLocalPath || isDataUrl) ? null : { invalidImage: true };
 };
 
 // Validador: solo letras (para nombre de sectores)
@@ -120,10 +125,49 @@ export class AdminEventos implements OnInit {
   protected eventos = signal<Evento[]>([]);
   protected modoEdicion = signal(false);
   protected mostrarTodasButacas = signal(false);
+  protected archivoSeleccionado = signal<string>('');
   @Output() cancelled = new EventEmitter<void>();
 
   toggleMostrarTodas(): void {
     this.mostrarTodasButacas.update(v => !v);
+  }
+
+  // Manejar selección de archivo de imagen
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+    if (file) {
+      // Validar que sea un archivo PNG
+      if (!file.type.match('image/png')) {
+        alert('⚠️ Solo se aceptan archivos PNG');
+        input.value = '';
+        this.archivoSeleccionado.set('');
+        this.form.get('imagen')?.setValue('');
+        return;
+      }
+
+      // Validar tamaño máximo (5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('⚠️ El archivo es demasiado grande. Máximo 5MB');
+        input.value = '';
+        this.archivoSeleccionado.set('');
+        this.form.get('imagen')?.setValue('');
+        return;
+      }
+
+      // Leer el archivo como base64
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const base64String = e.target?.result as string;
+        
+        // Guardar el base64 en el formulario
+        this.form.get('imagen')?.setValue(base64String);
+        this.archivoSeleccionado.set(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   protected readonly form = this.fb.group({
@@ -132,7 +176,7 @@ export class AdminEventos implements OnInit {
     fecha: ['', [Validators.required, minDateValidator]],
     hora: ['', Validators.required],
     lugar: ['', [Validators.required, Validators.minLength(3), noNumbersValidator]],
-    imagen: ['', [Validators.required, httpsUrlValidator]],
+    imagen: ['', [Validators.required, imageValidator]],
     modoVenta: ['sector' as 'sector' | 'butaca', Validators.required],
     categoria: ['', Validators.required],
     sectores: this.fb.array([]),

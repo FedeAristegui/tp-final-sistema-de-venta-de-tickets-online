@@ -309,6 +309,18 @@ button[type="submit"]:hover {
   background: #718096;
 }
 
+.archivo-info {
+  padding: 12px 14px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  color: #166534;
+  font-size: 0.95rem;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 @media (max-width: 768px) {
 

@@ -80,30 +80,51 @@ export class FormularioDescuento {
   get fechaInicio() { return this.form.controls.fechaInicio; }
   get fechaFin() { return this.form.controls.fechaFin; }
 
+  mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
+
+  // Modal de confirmación
+  showConfirmModal: boolean = false;
+  private pendingDescuento: Descuento | null = null;
+
   handleSubmit() {
     if (this.form.invalid) {
-      alert('Por favor completá todos los campos correctamente.');
+      this.mensaje = 'Por favor completá todos los campos correctamente.';
+      this.tipoMensaje = 'error';
       return;
     }
+    // Guardamos datos en pending y mostramos el modal de confirmación
+    this.pendingDescuento = this.form.getRawValue();
+    this.showConfirmModal = true;
+  }
 
-    if (confirm('¿Desea confirmar los datos del descuento?')) {
-      const descuento = this.form.getRawValue();
+  // Confirma guardado desde el modal
+  confirmSave(): void {
+    if (!this.pendingDescuento) return;
 
-      if (!this.isEditing()) {
-        // Crear nuevo descuento
-        this.descuentoClient.agregarDescuento(descuento).subscribe(() => {
-          alert('🎉 Descuento creado con éxito');
-          this.router.navigateByUrl('/lista-descuento');
-          this.form.reset({ activo: true });
-        });
-      } else if (this.descuento()) {
-        // Actualizar descuento existente
-        this.descuentoClient.actualizarDescuento(descuento, this.descuento()?.id!).subscribe((d) => {
-          alert('Descuento modificado con éxito');
-          this.edited.emit(d);
-        });
-      }
+    const descuento = this.pendingDescuento;
+
+    if (!this.isEditing()) {
+      this.descuentoClient.agregarDescuento(descuento).subscribe(() => {
+        this.mensaje = 'Descuento agregado con éxito';
+        this.tipoMensaje = 'success';
+        this.form.reset({ activo: true });
+        this.closeConfirmModal();
+      });
+    } else if (this.descuento()) {
+      this.descuentoClient.actualizarDescuento(descuento, this.descuento()?.id!).subscribe((d) => {
+        this.mensaje = 'Descuento modificado con éxito';
+        this.tipoMensaje = 'success';
+        this.edited.emit(d);
+        this.closeConfirmModal();
+      });
     }
+  }
+
+  // Cancela el modal
+  closeConfirmModal(): void {
+    this.showConfirmModal = false;
+    this.pendingDescuento = null;
   }
 
   cancelarEdicion(): void {

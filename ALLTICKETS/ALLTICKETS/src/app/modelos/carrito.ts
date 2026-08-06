@@ -7,6 +7,7 @@ export interface Carrito {
     tipoEntrada: 'sector' | 'butaca';
     detalleEntrada: string;
     precioUnitario: number;
+    addedAt?: string;
   }[];
   fechaActualizacion: string;
 }

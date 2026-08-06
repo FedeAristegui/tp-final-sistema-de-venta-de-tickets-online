@@ -1,4 +1,4 @@
-import { Component, inject, linkedSignal, signal, computed } from '@angular/core';
+import { Component, inject, linkedSignal, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { CarritoServicio } from '../../servicios/carrito.servicio';
@@ -8,6 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Autenticador } from '../../servicios/autenticador';
 import { AdminEventos } from '../crear-evento/admin-eventos';
+import { interval, Subscription } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-evento-ficha',
@@ -15,7 +18,7 @@ import { AdminEventos } from '../crear-evento/admin-eventos';
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
-export class detalleEvento {
+export class detalleEvento implements OnInit, OnDestroy {
 
   private readonly cliente = inject(EventoServicio);
   private readonly carritoServicio = inject(CarritoServicio);
@@ -23,13 +26,13 @@ export class detalleEvento {
   private readonly route = inject(ActivatedRoute);
   private readonly id = this.route.snapshot.paramMap.get('id');
   private readonly autenticador = inject(Autenticador);
+  private pollingSubscription?: Subscription;
 
   protected readonly eventoFuente = toSignal(this.cliente.obtenerEvento(this.id!));
   protected readonly evento = linkedSignal(() => this.eventoFuente());
   protected readonly isEditing = signal(false);
   protected readonly usuario = signal(this.autenticador.obtenerUsuarioActual());
 
-  
   protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
 
   protected butacasPorFila = computed(() => {
@@ -178,6 +181,7 @@ export class detalleEvento {
     const itemsCarrito = this.carritoServicio.obtenerItems()();
     const butacasYaEnCarrito: string[] = [];
     const butacasAgregadas: string[] = [];
+    const butacasParaMarcar: { fila: string; numero: number }[] = [];
     
     butacas.forEach(sel => {
       const butaca = evento.butacas.find(b => b.fila === sel.fila && b.numero === sel.numero);
@@ -201,11 +205,25 @@ export class detalleEvento {
             precioUnitario: butaca.precio
           });
           butacasAgregadas.push(detalleButaca);
+          butacasParaMarcar.push(sel);
         }
       }
     });
 
-    
+    // Marcar butacas como no disponibles en la base de datos
+    if (butacasParaMarcar.length > 0) {
+      butacasParaMarcar.forEach(butaca => {
+        this.carritoServicio.marcarButacasComoNoDisponibles(evento.id!, [butaca]).subscribe({
+          next: () => {
+            // Butaca marcada exitosamente
+          },
+          error: (err) => {
+            console.error('Error marcando butaca como no disponible:', err);
+          }
+        });
+      });
+    }
+
     if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
       alert(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
@@ -279,6 +297,54 @@ export class detalleEvento {
       this.router.navigate(['/lista-eventos']);
     } else {
       this.router.navigate(['/menu-principal']);
+    }
+  }
+
+  ngOnInit(): void {
+    // Iniciar polling cada 2.5 segundos para obtener actualizaciones del evento
+    this.pollingSubscription = interval(2500)
+      .pipe(
+        switchMap(() => 
+          this.cliente.obtenerEvento(this.id!).pipe(
+            catchError(() => of(null))
+          )
+        )
+      )
+      .subscribe(eventoActualizado => {
+        if (eventoActualizado) {
+          // Actualizar el evento
+          this.evento.set(eventoActualizado);
+          
+          // Verificar si alguna butaca seleccionada se volvió no disponible
+          const butacasNoDisponibles = this.butacasSeleccionadas().filter(sel => {
+            const butaca = eventoActualizado.butacas.find(
+              b => b.fila === sel.fila && b.numero === sel.numero
+            );
+            return butaca && !butaca.disponible;
+          });
+          
+          // Si hay butacas que se volvieron no disponibles, removerlas de la selección
+          if (butacasNoDisponibles.length > 0) {
+            this.butacasSeleccionadas.update(lista =>
+              lista.filter(sel =>
+                !butacasNoDisponibles.some(nd => nd.fila === sel.fila && nd.numero === sel.numero)
+              )
+            );
+            
+            const detalles = butacasNoDisponibles
+              .map(b => `Fila ${b.fila} - Butaca ${b.numero}`)
+              .join('\n');
+            
+            alert(`⚠️ Las siguientes butacas dejaron de estar disponibles y fueron removidas:\n${detalles}`);
+          }
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar polling al destruir el componente
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
     }
   }
 }

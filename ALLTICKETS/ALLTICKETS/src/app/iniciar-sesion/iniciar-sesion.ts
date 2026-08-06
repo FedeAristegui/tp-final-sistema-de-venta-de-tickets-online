@@ -19,6 +19,7 @@ export class IniciarSesion {
   private readonly autenticador = inject(Autenticador);
 
   protected error: string | null = null;
+  mensaje: string = '';
 
   protected readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -31,7 +32,6 @@ export class IniciarSesion {
       
       return;
     }
-
       const email = this.form.get('email')?.value;
     const contrasena = this.form.get('contrasena')?.value;
 
@@ -51,8 +51,7 @@ export class IniciarSesion {
           // Recargar la página completamente
           window.location.href = '/menu-principal';
         } else {
-          this.error = 'Email o contraseña incorrectos';
-          alert(this.error);
+          this.mensaje = 'Email o contraseña incorrectos';
         }
       },
       error: (err) => {

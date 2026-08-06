@@ -1,6 +1,12 @@
 <div class="contenedor">
   <div class="formulario-container">
 
+    @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
+
     @if (isEditing()) {
       <h3>Modificar Descuento</h3>
     } @else {
@@ -79,3 +85,16 @@
     </form>
   </div>
 </div>
+
+<!-- Modal de confirmación simple -->
+@if (showConfirmModal) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>¿Desea confirmar los datos del descuento?</p>
+      <div class="modal-actions">
+        <button type="button" (click)="confirmSave()" class="confirm-btn">Confirmar</button>
+        <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}

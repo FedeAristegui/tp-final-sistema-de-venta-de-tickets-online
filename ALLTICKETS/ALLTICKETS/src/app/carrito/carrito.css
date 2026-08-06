@@ -169,6 +169,21 @@
   font-size: 0.9rem;
 }
 
+.item-timer {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #155724;
+  background: #e9f7ef;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.item-timer.expired {
+  color: #721c24;
+  background: #f8d7da;
+}
+
 .item-fecha {
   font-weight: 500;
   color: #ff6b6b;

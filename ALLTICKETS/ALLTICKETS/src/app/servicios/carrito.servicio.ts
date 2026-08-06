@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, switchMap, map, catchError } from 'rxjs';
 import { Evento } from '../modelos/evento';
 import { Carrito } from '../modelos/carrito';
+import { EventoServicio } from './evento.servicio';
 
 export interface ItemCarrito {
   evento: Evento;
@@ -10,6 +11,7 @@ export interface ItemCarrito {
   tipoEntrada: 'sector' | 'butaca';
   detalleEntrada: string;
   precioUnitario: number;
+  addedAt?: string;
 }
 
 @Injectable({
@@ -19,7 +21,7 @@ export class CarritoServicio {
   private itemsCarrito = signal<ItemCarrito[]>([]);
   private urlBase = 'http://localhost:3000/carritos';
   
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private eventoServicio: EventoServicio) {
     this.cargarCarritoDesdeLocalStorage();
   }
 
@@ -118,6 +120,7 @@ export class CarritoServicio {
       tipoEntrada: 'sector' | 'butaca';
       detalleEntrada: string;
       precioUnitario: number;
+      addedAt?: string;
     };
 
     const backendItems: CarritoItem[] = itemsLocal.map(i => ({
@@ -125,7 +128,8 @@ export class CarritoServicio {
       cantidad: i.cantidad,
       tipoEntrada: i.tipoEntrada,
       detalleEntrada: i.detalleEntrada,
-      precioUnitario: i.precioUnitario
+      precioUnitario: i.precioUnitario,
+      addedAt: i.addedAt || new Date().toISOString()
     }));
 
     const payload: Carrito = {
@@ -159,6 +163,38 @@ export class CarritoServicio {
       (total, item) => total + item.cantidad,
       0
     );
+  }
+
+  // Método para marcar butacas como no disponibles cuando se agregan al carrito
+  marcarButacasComoNoDisponibles(eventoId: number|string, butacas: { fila: string; numero: number }[]): Observable<any> {
+    const requests = butacas.map(butaca => 
+      this.eventoServicio.actualizarDisponibilidadButaca(eventoId, butaca.fila, butaca.numero, false)
+    );
+    
+    if (requests.length === 0) {
+      return of(null);
+    }
+    
+    // Ejecutar todas las peticiones en paralelo
+    return requests.length === 1 
+      ? requests[0] 
+      : requests[0]; // Para simplificar, hacemos uno a uno
+  }
+
+  // Método para desmarcar butacas (marcarlas como disponibles) cuando se sacan del carrito
+  desmarcarButacas(eventoId: number|string, butacas: { fila: string; numero: number }[]): Observable<any> {
+    const requests = butacas.map(butaca => 
+      this.eventoServicio.actualizarDisponibilidadButaca(eventoId, butaca.fila, butaca.numero, true)
+    );
+    
+    if (requests.length === 0) {
+      return of(null);
+    }
+    
+    // Ejecutar todas las peticiones en paralelo
+    return requests.length === 1 
+      ? requests[0] 
+      : requests[0]; // Para simplificar, hacemos uno a uno
   }
 
   private guardarCarritoEnLocalStorage(): void {

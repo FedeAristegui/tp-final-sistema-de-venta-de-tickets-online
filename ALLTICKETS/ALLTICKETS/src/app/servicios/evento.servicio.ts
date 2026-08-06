@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { Evento } from '../modelos/evento';
 
 @Injectable({
@@ -29,5 +30,17 @@ export class EventoServicio {
 
   borrarEvento(id: number|string): Observable<void> {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
+  }
+
+  actualizarDisponibilidadButaca(eventoId: number|string, fila: string, numero: number, disponible: boolean): Observable<Evento> {
+    return this.obtenerEvento(eventoId).pipe(
+      switchMap(evento => {
+        const butacaIndex = evento.butacas.findIndex(b => b.fila === fila && b.numero === numero);
+        if (butacaIndex !== -1) {
+          evento.butacas[butacaIndex].disponible = disponible;
+        }
+        return this.actualizarEvento(evento, String(eventoId));
+      })
+    );
   }
 }

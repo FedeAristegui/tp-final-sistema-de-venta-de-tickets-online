@@ -66,14 +66,25 @@
       }
     }
 
-      <label for="imagen">Imagen (URL):</label>
-      <input id="imagen" formControlName="imagen" placeholder="https://..." />
-        @if (imagen.dirty || imagen.touched) {
+      <label for="imagen">Imagen (PNG):</label>
+      <input 
+        id="imagen" 
+        type="file" 
+        accept=".png,image/png"
+        (change)="onImageSelected($event)"
+        placeholder="Selecciona una imagen PNG"
+      />
+      @if (archivoSeleccionado()) {
+        <div class="archivo-info">
+          ✅ Archivo seleccionado: <strong>{{ archivoSeleccionado() }}</strong>
+        </div>
+      }
+      @if (imagen.dirty || imagen.touched) {
         @if (imagen.hasError('required')) {
           <span>La foto es requerida</span>
         }
-        @else if (imagen.hasError('invalidUrl')) {
-          <span>La URL debe empezar con "https://"</span>
+        @else if (imagen.hasError('invalidImage')) {
+          <span>La imagen debe ser una foto PNG válida</span>
         }
       }
   

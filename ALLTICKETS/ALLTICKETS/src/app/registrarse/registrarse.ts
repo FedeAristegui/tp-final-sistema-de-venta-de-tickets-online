@@ -18,6 +18,9 @@ export class Registrarse {
   private readonly fb = inject(FormBuilder);
   private readonly autenticador = inject(Autenticador);
 
+  mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
+
   protected readonly form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]],
     apellido: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]], 
@@ -29,7 +32,8 @@ export class Registrarse {
    registrar() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      alert('Por favor, complete todos los campos correctamente.');
+      this.mensaje = 'Por favor, completa todos los campos correctamente.';
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -40,23 +44,27 @@ export class Registrarse {
       next: usuarios => {
         const existe = usuarios.some(u => u.email === nuevoUsuario.email);
         if (existe) {
-          alert('El email ya está registrado.');
+          this.mensaje = 'El email ya está registrado. Por favor, utiliza otro email.';
+          this.tipoMensaje = 'error';
           return;
         }
 
         // Si no existe, registra el mail
         this.autenticador.registrarUsuario(nuevoUsuario).subscribe({
           next: () => {
-            alert('Usuario registrado con éxito.');
+            this.mensaje = 'Usuario registrado exitosamente. Ahora puedes iniciar sesión.';
+            this.tipoMensaje = 'success';
             this.form.reset({ rol: 'usuario' });
           },
           error: err => {
-            alert('Ocurrió un error al registrar el usuario.');
+            this.mensaje = 'Ocurrió un error al registrar el usuario.';
+            this.tipoMensaje = 'error';
           }
         });
       },
       error: err => {
-        alert('No se pudo verificar el email.');
+        this.mensaje = 'No se pudo verificar el email.';
+        this.tipoMensaje = 'error';
       }
     });
   }

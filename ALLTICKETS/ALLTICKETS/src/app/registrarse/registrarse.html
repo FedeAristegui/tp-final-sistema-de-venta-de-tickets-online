@@ -1,6 +1,12 @@
 <div class="register-container">
   <h2>Registrarse</h2>
 
+  @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
+
   <form [formGroup]="form" (ngSubmit)="registrar()">
     <input type="text" formControlName="nombre" placeholder="Nombre" />
     @if (form.get('nombre')?.invalid && (form.get('nombre')?.dirty || form.get('nombre')?.touched)) {

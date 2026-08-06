@@ -1,6 +1,12 @@
 <div class="login-container">
   <h2>Iniciar Sesión</h2>
 
+  @if (mensaje) {
+    <div class="alert">
+      {{ mensaje }}
+    </div>
+  }
+
   <form [formGroup]="form" (ngSubmit)="iniciarSesion()">
     <input type="email" placeholder="Email" formControlName="email" />
     @if (form.get('email')?.invalid && form.get('email')?.touched) {
