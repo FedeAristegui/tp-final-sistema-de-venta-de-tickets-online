@@ -88,9 +88,7 @@ button {
   max-width: 90%;
 }
 .alert-error {
-  background: linear-gradient(90deg,#ffefef,#ffd6d6);
-  color: #7a1f1f;
-  border: 1px solid rgba(186, 26, 26, 0.12);
+  background-color: #f9624a;
 }
 .alert-success {
   background: linear-gradient(90deg,#f0fff4,#ddffd9);

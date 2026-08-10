@@ -17,6 +17,12 @@
           <p class="total-pagado"><strong>Total pagado:</strong> ${{ detalle.totalPagado.toFixed(2) }}</p>
         </div>
       }
+
+      @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
       
       <div class="acciones-compra-exitosa">
         <button class="btn-continuar-comprando" (click)="continuarComprando()">
@@ -259,3 +265,16 @@
     </div>
   }
 </div>
+
+<!-- Modal de confirmación -->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>{{ confirmMessage() }}</p>
+      <div class="modal-actions">
+        <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
+        <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}

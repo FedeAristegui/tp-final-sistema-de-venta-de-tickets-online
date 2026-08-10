@@ -8,6 +8,12 @@
       }
     </h3>
 
+    @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
+
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario-evento">
       <label for="titulo">Título:</label>
       <input id="titulo" formControlName="titulo" placeholder="Título del evento" />
@@ -289,15 +295,27 @@
           Guardar Evento
         }
       </button>
-      
-      
-      
+
       @if(isEditing) {
-        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">Cancelar</button>
+        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">
+          Cancelar
+        </button>
       }
-      
     </form>
   </div>
+
+  <!-- Modal de confirmación -->
+  @if (showConfirmModal()) {
+    <div class="modal-backdrop">
+      <div class="modal">
+        <p>{{ confirmMessage() }}</p>
+        <div class="modal-actions">
+          <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
+          <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
 
 

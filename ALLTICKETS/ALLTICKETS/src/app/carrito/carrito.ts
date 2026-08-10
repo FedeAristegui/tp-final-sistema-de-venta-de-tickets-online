@@ -33,6 +33,9 @@ export class Carrito implements OnInit {
   items = this.carritoServicio.obtenerItems();
   subtotal = computed(() => this.carritoServicio.calcularTotal());
   cantidadTotal = computed(() => this.carritoServicio.obtenerCantidadTotal());
+
+  mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
   
   procesandoCompra = signal<boolean>(false);
   compraExitosa = signal<boolean>(false);
@@ -58,6 +61,12 @@ export class Carrito implements OnInit {
   descuentoPorcentaje = computed(() => this.cuponAplicado()?.porcentaje || 0);
   montoDescuento = computed(() => this.subtotal() * (this.descuentoPorcentaje() / 100));
   total = computed(() => this.subtotal() - this.montoDescuento());
+
+  // modal de confirmación
+  showConfirmModal = signal<boolean>(false);
+  confirmMessage = signal<string>('');
+  pendingAction: 'eliminar' | 'vaciar' | 'pagar' | null = null;
+  pendingItemIndex: number | null = null;
 
   constructor() {
     this.tarjetaForm = this.fb.group({
@@ -111,7 +120,8 @@ export class Carrito implements OnInit {
   agregarNuevaTarjeta(){
     if (this.tarjetaForm.invalid) {
       this.tarjetaForm.markAllAsTouched();
-      alert('Por favor completa todos los campos correctamente');
+      this.mensaje = 'Por favor completa todos los campos correctamente';
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -134,10 +144,12 @@ export class Carrito implements OnInit {
         this.tarjetaSeleccionada.set(tarjeta);
         this.mostrarFormularioTarjeta.set(false);
         this.tarjetaForm.reset({ tipo: 'Visa' });
-        alert('Tarjeta agregada correctamente');
+        this.mensaje = 'Tarjeta agregada correctamente';
+        this.tipoMensaje = 'success';
       },
       error: (err) => {
-        alert('Error al agregar tarjeta');
+        this.mensaje = 'Error al agregar tarjeta';
+        this.tipoMensaje = 'error';
       }
     });
   }
@@ -153,34 +165,44 @@ export class Carrito implements OnInit {
   }
 
   eliminarItem(index: number){
-    if (confirm('¿Estás seguro de que deseas eliminar este item del carrito?')) {
-      const item = this.items()[index];
-      
-      // Si es una butaca, desmarcarla en la base de datos
-      if (item && item.tipoEntrada === 'butaca') {
-        const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
-        if (detalles) {
-          const fila = detalles[1];
-          const numero = parseInt(detalles[2], 10);
-          this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
-            next: () => {
-              // Butaca desmarcada exitosamente
-            },
-            error: (err) => {
-              console.error('Error desmarcando butaca:', err);
-            }
-          });
-        }
-      }
-      
-      this.carritoServicio.eliminarDelCarrito(index);
-      if (this.usuario) {
-        this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
-          next: () => {},
-          error: (err) => {}
+    this.pendingItemIndex = index;
+    this.pendingAction = 'eliminar';
+    this.confirmMessage.set('¿Estás seguro de que deseas eliminar este item del carrito?');
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarEliminarItem() {
+    if (this.pendingItemIndex === null) return;
+    
+    const index = this.pendingItemIndex;
+    const item = this.items()[index];
+    
+    // Si es una butaca, desmarcarla en la base de datos
+    if (item && item.tipoEntrada === 'butaca') {
+      const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
+      if (detalles) {
+        const fila = detalles[1];
+        const numero = parseInt(detalles[2], 10);
+        this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
+          next: () => {
+            // Butaca desmarcada exitosamente
+          },
+          error: (err) => {
+            console.error('Error desmarcando butaca:', err);
+          }
         });
       }
     }
+    
+    this.carritoServicio.eliminarDelCarrito(index);
+    if (this.usuario) {
+      this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
+        next: () => {},
+        error: (err) => {}
+      });
+    }
+    
+    this.closeConfirmModal();
   }
 
   actualizarCantidad(index: number, event: Event) {
@@ -199,35 +221,41 @@ export class Carrito implements OnInit {
   }
 
   vaciarCarrito() {
-    if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
-      // Desmarcar todas las butacas antes de vaciar
-      const items = this.items();
-      items.forEach(item => {
-        if (item.tipoEntrada === 'butaca') {
-          const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
-          if (detalles) {
-            const fila = detalles[1];
-            const numero = parseInt(detalles[2], 10);
-            this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
-              next: () => {},
-              error: (err) => {
-                console.error('Error desmarcando butaca:', err);
-              }
-            });
-          }
-        }
-      });
+    this.pendingAction = 'vaciar';
+    this.confirmMessage.set('¿Estás seguro de que deseas vaciar el carrito?');
+    this.showConfirmModal.set(true);
+  }
 
-      this.carritoServicio.vaciarCarrito();
-      this.limpiarCupon();
-      this.resetearEstadoCompra();
-      if (this.usuario) {
-        this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
-          next: () => {},
-          error: (err) => {}
-        });
+  private confirmarVaciarCarrito() {
+    // Desmarcar todas las butacas antes de vaciar
+    const items = this.items();
+    items.forEach(item => {
+      if (item.tipoEntrada === 'butaca') {
+        const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
+        if (detalles) {
+          const fila = detalles[1];
+          const numero = parseInt(detalles[2], 10);
+          this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
+            next: () => {},
+            error: (err) => {
+              console.error('Error desmarcando butaca:', err);
+            }
+          });
+        }
       }
+    });
+
+    this.carritoServicio.vaciarCarrito();
+    this.limpiarCupon();
+    this.resetearEstadoCompra();
+    if (this.usuario) {
+      this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
+        next: () => {},
+        error: (err) => {}
+      });
     }
+    
+    this.closeConfirmModal();
   }
 
   cargarCarritoUsuario(){
@@ -341,18 +369,26 @@ export class Carrito implements OnInit {
     const items = this.items();
     
     if (items.length === 0) {
-      alert('El carrito está vacío');
+      this.mensaje = 'No hay artículos en el carrito para procesar la compra';
+      this.tipoMensaje = 'error';
       return;
     }
 
     if (!this.tarjetaSeleccionada()) {
-      alert('Por favor selecciona o agrega una tarjeta de pago');
+      this.mensaje = 'Por favor selecciona o agrega una tarjeta de pago';
+      this.tipoMensaje = 'error';
       return;
     }
 
-    if (!confirm('¿Confirmar la compra?')) {
-      return;
-    }
+    this.pendingAction = 'pagar';
+    this.confirmMessage.set('¿Confirmar la compra?');
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarPago() {
+    const items = this.items();
+
+    this.closeConfirmModal();
 
     this.procesandoCompra.set(true);
 
@@ -364,13 +400,15 @@ export class Carrito implements OnInit {
         },
         error: (error) => {
           this.procesandoCompra.set(false);
-          alert('Error al procesar la compra. Por favor, intenta nuevamente.');
+          this.mensaje = 'Error al procesar la compra. Por favor, intenta nuevamente.';
+          this.tipoMensaje = 'error';
         }
       });
     }).catch((msg) => {
       this.procesandoCompra.set(false);
       const texto = typeof msg === 'string' ? msg : 'Algunos artículos ya no están disponibles.';
-      alert(texto);
+      this.mensaje = texto;
+      this.tipoMensaje = 'error';
     });
   }
 
@@ -583,7 +621,30 @@ export class Carrito implements OnInit {
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      alert('Error al procesar la compra. Por favor, intenta nuevamente.');
+      this.mensaje = 'Error al procesar la compra. Por favor, intenta nuevamente.';
+      this.tipoMensaje = 'error';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  closeConfirmModal(): void {
+    this.showConfirmModal.set(false);
+    this.pendingAction = null;
+    this.pendingItemIndex = null;
+    this.confirmMessage.set('');
+  }
+
+  confirmAction(): void {
+    switch (this.pendingAction) {
+      case 'eliminar':
+        this.confirmarEliminarItem();
+        break;
+      case 'vaciar':
+        this.confirmarVaciarCarrito();
+        break;
+      case 'pagar':
+        this.confirmarPago();
+        break;
     }
   }
 }

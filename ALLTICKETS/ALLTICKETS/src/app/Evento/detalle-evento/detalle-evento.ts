@@ -35,6 +35,9 @@ export class detalleEvento implements OnInit, OnDestroy {
 
   protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
 
+    mensaje: string = '';
+    tipoMensaje: 'error' | 'success' | '' = '';
+
   protected butacasPorFila = computed(() => {
     const evento = this.evento();
     if (!evento?.butacas) return {};
@@ -81,7 +84,8 @@ export class detalleEvento implements OnInit, OnDestroy {
   // MÉTODOS DE BUTACAS
   seleccionarButaca(fila: string, numero: number, disponible: boolean): void {
     if (!disponible) {
-      alert('⚠️ Esta butaca no está disponible');
+      this.mensaje = '⚠️ Esta butaca no está disponible';
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -158,8 +162,8 @@ export class detalleEvento implements OnInit, OnDestroy {
     if (!evento) return;
 
     if (!this.usuario()) {
-      alert('Debes iniciar sesión para agregar al carrito');
-      this.router.navigate(['/login']);
+      this.mensaje = 'Debes iniciar sesión para agregar al carrito';
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -172,10 +176,6 @@ export class detalleEvento implements OnInit, OnDestroy {
 
   private agregarButacasAlCarrito(): void {
     const butacas = this.butacasSeleccionadas();
-    if (butacas.length === 0) {
-      alert('Debes seleccionar al menos una butaca');
-      return;
-    }
 
     const evento = this.evento()!;
     const itemsCarrito = this.carritoServicio.obtenerItems()();
@@ -225,11 +225,14 @@ export class detalleEvento implements OnInit, OnDestroy {
     }
 
     if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
-      alert(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito`);
+      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito`;
+      this.tipoMensaje = 'success';
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
-      alert(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito\n\n ${butacasYaEnCarrito.length} butaca(s) ya estaba(n) en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito`;
+      this.tipoMensaje = 'error';
     } else {
-      alert(`Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`);
+      this.mensaje = `Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`;
+      this.tipoMensaje = 'error';
     }
 
     this.limpiarSeleccion();
@@ -250,10 +253,6 @@ export class detalleEvento implements OnInit, OnDestroy {
 
   private agregarSectorAlCarrito(): void {
     const sectorNombre = this.sectorSeleccionado();
-    if (!sectorNombre) {
-      alert('Debes seleccionar un sector');
-      return;
-    }
 
     const evento = this.evento()!;
     const sector = evento.sectores.find(s => s.nombre === sectorNombre);
@@ -263,7 +262,8 @@ export class detalleEvento implements OnInit, OnDestroy {
     const disponible = this.getCapacidadDisponible(sector.nombre);
 
     if (cantidad > disponible) {
-      alert(`Solo hay ${disponible} entradas disponibles`);
+      this.mensaje = `Solo hay ${disponible} entradas disponibles`;
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -275,7 +275,7 @@ export class detalleEvento implements OnInit, OnDestroy {
       precioUnitario: sector.precio
     });
 
-    alert(`${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`);
+    this.mensaje = `${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`;
     this.sectorSeleccionado.set('');
     this.cantidadSector.set(1);
 
@@ -335,7 +335,8 @@ export class detalleEvento implements OnInit, OnDestroy {
               .map(b => `Fila ${b.fila} - Butaca ${b.numero}`)
               .join('\n');
             
-            alert(`⚠️ Las siguientes butacas dejaron de estar disponibles y fueron removidas:\n${detalles}`);
+            this.mensaje = `⚠️ Las siguientes butacas seleccionadas ya no están disponibles:\n${detalles}`;
+            this.tipoMensaje = 'error';
           }
         }
       });

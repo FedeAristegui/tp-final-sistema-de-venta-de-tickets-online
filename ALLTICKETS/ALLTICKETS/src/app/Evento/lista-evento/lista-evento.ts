@@ -1,14 +1,16 @@
 import { Component, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Evento } from '../../modelos/evento';
 import { FormsModule } from '@angular/forms';
+import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 
 @Component({
   selector: 'app-lista-evento',
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, CommonModule],
   templateUrl: './lista-evento.html',
   styleUrl: './lista-evento.css',
 })
@@ -18,6 +20,7 @@ export class ListaEvento {
   protected readonly eventos = toSignal(this.client.obtenerEventos()) ;
   protected readonly isLoading = computed(() => this.eventos() === undefined);
   protected readonly router = inject(Router);
+  protected readonly modalService = inject(ModalConfirmacionService);
   private readonly route = inject(ActivatedRoute);
   private readonly id = this.route.snapshot.paramMap.get('id');
 
@@ -67,20 +70,19 @@ export class ListaEvento {
     this.router.navigate(['/ficha-evento', id]);
   }
   
-eliminarEvento(id: number | string) {
-  if (id == null) return;
-  
-  if (!confirm('¿Estás seguro de eliminar este evento?')) {
-    return; 
+  async eliminarEvento(id: number | string) {
+    if (id == null) return;
+    
+    const confirmar = await this.modalService.confirm('¿Estás seguro de eliminar este evento?');
+    if (!confirmar) return;
+     
+    this.client.borrarEvento(id).subscribe({
+      next: () => {
+        window.location.reload();
+      },
+      error: (err) => {
+        alert('Error al eliminar el evento');
+      }
+    });
   }
-   
-  this.client.borrarEvento(id).subscribe({
-    next: () => {
-     window.location.reload();
-    },
-    error: (err) => {
-      alert('Error al eliminar el evento');
-    }
-  });
-}
 }

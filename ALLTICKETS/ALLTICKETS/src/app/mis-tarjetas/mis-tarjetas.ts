@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Tarjeta } from '../modelos/tarjeta';
 
 export const tarjetaNoVencidaValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -46,6 +47,7 @@ export class MisTarjetas implements OnInit {
 
   private readonly tarjetaService = inject(TarjetaServicio);
   private readonly router = inject(Router);
+  protected readonly modalService = inject(ModalConfirmacionService);
   private readonly fb = inject(FormBuilder);
 
   mensaje: string = '';
@@ -142,10 +144,9 @@ export class MisTarjetas implements OnInit {
     });
   }
 
-  eliminarTarjeta(tarjeta: Tarjeta): void {
-    if (!confirm(`¿Estás seguro de eliminar la tarjeta terminada en ${tarjeta.numeroTarjeta}?`)) {
-      return;
-    }
+  async eliminarTarjeta(tarjeta: Tarjeta): Promise<void> {
+    const confirmar = await this.modalService.confirm(`¿Estás seguro de eliminar la tarjeta terminada en ${tarjeta.numeroTarjeta}?`);
+    if (!confirmar) return;
 
     if (tarjeta.id) {
       this.tarjetaService.eliminarTarjeta(tarjeta.id).subscribe({

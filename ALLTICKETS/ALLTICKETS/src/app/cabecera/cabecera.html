@@ -42,3 +42,16 @@
     <a class="btn-volver" routerLink="/menu-principal">← Volver al menú</a>
     </div>
 </div>
+
+<!-- Modal de confirmación global -->
+@if (modalService.showConfirmModal()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>{{ modalService.confirmMessage() }}</p>
+      <div class="modal-actions">
+        <button type="button" (click)="modalService.confirmAction()" class="confirm-btn">Confirmar</button>
+        <button type="button" (click)="modalService.cancelAction()" class="cancel-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}

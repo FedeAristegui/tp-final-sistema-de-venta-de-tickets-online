@@ -1,10 +1,15 @@
 import { CanDeactivateFn } from '@angular/router';
-import {AdminEventos} from '../Evento/crear-evento/admin-eventos';
+import { inject } from '@angular/core';
+import { AdminEventos } from '../Evento/crear-evento/admin-eventos';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 
-export const formIncompletoGuard: CanDeactivateFn<AdminEventos> = (component, currentRoute, currentState, nextState) => {
+export const formIncompletoGuard: CanDeactivateFn<AdminEventos> = async (component, currentRoute, currentState, nextState) => {
+  const modalService = inject(ModalConfirmacionService);
+  
   // Accede al formulario usando la propiedad correcta
   if (component['form']?.dirty) {
-    return confirm('Desea salir sin guardar?');
+    const confirmar = await modalService.confirm('¿Desea salir sin guardar?');
+    return confirmar;
   }
   return true;
 };

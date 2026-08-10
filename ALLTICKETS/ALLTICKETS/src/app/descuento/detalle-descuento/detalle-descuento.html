@@ -1,7 +1,6 @@
 @let descuento = this.descuento();
 
 @if (descuento) {
-
   <h2>{{ descuento.codigo }}</h2>
   <p>
     Descuento: {{ descuento.porcentaje }}% |
@@ -18,20 +17,23 @@
     <button (click)="eliminarDescuento()" [disabled]="isEditing()">Eliminar</button>
   </div>
 
-  @if (isEditing()) {
-    
-    <app-formulario-descuento
-      id="form-edicion"
-      [isEditing]="true"
-      [descuento]="descuento"
-      (edited)="handleEdit($event)" 
-      (cancelled)="toggleEdit()">
-    </app-formulario-descuento>
-  }
+<!-- Modal de confirmación -->
+@if (modalService.showConfirmModal()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>{{ modalService.confirmMessage() }}</p>
+      <div class="modal-actions">
+        <button type="button" (click)="modalService.confirmAction()" class="confirm-btn">Confirmar</button>
+        <button type="button" (click)="modalService.cancelAction()" class="cancel-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}
 
 } @else {
   <p>No se encontró el descuento</p>
 }
+
 @if(!isEditing()){
   <button routerLink="/lista-descuento" class="volver-btn">Volver a la lista</button>
 }

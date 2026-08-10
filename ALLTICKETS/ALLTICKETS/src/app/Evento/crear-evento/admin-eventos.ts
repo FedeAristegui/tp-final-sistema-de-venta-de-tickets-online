@@ -126,7 +126,17 @@ export class AdminEventos implements OnInit {
   protected modoEdicion = signal(false);
   protected mostrarTodasButacas = signal(false);
   protected archivoSeleccionado = signal<string>('');
+  
+  // modal de confirmación
+  protected showConfirmModal = signal<boolean>(false);
+  protected confirmMessage = signal<string>('');
+  protected pendingAction: 'eliminarSector' | 'eliminarButaca' | 'limpiarButacas' | 'generarButacas' | 'eliminarEvento' | null = null;
+  protected pendingData: any = null;
+  
   @Output() cancelled = new EventEmitter<void>();
+
+  mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
 
   toggleMostrarTodas(): void {
     this.mostrarTodasButacas.update(v => !v);
@@ -140,7 +150,8 @@ export class AdminEventos implements OnInit {
     if (file) {
       // Validar que sea un archivo PNG
       if (!file.type.match('image/png')) {
-        alert('⚠️ Solo se aceptan archivos PNG');
+        this.mensaje = '⚠️ Solo se aceptan archivos PNG';
+        this.tipoMensaje = 'error';
         input.value = '';
         this.archivoSeleccionado.set('');
         this.form.get('imagen')?.setValue('');
@@ -150,7 +161,8 @@ export class AdminEventos implements OnInit {
       // Validar tamaño máximo (5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        alert('⚠️ El archivo es demasiado grande. Máximo 5MB');
+        this.mensaje = '⚠️ El archivo es demasiado grande. Máximo 5MB';
+        this.tipoMensaje = 'error';
         input.value = '';
         this.archivoSeleccionado.set('');
         this.form.get('imagen')?.setValue('');
@@ -246,7 +258,8 @@ export class AdminEventos implements OnInit {
       this.eventoService.obtenerEvento(id).subscribe({
         next: ev => this.cargarEventoEnFormulario(ev),
         error: err => {
-          alert('No se pudo cargar el evento para editar.');
+          this.mensaje = 'No se pudo cargar el evento para editar.';
+          this.tipoMensaje = 'error';
           this.router.navigate(['/eventos']);
         }
       });
@@ -327,10 +340,17 @@ export class AdminEventos implements OnInit {
   }
 
   eliminarSector(index: number): void {
-    if (confirm('¿Eliminar este sector?')) {
-      this.sectores.removeAt(index);
-      this.form.updateValueAndValidity();
-    }
+    this.pendingAction = 'eliminarSector';
+    this.pendingData = index;
+    this.confirmMessage.set('¿Eliminar este sector?');
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarEliminarSector() {
+    if (this.pendingData === null) return;
+    this.sectores.removeAt(this.pendingData);
+    this.form.updateValueAndValidity();
+    this.closeConfirmModal();
   }
 
   agregarButaca(): void {
@@ -369,20 +389,32 @@ export class AdminEventos implements OnInit {
   }
 
   eliminarButaca(index: number): void {
-    if (confirm('¿Eliminar esta butaca?')) {
-      this.butacas.removeAt(index);
-      this.form.updateValueAndValidity();
-    }
+    this.pendingAction = 'eliminarButaca';
+    this.pendingData = index;
+    this.confirmMessage.set('¿Eliminar esta butaca?');
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarEliminarButaca() {
+    if (this.pendingData === null) return;
+    this.butacas.removeAt(this.pendingData);
+    this.form.updateValueAndValidity();
+    this.closeConfirmModal();
   }
 
   limpiarButacas(): void {
-    if (confirm(`¿Eliminar todas las ${this.butacas.length} butacas?`)) {
-      while (this.butacas.length) {
-        this.butacas.removeAt(0);
-      }
-      this.mostrarTodasButacas.set(false);
-      this.form.updateValueAndValidity();
+    this.pendingAction = 'limpiarButacas';
+    this.confirmMessage.set(`¿Eliminar todas las ${this.butacas.length} butacas?`);
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarLimpiarButacas() {
+    while (this.butacas.length) {
+      this.butacas.removeAt(0);
     }
+    this.mostrarTodasButacas.set(false);
+    this.form.updateValueAndValidity();
+    this.closeConfirmModal();
   }
 
   //  Generar butacas automáticamente
@@ -401,18 +433,26 @@ export class AdminEventos implements OnInit {
     const filas = this.parsearFilas(filasInput);
     
     if (filas.length === 0) {
-      alert('Formato de filas inválido.\n\nEjemplos válidos:\n• A,B,C (filas separadas por coma)\n• A-Z (rango de filas del alfabeto)');
+      this.mensaje = '⚠️ Formato de filas inválido. Ejemplo: A-E o A,B,C';
+      this.tipoMensaje = 'error';
       return;
     }
 
     const totalButacas = filas.length * cantidad;
-    const mensaje = this.butacas.length > 0
+    const mensajeConfirm = this.butacas.length > 0
       ? `¿Generar ${totalButacas} butacas nuevas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca\n\n⚠️ Esto reemplazará las ${this.butacas.length} butacas actuales`
       : `¿Generar ${totalButacas} butacas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca`;
 
-    if (!confirm(mensaje)) {
-      return;
-    }
+    this.pendingAction = 'generarButacas';
+    this.pendingData = { filas, cantidad, precio, totalButacas };
+    this.confirmMessage.set(mensajeConfirm);
+    this.showConfirmModal.set(true);
+  }
+
+  private confirmarGenerarButacas() {
+    if (!this.pendingData) return;
+    
+    const { filas, cantidad, precio, totalButacas } = this.pendingData;
 
     // Limpiar butacas existentes
     while (this.butacas.length) {
@@ -420,7 +460,7 @@ export class AdminEventos implements OnInit {
     }
 
     // Generar nuevas butacas
-    filas.forEach(fila => {
+    filas.forEach((fila: string) => {
       for (let num = 1; num <= cantidad; num++) {
         this.butacas.push(
           this.fb.group({
@@ -434,7 +474,9 @@ export class AdminEventos implements OnInit {
     });
 
     this.mostrarTodasButacas.set(false);
-    alert(`${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`);
+    this.mensaje = `${totalButacas} butacas generadas correctamente\n\nFilas: ${filas.join(', ')}\nButacas por fila: ${cantidad}`;
+    this.tipoMensaje = 'success';
+    this.closeConfirmModal();
   }
 
   private parsearFilas(input: string): string[] {
@@ -496,14 +538,18 @@ export class AdminEventos implements OnInit {
       if (this.form.hasError('requireSectorOrButaca')) {
         const modo = this.form.get('modoVenta')?.value;
         if (modo === 'sector') {
-          alert('Debes agregar al menos un sector para este evento.');
+          this.mensaje = 'Debes agregar al menos un sector para este evento.';
+          this.tipoMensaje = 'error';
         } else if (modo === 'butaca') {
-          alert('Debes agregar al menos una butaca para este evento.');
+          this.mensaje = 'Debes agregar al menos una butaca para este evento.';
+          this.tipoMensaje = 'error';
         } else {
-          alert('Debes agregar al menos un sector o una butaca para este evento.');
+          this.mensaje = 'Debes agregar al menos un sector o una butaca para este evento.';
+          this.tipoMensaje = 'error';
         }
       } else {
-        alert('Por favor completá todos los campos correctamente.');
+        this.mensaje = 'Por favor completá todos los campos correctamente.';
+        this.tipoMensaje = 'error';
       }
       this.form.markAllAsTouched();
       return;
@@ -536,8 +582,9 @@ export class AdminEventos implements OnInit {
             }
             return eventos;
           });
-          alert('Evento actualizado con éxito');
-          
+          this.mensaje = 'Evento actualizado con éxito';
+          this.tipoMensaje = 'success';
+
           // Si viene desde @Input, emitir el evento actualizado
           if (this.isEditing) {
             this.edited.emit(evento);
@@ -547,7 +594,8 @@ export class AdminEventos implements OnInit {
           this.cancelarEdicion();
         },
         error: err => {
-          alert('Error al actualizar el evento.');
+          this.mensaje = 'Error al actualizar el evento.';
+          this.tipoMensaje = 'error';
         }
       });
     } else {
@@ -555,11 +603,13 @@ export class AdminEventos implements OnInit {
       this.eventoService.crearEvento(evento).subscribe({
         next: (nuevoEvento: Evento) => {
           this.eventos.update(eventos => [...eventos, nuevoEvento]);
-          alert('🎉 Evento creado con éxito');
+          this.mensaje = '🎉 Evento creado con éxito';
+          this.tipoMensaje = 'success';
           this.cancelarEdicion();
         },
         error: err => {
-          alert('Hubo un error al crear el evento.');
+          this.mensaje = 'Hubo un error al crear el evento.';
+          this.tipoMensaje = 'error';
         }
       });
     }
@@ -567,24 +617,64 @@ export class AdminEventos implements OnInit {
 
   eliminarEvento(id: number | undefined): void {
     if (!id) return;
-    if (!confirm('¿Está seguro que desea eliminar este evento?')) return;
+    
+    this.pendingAction = 'eliminarEvento';
+    this.pendingData = id;
+    this.confirmMessage.set('¿Está seguro que desea eliminar este evento?');
+    this.showConfirmModal.set(true);
+  }
 
+  private confirmarEliminarEvento() {
+    if (this.pendingData === null) return;
+    
+    const id = this.pendingData;
     this.eventos.update(eventos => eventos.filter(e => e.id !== id));
 
     this.eventoService.borrarEvento(id).subscribe({
       next: () => {
-        alert('Evento eliminado');
+        this.mensaje = 'Evento eliminado con éxito';
+        this.tipoMensaje = 'success';
       },
       error: err => {
         this.cargarEventos();
-        alert('Error al eliminar el evento.');
+        this.mensaje = 'Error al eliminar el evento.';
+        this.tipoMensaje = 'error';
       }
     });
+    
+    this.closeConfirmModal();
   }
 
   navegarAdetalles(id: number | undefined): void {
     if (id != null) {
       this.router.navigate(['/ficha-evento', id]);
+    }
+  }
+
+  closeConfirmModal(): void {
+    this.showConfirmModal.set(false);
+    this.pendingAction = null;
+    this.pendingData = null;
+    this.confirmMessage.set('');
+  }
+
+  confirmAction(): void {
+    switch (this.pendingAction) {
+      case 'eliminarSector':
+        this.confirmarEliminarSector();
+        break;
+      case 'eliminarButaca':
+        this.confirmarEliminarButaca();
+        break;
+      case 'limpiarButacas':
+        this.confirmarLimpiarButacas();
+        break;
+      case 'generarButacas':
+        this.confirmarGenerarButacas();
+        break;
+      case 'eliminarEvento':
+        this.confirmarEliminarEvento();
+        break;
     }
   }
 }

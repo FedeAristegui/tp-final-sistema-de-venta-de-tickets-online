@@ -1,4 +1,11 @@
 @if (evento()) {
+
+  @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
+  
   <div class="detalle-evento">
     <div class="header-evento">
       <button (click)="volverAtras()" class="btn-volver">
@@ -15,6 +22,8 @@
         <img [src]="evento()!.imagen" [alt]="evento()!.titulo" />
       </div>
     }
+
+    
 
     <div class="info-basica">
       <div class="info-item">
