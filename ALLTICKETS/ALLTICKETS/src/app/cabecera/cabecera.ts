@@ -18,11 +18,15 @@ export class Cabecera implements OnInit{
   protected readonly modalService = inject(ModalConfirmacionService);
   protected readonly user = this.client.obtenerUsuarioActual();
   
-  cerrarSesion() {
+  async cerrarSesion() {
+  // Dispara el canDeactivate (formIncompletoGuard) si hay un formulario sin guardar
+  const navego = await this.router.navigate(['/']);
+  if (!navego) {
+    return; // el usuario canceló la salida en el popup de confirmación
+  }
   localStorage.removeItem('usuarioLogueado');
   this.usuario = null;
   this.favoritosUsuario = [];
-  this.router.navigate(['/']);
   if (this.user) {
     this.user.ultimaActividad = Date.now().toString();
   }

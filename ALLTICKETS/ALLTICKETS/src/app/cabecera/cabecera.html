@@ -12,7 +12,7 @@
           <li><a routerLink="/formulario-descuento">Agregar Descuento</a></li>
           <li><a routerLink="/lista-descuento">Ver lista Descuentos</a></li>
           <li><a routerLink="/estadisticas">Ver Estadísticas de Ventas</a></li>
-          <li><a routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+          <li><a (click)="cerrarSesion()">Cerrar Sesión</a></li>
         </ul>
       </nav>
     }
@@ -26,7 +26,7 @@
           <li><a routerLink="/mis-tarjetas">💳 Mis Tarjetas</a></li>
           <li><a routerLink="/carrito">🛒 Carrito</a></li>
           <li><a routerLink="/historial-compras">🛍️ Mis compras</a></li>
-          <li><a class="btn-cerrar" routerLink="/logout" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+          <li><a class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</a></li>
         </ul>
       </nav>
     }

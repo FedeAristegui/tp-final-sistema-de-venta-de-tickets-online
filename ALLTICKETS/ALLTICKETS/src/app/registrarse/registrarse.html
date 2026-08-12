@@ -20,6 +20,12 @@
           @if (form.get('nombre')?.errors?.['pattern']) {
             <span>El nombre no debe contener números</span>
           }
+          @if (form.get('nombre')?.errors?.['espacioInicio']) {
+            <span>El nombre no puede empezar con espacios en blanco</span>
+          }
+          @if (form.get('nombre')?.errors?.['espacioFinal']) {
+            <span>El nombre no puede terminar con espacios en blanco</span>
+          }
         </div>
     }
 
@@ -34,6 +40,12 @@
           }
           @if (form.get('apellido')?.errors?.['pattern']) {
             <span>El apellido no debe contener números</span>
+          }
+          @if (form.get('apellido')?.errors?.['espacioInicio']) {
+            <span>El apellido no puede empezar con espacios en blanco</span>
+          }
+          @if (form.get('apellido')?.errors?.['espacioFinal']) {
+            <span>El apellido no puede terminar con espacios en blanco</span>
           }
         </div>
     }
@@ -61,6 +73,12 @@
           }
           @if (form.get('contrasena')?.errors?.['maxlength']) {
             <span>La contraseña debe tener entre 6 y 20 caracteres</span>
+          }
+          @if (form.get('contrasena')?.errors?.['espacioInicio']) {
+            <span>La contraseña no puede empezar con espacios en blanco</span>
+          }
+          @if (form.get('contrasena')?.errors?.['espacioFinal']) {
+            <span>La contraseña no puede terminar con espacios en blanco</span>
           }
         </div>
     }

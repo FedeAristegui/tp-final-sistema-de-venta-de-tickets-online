@@ -3,8 +3,18 @@ import { usuario } from '../modelos/usuario';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RouterLink } from "@angular/router";
+
+// Validador: rechaza espacios en blanco al inicio o al final del valor
+export const sinEspaciosBordeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  if (!value) return null;
+  const errores: ValidationErrors = {};
+  if (/^\s/.test(value)) errores['espacioInicio'] = true;
+  if (/\s$/.test(value)) errores['espacioFinal'] = true;
+  return Object.keys(errores).length > 0 ? errores : null;
+};
 
 @Component({
   selector: 'app-registrarse',
@@ -22,10 +32,10 @@ export class Registrarse {
   tipoMensaje: 'error' | 'success' | '' = '';
 
   protected readonly form = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]],
-    apellido: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)]], 
+    nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/), sinEspaciosBordeValidator]],
+    apellido: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/), sinEspaciosBordeValidator]], 
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required, Validators.minLength(6)]],
+    contrasena: ['', [Validators.required, Validators.minLength(6), sinEspaciosBordeValidator]],
     rol: ['usuario', Validators.required]
   });
 

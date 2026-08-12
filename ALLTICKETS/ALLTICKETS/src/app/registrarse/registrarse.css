@@ -6,6 +6,9 @@
   background-color: #667eea;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+span {
+  color: red;
+}
 .register-container {
   width: 420px;
   padding: 40px;

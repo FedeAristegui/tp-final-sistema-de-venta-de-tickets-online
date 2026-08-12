@@ -109,6 +109,7 @@ nav ul li a {
   transition: all 0.3s ease;
   display: inline-block;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  cursor: pointer;
 }
 
 nav ul li a:hover {
