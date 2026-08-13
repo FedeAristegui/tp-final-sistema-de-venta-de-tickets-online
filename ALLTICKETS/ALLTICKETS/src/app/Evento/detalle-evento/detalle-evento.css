@@ -126,6 +126,22 @@ button.editar:disabled {
   margin-right: 0.5rem;
 }
 
+/* UBICACIÓN EN GOOGLE MAPS */
+.ubicacion-evento {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.ubicacion-evento h2 {
+  color: #333;
+  margin: 0 0 1.5rem 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
 /* MAPA DE BUTACAS */
 .mapa-butacas {
   background: rgba(255, 255, 255, 0.95);

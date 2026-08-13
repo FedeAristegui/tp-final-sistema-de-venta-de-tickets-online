@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.mapa-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #eef0f5;
+}
+
+.mapa {
+  width: 100%;
+  height: 100%;
+}
+
+.mapa.oculto {
+  visibility: hidden;
+}
+
+.mapa-estado {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #4a5568;
+}
+
+.mapa-estado p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.icono-estado {
+  font-size: 2.5rem;
+}
+
+.direccion-alternativa {
+  font-weight: 500 !important;
+  color: #667eea;
+}
+
+.spinner-mapa {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(102, 126, 234, 0.2);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: girarMapa 0.8s linear infinite;
+}
+
+@keyframes girarMapa {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.direccion-mapa {
+  margin: 12px 0 0 0;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.btn-como-llegar {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+}
+
+.btn-como-llegar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}

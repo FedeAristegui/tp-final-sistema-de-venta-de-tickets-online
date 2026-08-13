@@ -1,0 +1,60 @@
+<div class="selector-ubicacion">
+  <p class="ayuda">
+    Buscá la dirección del lugar, o hacé click directamente sobre el mapa.
+    Después podés arrastrar el pin para ajustarlo.
+  </p>
+
+  <!-- Google inserta acá su propio buscador de direcciones -->
+  <div #contenedorBuscador class="buscador" [class.oculto]="!buscadorDisponible()"></div>
+
+  @if (!buscadorDisponible()) {
+    <p class="aviso-buscador">
+      El buscador de direcciones no está disponible; marcá el punto haciendo click en el mapa.
+    </p>
+  }
+
+  <div class="mapa-wrapper">
+    <div #contenedorMapa class="mapa" [class.oculto]="estado() !== 'listo'"></div>
+
+    @if (estado() !== 'listo') {
+      <div class="mapa-estado">
+        @switch (estado()) {
+          @case ('cargando') {
+            <div class="spinner-mapa"></div>
+            <p>Cargando mapa...</p>
+          }
+          @case ('sin-key') {
+            <span class="icono-estado">🗺️</span>
+            <p>Falta configurar la API key de Google Maps.</p>
+            <p class="detalle-estado">
+              Pegala en <code>src/app/config/google-maps.config.ts</code> para habilitar el mapa.
+            </p>
+          }
+          @default {
+            <span class="icono-estado">⚠️</span>
+            <p>No se pudo cargar el mapa.</p>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  @if (seleccion(); as ubicacion) {
+    <div class="resumen-ubicacion">
+      <div class="datos-ubicacion">
+        <strong>📍 Ubicación seleccionada</strong>
+        @if (ubicacion.direccion) {
+          <span class="direccion">{{ ubicacion.direccion }}</span>
+        }
+        <span class="coordenadas">
+          {{ ubicacion.lat | number: '1.5-5' }}, {{ ubicacion.lng | number: '1.5-5' }}
+        </span>
+      </div>
+      <button type="button" class="btn-limpiar-ubicacion" (click)="limpiar()">
+        Quitar ubicación
+      </button>
+    </div>
+  } @else {
+    <p class="sin-ubicacion">Todavía no seleccionaste una ubicación (es opcional).</p>
+  }
+</div>

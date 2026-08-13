@@ -59,6 +59,11 @@
         }
       }
 
+      <label>Ubicación en el mapa:</label>
+      <app-selector-ubicacion
+        [valorInicial]="ubicacionActual()"
+        (ubicacionCambiada)="onUbicacionCambiada($event)" />
+
       <label for="categoria">Categoría: </label>
       <select id = "categoria" formControlName = "categoria">
       <option value="" disabled selected>Seleccione una categoria</option>

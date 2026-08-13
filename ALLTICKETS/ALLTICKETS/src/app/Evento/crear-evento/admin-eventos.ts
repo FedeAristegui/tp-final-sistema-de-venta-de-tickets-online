@@ -102,13 +102,14 @@ export const requireSectorOrButacaByModo: ValidatorFn = (group: AbstractControl)
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
-import { Evento } from '../../modelos/evento';
+import { Evento, Ubicacion } from '../../modelos/evento';
 import { CommonModule } from '@angular/common';
+import { SelectorUbicacion } from '../../mapa/selector-ubicacion/selector-ubicacion';
 
 @Component({
   selector: 'app-admin-eventos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SelectorUbicacion],
   templateUrl: './admin-eventos.html',
   styleUrls: ['./admin-eventos.css']
 })
@@ -190,6 +191,9 @@ export class AdminEventos implements OnInit {
     fecha: ['', [Validators.required, minDateValidator]],
     hora: ['', Validators.required],
     lugar: ['', [Validators.required, Validators.minLength(3), noNumbersValidator]],
+    // Opcional a propósito: los eventos ya cargados no tienen ubicación y deben
+    // poder seguir editándose sin obligar al admin a marcarles el punto en el mapa.
+    ubicacion: [null as Ubicacion | null],
     imagen: ['', [Validators.required, imageValidator]],
     modoVenta: ['sector' as 'sector' | 'butaca', Validators.required],
     categoria: ['', Validators.required],
@@ -220,6 +224,26 @@ export class AdminEventos implements OnInit {
   }
   get lugar(){
     return this.form.controls.lugar;
+  }
+
+  get ubicacion(){
+    return this.form.controls.ubicacion;
+  }
+
+  /**
+   * Espejo en signal del control 'ubicacion'. La app corre en modo zoneless, así que
+   * leer el valor del control directamente desde el template no garantiza refresco;
+   * el signal sí lo garantiza.
+   */
+  protected readonly ubicacionActual = signal<Ubicacion | null>(null);
+
+  /** Recibe el punto elegido en el mapa y lo guarda en el formulario. */
+  protected onUbicacionCambiada(ubicacion: Ubicacion | null): void {
+    this.ubicacion.setValue(ubicacion);
+    this.ubicacionActual.set(ubicacion);
+    // Marcamos el form como sucio para que el guard de "salir sin guardar"
+    // también proteja los cambios hechos sólo sobre el mapa.
+    this.ubicacion.markAsDirty();
   }
 
   get imagen(){
@@ -287,10 +311,12 @@ export class AdminEventos implements OnInit {
       fecha: ev.fecha,
       hora: ev.hora,
       lugar: ev.lugar,
+      ubicacion: ev.ubicacion ?? null,
       categoria: ev.categoria,
       imagen: ev.imagen,
       modoVenta: ev.modoVenta
     });
+    this.ubicacionActual.set(ev.ubicacion ?? null);
 
     this.sectores.clear();
     this.butacas.clear();
@@ -524,6 +550,7 @@ export class AdminEventos implements OnInit {
   cancelarEdicion(): void {
     this.modoEdicion.set(false);
     this.form.reset({ modoVenta: 'sector' });
+    this.ubicacionActual.set(null);
     while (this.sectores.length) {
       this.sectores.removeAt(0);
     }
@@ -564,6 +591,9 @@ export class AdminEventos implements OnInit {
       fecha: String(raw.fecha ?? ''),
       hora: String(raw.hora ?? ''),
       lugar: String(raw.lugar ?? ''),
+      // Si el admin no marcó el punto, se omite el campo en vez de mandar null,
+      // para que el evento quede igual que los que nunca tuvieron ubicación.
+      ...(raw.ubicacion ? { ubicacion: raw.ubicacion as Ubicacion } : {}),
       imagen: String(raw.imagen ?? ''),
       categoria: String(raw.categoria ?? ''),
       modoVenta: (raw.modoVenta as 'sector' | 'butaca') ?? 'sector',

@@ -1,0 +1,36 @@
+<div class="mapa-wrapper">
+  <!-- El contenedor se mantiene siempre en el DOM porque Google lo necesita
+       para dibujar; los estados se muestran superpuestos encima. -->
+  <div #contenedorMapa class="mapa" [class.oculto]="estado() !== 'listo'"></div>
+
+  @if (estado() !== 'listo') {
+    <div class="mapa-estado">
+      @switch (estado()) {
+        @case ('cargando') {
+          <div class="spinner-mapa"></div>
+          <p>Cargando mapa...</p>
+        }
+        @case ('sin-key') {
+          <span class="icono-estado">🗺️</span>
+          <p>El mapa no está disponible en este momento.</p>
+        }
+        @default {
+          <span class="icono-estado">⚠️</span>
+          <p>No se pudo cargar el mapa.</p>
+        }
+      }
+
+      @if (direccion()) {
+        <p class="direccion-alternativa">📍 {{ direccion() }}</p>
+      }
+    </div>
+  }
+</div>
+
+@if (direccion() && estado() === 'listo') {
+  <p class="direccion-mapa">📍 {{ direccion() }}</p>
+}
+
+<a class="btn-como-llegar" [href]="urlComoLlegar()" target="_blank" rel="noopener">
+  Cómo llegar
+</a>

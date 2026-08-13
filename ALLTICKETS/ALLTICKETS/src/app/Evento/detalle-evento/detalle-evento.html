@@ -44,6 +44,17 @@
       </div>
     </div>
 
+    @if (evento()!.ubicacion; as ubicacion) {
+      <div class="ubicacion-evento">
+        <h2>Cómo llegar</h2>
+        <app-mapa-ubicacion
+          [lat]="ubicacion.lat"
+          [lng]="ubicacion.lng"
+          [direccion]="ubicacion.direccion"
+          [titulo]="evento()!.lugar" />
+      </div>
+    }
+
     @if (evento()!.modoVenta === 'butaca') {
       <!-- MAPA DE BUTACAS -->
       <div class="mapa-butacas">

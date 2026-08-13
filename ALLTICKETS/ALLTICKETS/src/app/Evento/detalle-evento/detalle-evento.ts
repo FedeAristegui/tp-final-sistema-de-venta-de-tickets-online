@@ -9,13 +9,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Autenticador } from '../../servicios/autenticador';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { AdminEventos } from '../crear-evento/admin-eventos';
+import { MapaUbicacion } from '../../mapa/mapa-ubicacion/mapa-ubicacion';
 import { interval, Subscription } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, CommonModule, FormsModule, AdminEventos],
+  imports: [DatePipe, CommonModule, FormsModule, AdminEventos, MapaUbicacion],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
