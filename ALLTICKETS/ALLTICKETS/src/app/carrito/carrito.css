@@ -18,10 +18,10 @@
   text-align: center;
   margin-bottom: 30px;
   box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-  animation: slideDown 0.5s ease-out;
+  animation: slideDownCompra 0.5s ease-out;
 }
 
-@keyframes slideDown {
+@keyframes slideDownCompra {
   from {
     opacity: 0;
     transform: translateY(-30px);
@@ -169,21 +169,6 @@
   font-size: 0.9rem;
 }
 
-.item-timer {
-  margin-top: 8px;
-  font-size: 0.85rem;
-  color: #155724;
-  background: #e9f7ef;
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-.item-timer.expired {
-  color: #721c24;
-  background: #f8d7da;
-}
-
 .item-fecha {
   font-weight: 500;
   color: #ff6b6b;
@@ -207,15 +192,6 @@
 .item-cantidad label {
   font-size: 0.9rem;
   color: #666;
-}
-
-.input-cantidad {
-  width: 60px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  text-align: center;
 }
 
 .item-precio {
@@ -629,32 +605,6 @@
   background: #5a6268;
 }
 
-.sin-login {
-  text-align: center;
-  padding: 20px;
-}
-
-.sin-login p {
-  margin-bottom: 15px;
-  color: #666;
-}
-
-.btn-login {
-  display: inline-block;
-  padding: 12px 30px;
-  background: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.btn-login:hover {
-  background: #0056b3;
-  transform: translateY(-2px);
-}
-
 .btn-pagar,
 .btn-vaciar,
 .btn-seguir-comprando {
@@ -736,28 +686,3 @@
   }
 }
 
-.alert {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #c6f6d5;
-  color: #22543d;
-  padding: 14px 20px;
-  border-radius: 10px;
-  border-left: 4px solid #48bb78;
-  font-weight: 600;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  animation: slideDown 0.3s ease-out;
-  max-width: 90%;
-}
-.alert-error {
-  background-color: #f9624a;
-}
-.alert-success {
-  background: linear-gradient(90deg,#f0fff4,#ddffd9);
-  color: #155724;
-  border: 1px solid rgba(40, 167, 69, 0.12);
-}

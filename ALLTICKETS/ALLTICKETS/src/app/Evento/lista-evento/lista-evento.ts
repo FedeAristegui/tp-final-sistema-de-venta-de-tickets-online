@@ -81,7 +81,7 @@ export class ListaEvento {
         window.location.reload();
       },
       error: (err) => {
-        alert('Error al eliminar el evento');
+        this.modalService.notify('Error al eliminar el evento');
       }
     });
   }

@@ -6,7 +6,7 @@
   </div>  
 
   @if (mensaje) {
-    <div class="mensaje">{{ mensaje }}</div>
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">{{ mensaje }}</div>
   }
 
 

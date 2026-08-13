@@ -101,6 +101,7 @@ export const requireSectorOrButacaByModo: ValidatorFn = (group: AbstractControl)
 };
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
+import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { Evento } from '../../modelos/evento';
 import { CommonModule } from '@angular/common';
 
@@ -119,6 +120,7 @@ export class AdminEventos implements OnInit {
 
   private readonly fb = inject(FormBuilder);
   private readonly eventoService = inject(EventoServicio);
+  private readonly modalService = inject(ModalConfirmacionService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -257,9 +259,8 @@ export class AdminEventos implements OnInit {
       const id = Number(idParam);
       this.eventoService.obtenerEvento(id).subscribe({
         next: ev => this.cargarEventoEnFormulario(ev),
-        error: err => {
-          this.mensaje = 'No se pudo cargar el evento para editar.';
-          this.tipoMensaje = 'error';
+        error: async err => {
+          await this.modalService.notify('No se pudo cargar el evento para editar.');
           this.router.navigate(['/eventos']);
         }
       });
@@ -594,8 +595,7 @@ export class AdminEventos implements OnInit {
           this.cancelarEdicion();
         },
         error: err => {
-          this.mensaje = 'Error al actualizar el evento.';
-          this.tipoMensaje = 'error';
+          this.modalService.notify('No se pudo actualizar el evento. Intenta nuevamente en unos minutos.');
         }
       });
     } else {
@@ -608,8 +608,7 @@ export class AdminEventos implements OnInit {
           this.cancelarEdicion();
         },
         error: err => {
-          this.mensaje = 'Hubo un error al crear el evento.';
-          this.tipoMensaje = 'error';
+          this.modalService.notify('No se pudo crear el evento. Intenta nuevamente en unos minutos.');
         }
       });
     }
@@ -637,8 +636,7 @@ export class AdminEventos implements OnInit {
       },
       error: err => {
         this.cargarEventos();
-        this.mensaje = 'Error al eliminar el evento.';
-        this.tipoMensaje = 'error';
+        this.modalService.notify('No se pudo eliminar el evento. Intenta nuevamente en unos minutos.');
       }
     });
     

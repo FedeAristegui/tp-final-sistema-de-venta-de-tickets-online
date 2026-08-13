@@ -338,32 +338,6 @@ button[type="submit"]:hover {
   }
 }
 
-.alert {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #c6f6d5;
-  color: #22543d;
-  padding: 14px 20px;
-  border-radius: 10px;
-  border-left: 4px solid #48bb78;
-  font-weight: 600;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  animation: slideDown 0.3s ease-out;
-  max-width: 90%;
-}
-.alert-error {
-  background-color: #f9624a;
-}
-.alert-success {
-  background: linear-gradient(90deg,#f0fff4,#ddffd9);
-  color: #155724;
-  border: 1px solid rgba(40, 167, 69, 0.12);
-}
-
 /* Estilos para el modal de confirmación */
 .modal-backdrop {
   position: fixed;

@@ -7,6 +7,7 @@ import { VentaServicio } from '../servicios/venta.servicio';
 import { ClienteDescuento } from '../servicios/cliente-descuento';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Venta } from '../modelos/venta';
 import { Descuento } from '../modelos/descuento';
 import { Tarjeta } from '../modelos/tarjeta';
@@ -27,6 +28,7 @@ export class Carrito implements OnInit {
   private descuentoServicio = inject(ClienteDescuento);
   private tarjetaServicio = inject(TarjetaServicio);
   private eventoServicio = inject(EventoServicio);
+  private modalService = inject(ModalConfirmacionService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   
@@ -58,6 +60,7 @@ export class Carrito implements OnInit {
   codigoCupon = signal<string>('');
   cuponAplicado = signal<Descuento | null>(null);
   mensajeCupon = signal<string>('');
+  cuponEsError = signal<boolean>(false);
   descuentoPorcentaje = computed(() => this.cuponAplicado()?.porcentaje || 0);
   montoDescuento = computed(() => this.subtotal() * (this.descuentoPorcentaje() / 100));
   total = computed(() => this.subtotal() - this.montoDescuento());
@@ -148,8 +151,7 @@ export class Carrito implements OnInit {
         this.tipoMensaje = 'success';
       },
       error: (err) => {
-        this.mensaje = 'Error al agregar tarjeta';
-        this.tipoMensaje = 'error';
+        this.modalService.notify('No se pudo agregar la tarjeta. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -306,9 +308,10 @@ export class Carrito implements OnInit {
 
   aplicarCupon() {
     const codigo = this.codigoCupon().trim().toUpperCase();
-    
+
     if (!codigo) {
       this.mensajeCupon.set('Por favor ingresa un código de cupón');
+      this.cuponEsError.set(true);
       return;
     }
 
@@ -320,12 +323,14 @@ export class Carrito implements OnInit {
 
         if (!cuponEncontrado) {
           this.mensajeCupon.set('Cupón no válido');
+          this.cuponEsError.set(true);
           this.cuponAplicado.set(null);
           return;
         }
 
         if (!cuponEncontrado.activo) {
           this.mensajeCupon.set('Este cupón ya no está disponible');
+          this.cuponEsError.set(true);
           this.cuponAplicado.set(null);
           return;
         }
@@ -335,21 +340,24 @@ export class Carrito implements OnInit {
 
         if (hoy < fechaInicio) {
           this.mensajeCupon.set('Este cupón aún no es válido');
+          this.cuponEsError.set(true);
           this.cuponAplicado.set(null);
           return;
         }
 
         if (hoy > fechaFin) {
           this.mensajeCupon.set('Este cupón ha expirado');
+          this.cuponEsError.set(true);
           this.cuponAplicado.set(null);
           return;
         }
         this.cuponAplicado.set(cuponEncontrado);
         this.mensajeCupon.set(`Cupón aplicado: ${cuponEncontrado.porcentaje}% de descuento`);
+        this.cuponEsError.set(false);
       },
       error: (error) => {
-        this.mensajeCupon.set('Error al validar el cupón');
         this.cuponAplicado.set(null);
+        this.modalService.notify('No se pudo validar el cupón. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -357,12 +365,14 @@ export class Carrito implements OnInit {
   borrarCupon(){
     this.limpiarCupon();
     this.mensajeCupon.set('Cupón borrado');
+    this.cuponEsError.set(false);
   }
 
   private limpiarCupon(){
     this.codigoCupon.set('');
     this.cuponAplicado.set(null);
     this.mensajeCupon.set('');
+    this.cuponEsError.set(false);
   }
 
   procederAlPago() {
@@ -400,8 +410,7 @@ export class Carrito implements OnInit {
         },
         error: (error) => {
           this.procesandoCompra.set(false);
-          this.mensaje = 'Error al procesar la compra. Por favor, intenta nuevamente.';
-          this.tipoMensaje = 'error';
+          this.modalService.notify('No se pudo procesar la compra. Intenta nuevamente en unos minutos.');
         }
       });
     }).catch((msg) => {
@@ -621,9 +630,8 @@ export class Carrito implements OnInit {
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      this.mensaje = 'Error al procesar la compra. Por favor, intenta nuevamente.';
-      this.tipoMensaje = 'error';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.modalService.notify('No se pudo procesar la compra. Intenta nuevamente en unos minutos.');
     }
   }
 

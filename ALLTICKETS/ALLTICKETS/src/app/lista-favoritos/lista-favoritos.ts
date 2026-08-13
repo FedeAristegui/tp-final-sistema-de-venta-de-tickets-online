@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FavoritoServicio } from '../servicios/favorito.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Evento } from '../modelos/evento';
 import { forkJoin } from 'rxjs';
 
@@ -20,14 +21,15 @@ export class ListaFavoritos implements OnInit {
 
   private readonly favoritoService = inject(FavoritoServicio);
   private readonly eventoService = inject(EventoServicio);
+  private readonly modalService = inject(ModalConfirmacionService);
   private readonly router = inject(Router);
 
-  ngOnInit() {
+  async ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
 
     if (!this.usuario) {
-      alert('Debes iniciar sesión para ver tus favoritos');
+      await this.modalService.notify('Debes iniciar sesión para ver tus favoritos');
       this.router.navigate(['/login']);
       return;
     }
@@ -59,12 +61,14 @@ export class ListaFavoritos implements OnInit {
           error: (err) => {
             this.eventosFavoritos.set([]);
             this.isLoading.set(false);
+            this.modalService.notify('No se pudieron cargar tus eventos favoritos. Intenta nuevamente en unos minutos.');
           }
         });
       },
       error: (err) => {
         this.eventosFavoritos.set([]);
         this.isLoading.set(false);
+        this.modalService.notify('No se pudieron cargar tus favoritos. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -79,7 +83,9 @@ export class ListaFavoritos implements OnInit {
             next: () => {
               this.eventosFavoritos.update(eventos => eventos.filter(e => e.id !== eventoId));
             },
-            error: (err) => {}
+            error: (err) => {
+              this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
+            }
           });
         }
       }

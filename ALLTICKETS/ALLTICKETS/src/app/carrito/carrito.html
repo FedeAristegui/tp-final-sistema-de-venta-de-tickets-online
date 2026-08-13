@@ -1,6 +1,12 @@
 <div class="carrito-container">
   <h1>Mi Carrito de Compras</h1>
 
+  @if (mensaje) {
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+      {{ mensaje }}
+    </div>
+  }
+
   @if (compraExitosa()) {
     <div class="mensaje-compra-exitosa">
       <div class="icono-exito">✓</div>
@@ -18,12 +24,6 @@
         </div>
       }
 
-      @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
-    </div>
-  }
-      
       <div class="acciones-compra-exitosa">
         <button class="btn-continuar-comprando" (click)="continuarComprando()">
           Ver Más Eventos
@@ -112,7 +112,7 @@
           }
           
           @if (mensajeCupon()) {
-            <p class="mensaje-cupon" [class.error]="mensajeCupon().includes('❌')">
+            <p class="mensaje-cupon" [class.error]="cuponEsError()">
               {{ mensajeCupon() }}
             </p>
           }

@@ -7,6 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Autenticador } from '../../servicios/autenticador';
+import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { AdminEventos } from '../crear-evento/admin-eventos';
 import { interval, Subscription } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
@@ -26,6 +27,7 @@ export class detalleEvento implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly id = this.route.snapshot.paramMap.get('id');
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalConfirmacionService);
   private pollingSubscription?: Subscription;
 
   protected readonly eventoFuente = toSignal(this.cliente.obtenerEvento(this.id!));
@@ -162,8 +164,7 @@ export class detalleEvento implements OnInit, OnDestroy {
     if (!evento) return;
 
     if (!this.usuario()) {
-      this.mensaje = 'Debes iniciar sesión para agregar al carrito';
-      this.tipoMensaje = 'error';
+      this.modalService.notify('Debes iniciar sesión para agregar al carrito');
       return;
     }
 
@@ -228,8 +229,8 @@ export class detalleEvento implements OnInit, OnDestroy {
       this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito`;
       this.tipoMensaje = 'success';
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
-      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito`;
-      this.tipoMensaje = 'error';
+      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito. Ya tenías en el carrito: ${butacasYaEnCarrito.join(', ')}`;
+      this.tipoMensaje = 'success';
     } else {
       this.mensaje = `Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`;
       this.tipoMensaje = 'error';
@@ -276,6 +277,7 @@ export class detalleEvento implements OnInit, OnDestroy {
     });
 
     this.mensaje = `${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`;
+    this.tipoMensaje = 'success';
     this.sectorSeleccionado.set('');
     this.cantidadSector.set(1);
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { inject } from '@angular/core';
 
 @Component({
@@ -13,13 +14,14 @@ import { inject } from '@angular/core';
   styleUrls: ['./iniciar-sesion.css']
 })
 export class IniciarSesion {
- 
+
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalConfirmacionService);
 
-  protected error: string | null = null;
   mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
 
   protected readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -28,15 +30,16 @@ export class IniciarSesion {
 
   iniciarSesion() {
     if (this.form.invalid) {
-      this.error = 'Todos los campos son obligatorios.';
-      
+      this.mensaje = 'Todos los campos son obligatorios.';
+      this.tipoMensaje = 'error';
       return;
     }
       const email = this.form.get('email')?.value;
     const contrasena = this.form.get('contrasena')?.value;
 
     if (!email || !contrasena) {
-      this.error = 'Datos de formulario inválidos';
+      this.mensaje = 'Datos de formulario inválidos';
+      this.tipoMensaje = 'error';
       return;
     }
 
@@ -45,17 +48,19 @@ export class IniciarSesion {
         if (usuarios.length > 0) {
           const usuario = usuarios[0];
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
-          this.error = null;
-          
+          this.mensaje = '';
+          this.tipoMensaje = '';
+
           this.form.reset();
           // Recargar la página completamente
           window.location.href = '/menu-principal';
         } else {
           this.mensaje = 'Email o contraseña incorrectos';
+          this.tipoMensaje = 'error';
         }
       },
       error: (err) => {
-        this.error = 'Error en el servidor. Intenta más tarde.';
+        this.modalService.notify('No se pudo conectar con el servidor. Intenta nuevamente en unos minutos.');
       }
     });
   }

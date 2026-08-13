@@ -55,3 +55,15 @@
     </div>
   </div>
 }
+
+<!-- Modal de error/aviso global -->
+@if (modalService.showErrorModal()) {
+  <div class="modal-backdrop">
+    <div class="modal modal-error">
+      <p>{{ modalService.errorMessage() }}</p>
+      <div class="modal-actions">
+        <button type="button" (click)="modalService.closeErrorModal()" class="confirm-btn">Aceptar</button>
+      </div>
+    </div>
+  </div>
+}

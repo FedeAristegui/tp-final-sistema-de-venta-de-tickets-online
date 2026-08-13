@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { FavoritoServicio } from '../servicios/favorito.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Evento } from '../modelos/evento';
 import { Favorito } from '../modelos/favorito';
 
@@ -27,6 +28,7 @@ export class PaginaPrincipal implements OnInit {
 
   private readonly eventoService = inject(EventoServicio);
   private readonly favoritoService = inject(FavoritoServicio);
+  private readonly modalService = inject(ModalConfirmacionService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   
@@ -71,7 +73,7 @@ export class PaginaPrincipal implements OnInit {
         this.eventos.set([]);
         this.eventosFiltrados.set([]);
         this.isLoading.set(false);
-        alert('Error al cargar eventos. Asegúrate de que json-server esté corriendo en http://localhost:3000');
+        this.modalService.notify('No se pudieron cargar los eventos. Intenta nuevamente en unos minutos.');
       },
       complete: () => {
       }
@@ -122,6 +124,7 @@ export class PaginaPrincipal implements OnInit {
       },
       error: (err) => {
         this.favoritosUsuario.set([]);
+        this.modalService.notify('No se pudieron cargar tus favoritos. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -131,11 +134,11 @@ export class PaginaPrincipal implements OnInit {
     return this.favoritosUsuario().includes(String(eventoId));
   }
 
-  toggleFavorito(evento: Evento, event: Event): void {
-    event.stopPropagation(); // Evitar que se active el click del evento 
-    
+  async toggleFavorito(evento: Evento, event: Event): Promise<void> {
+    event.stopPropagation(); // Evitar que se active el click del evento
+
     if (!this.usuario()) {
-      alert('Debes iniciar sesión para agregar favoritos');
+      await this.modalService.notify('Debes iniciar sesión para agregar favoritos');
       this.router.navigate(['/login']);
       return;
     }
@@ -153,7 +156,9 @@ export class PaginaPrincipal implements OnInit {
               next: () => {
                 this.favoritosUsuario.update(favs => favs.filter(id => id !== eventoId));
               },
-              error: (err) => {}
+              error: (err) => {
+                this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
+              }
             });
           }
         }
@@ -170,7 +175,9 @@ export class PaginaPrincipal implements OnInit {
         next: () => {
           this.favoritosUsuario.update(favs => [...favs, eventoId]);
         },
-        error: (err) => {}
+        error: (err) => {
+          this.modalService.notify('No se pudo agregar el favorito. Intenta nuevamente en unos minutos.');
+        }
       });
     }
   }

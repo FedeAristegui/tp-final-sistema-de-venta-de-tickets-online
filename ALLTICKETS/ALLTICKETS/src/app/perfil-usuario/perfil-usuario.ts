@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { usuario } from '../modelos/usuario';
 import { PaginaPrincipal } from '../pagina-principal/pagina-principal';
 
@@ -17,10 +18,12 @@ export class PerfilUsuario implements OnInit {
   private readonly autenticador = inject(Autenticador);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly modalService = inject(ModalConfirmacionService);
 
   usuario: usuario | null = null;
   editando: boolean = false;
   mensaje: string = '';
+  tipoMensaje: 'error' | 'success' | '' = '';
   perfilForm: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     apellido: ['', [Validators.required, Validators.minLength(3)]],
@@ -59,7 +62,8 @@ export class PerfilUsuario implements OnInit {
     if (this.perfilForm.invalid) {
       this.perfilForm.markAllAsTouched();
       this.mensaje = 'Por favor completa todos los campos correctamente';
-      setTimeout(() => this.mensaje = '', 3000);
+      this.tipoMensaje = 'error';
+      setTimeout(() => { this.mensaje = ''; this.tipoMensaje = ''; }, 3000);
       return;
     }
 
@@ -75,12 +79,12 @@ export class PerfilUsuario implements OnInit {
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
           this.usuario = usuario;
           this.mensaje = 'Perfil actualizado correctamente';
+          this.tipoMensaje = 'success';
           this.editando = false;
-          setTimeout(() => this.mensaje = '', 3000);
+          setTimeout(() => { this.mensaje = ''; this.tipoMensaje = ''; }, 3000);
         },
         error: (err) => {
-          this.mensaje = 'Error al actualizar el perfil';
-          setTimeout(() => this.mensaje = '', 3000);
+          this.modalService.notify('No se pudo actualizar el perfil. Intenta nuevamente en unos minutos.');
         }
       });
     }

@@ -26,8 +26,6 @@ export class DetalleDescuento {
   protected readonly descuento = linkedSignal(() => this.descuentoFuente());
   protected readonly isEditing = signal(false);
 
-  mensaje: string = '';
-
   toggleEdit(){
     this.isEditing.set(!this.isEditing());
     setTimeout(() => {
@@ -48,9 +46,10 @@ export class DetalleDescuento {
     const confirmar = await this.modalService.confirm('¿Desea borrar el Descuento?');
     if (!confirmar) return;
     
-    this.client.eliminarDescuento(this.id!).subscribe(() =>{
-      this.router.navigateByUrl('/lista-descuento');
-    })
+    this.client.eliminarDescuento(this.id!).subscribe({
+      next: () => this.router.navigateByUrl('/lista-descuento'),
+      error: () => this.modalService.notify('No se pudo eliminar el descuento. Intenta nuevamente en unos minutos.')
+    });
   }
 
 }

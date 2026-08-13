@@ -68,12 +68,12 @@ export class MisTarjetas implements OnInit {
     return this.tarjetaForm.controls['vencimiento'];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
 
     if (!this.usuario) {
-      this.mensaje = 'Debes iniciar sesión para ver tus tarjetas.';
+      await this.modalService.notify('Debes iniciar sesión para ver tus tarjetas.');
       this.router.navigate(['/login']);
       return;
     }
@@ -92,6 +92,7 @@ export class MisTarjetas implements OnInit {
       error: (err) => {
         this.tarjetas.set([]);
         this.isLoading.set(false);
+        this.modalService.notify('No se pudieron cargar tus tarjetas. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -138,8 +139,7 @@ export class MisTarjetas implements OnInit {
         this.tipoMensaje = 'success';
       },
       error: (err) => {
-        this.mensaje = 'Error al agregar la tarjeta';
-        this.tipoMensaje = 'error';
+        this.modalService.notify('No se pudo agregar la tarjeta. Intenta nuevamente en unos minutos.');
       }
     });
   }
@@ -156,8 +156,7 @@ export class MisTarjetas implements OnInit {
           this.tipoMensaje = 'success';
         },
         error: (err) => {
-          this.mensaje = 'Error al eliminar la tarjeta';
-          this.tipoMensaje = 'error';
+          this.modalService.notify('No se pudo eliminar la tarjeta. Intenta nuevamente en unos minutos.');
         }
       });
     }

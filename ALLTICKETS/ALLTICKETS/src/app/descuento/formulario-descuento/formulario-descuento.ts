@@ -1,6 +1,7 @@
 import { Component, effect, EventEmitter, inject, input, Output, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ClienteDescuento } from '../../servicios/cliente-descuento';
+import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { Descuento } from '../../modelos/descuento';
 import { Router, RouterLink } from '@angular/router';
 
@@ -47,6 +48,7 @@ export class FormularioDescuento {
   
   private readonly formBuilder = inject(FormBuilder);
   private readonly descuentoClient = inject(ClienteDescuento);
+  private readonly modalService = inject(ModalConfirmacionService);
   @Output() cancelled = new EventEmitter<void>();
   protected readonly router = inject(Router);
 
@@ -60,6 +62,10 @@ export class FormularioDescuento {
     // Si estamos editando, precarga los datos en el formulario
     effect(() => {
       if (this.isEditing() && this.descuento()) {
+        // Un descuento ya existente pudo haber empezado antes de hoy, así que al editarlo
+        // no se le exige "hoy o posterior": esa regla solo aplica al crear uno nuevo.
+        this.form.controls.fechaInicio.setValidators([Validators.required]);
+        this.form.controls.fechaInicio.updateValueAndValidity({ emitEvent: false });
         this.form.patchValue(this.descuento()!);
       }
     });
@@ -89,6 +95,7 @@ export class FormularioDescuento {
 
   handleSubmit() {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       this.mensaje = 'Por favor completá todos los campos correctamente.';
       this.tipoMensaje = 'error';
       return;
@@ -105,18 +112,30 @@ export class FormularioDescuento {
     const descuento = this.pendingDescuento;
 
     if (!this.isEditing()) {
-      this.descuentoClient.agregarDescuento(descuento).subscribe(() => {
-        this.mensaje = 'Descuento agregado con éxito';
-        this.tipoMensaje = 'success';
-        this.form.reset({ activo: true });
-        this.closeConfirmModal();
+      this.descuentoClient.agregarDescuento(descuento).subscribe({
+        next: () => {
+          this.mensaje = 'Descuento agregado con éxito';
+          this.tipoMensaje = 'success';
+          this.form.reset({ activo: true });
+          this.closeConfirmModal();
+        },
+        error: () => {
+          this.closeConfirmModal();
+          this.modalService.notify('No se pudo agregar el descuento. Intenta nuevamente en unos minutos.');
+        }
       });
     } else if (this.descuento()) {
-      this.descuentoClient.actualizarDescuento(descuento, this.descuento()?.id!).subscribe((d) => {
-        this.mensaje = 'Descuento modificado con éxito';
-        this.tipoMensaje = 'success';
-        this.edited.emit(d);
-        this.closeConfirmModal();
+      this.descuentoClient.actualizarDescuento(descuento, this.descuento()?.id!).subscribe({
+        next: (d) => {
+          this.mensaje = 'Descuento modificado con éxito';
+          this.tipoMensaje = 'success';
+          this.edited.emit(d);
+          this.closeConfirmModal();
+        },
+        error: () => {
+          this.closeConfirmModal();
+          this.modalService.notify('No se pudo modificar el descuento. Intenta nuevamente en unos minutos.');
+        }
       });
     }
   }

@@ -219,16 +219,3 @@
     <p>Tus datos están protegidos. Solo guardamos los últimos 4 dígitos de tu tarjeta.</p>
   </div>
 </div>
-
-<!-- Modal de confirmación -->
-@if (modalService.showConfirmModal()) {
-  <div class="modal-backdrop">
-    <div class="modal">
-      <p>{{ modalService.confirmMessage() }}</p>
-      <div class="modal-actions">
-        <button type="button" (click)="modalService.confirmAction()" class="confirm-btn">Confirmar</button>
-        <button type="button" (click)="modalService.cancelAction()" class="cancel-btn">Cancelar</button>
-      </div>
-    </div>
-  </div>
-}

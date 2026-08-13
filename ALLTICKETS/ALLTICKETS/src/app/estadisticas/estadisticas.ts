@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { VentaServicio } from '../servicios/venta.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { EstadisticaEvento } from '../modelos/venta';
 
 @Component({
@@ -14,6 +15,7 @@ import { EstadisticaEvento } from '../modelos/venta';
 export class Estadisticas implements OnInit {
   
   private readonly ventaService = inject(VentaServicio);
+  private readonly modalService = inject(ModalConfirmacionService);
   
   protected estadisticas = signal<EstadisticaEvento[]>([]);
   protected isLoading = signal(false);
@@ -42,9 +44,9 @@ export class Estadisticas implements OnInit {
         this.isLoading.set(false);
         
         if (err.status === 0) {
-          alert('No se puede conectar al servidor.\n\nAsegúrate de ejecutar:\njson-server --watch db.json');
+          this.modalService.notify('No se pudo conectar con el servidor. Intenta nuevamente en unos minutos.');
         } else {
-          alert('Error al cargar las estadísticas: ' + (err.message || 'Error desconocido'));
+          this.modalService.notify('No se pudieron cargar las estadísticas. Intenta nuevamente más tarde.');
         }
       }
     });

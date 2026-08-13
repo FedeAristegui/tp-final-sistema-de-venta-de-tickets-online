@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { VentaServicio } from '../servicios/venta.servicio';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Venta } from '../modelos/venta';
 
 @Component({
@@ -13,10 +14,11 @@ import { Venta } from '../modelos/venta';
 })
 export class HistorialCompras implements OnInit {
   private ventaService = inject(VentaServicio);
-  
+  private modalService = inject(ModalConfirmacionService);
+
   compras = signal<Venta[]>([]);
   cargando = signal(true);
-  
+
   ngOnInit() {
     const usuarioData = localStorage.getItem('usuarioLogueado');
     if (usuarioData) {
@@ -30,8 +32,8 @@ export class HistorialCompras implements OnInit {
           this.cargando.set(false);
         },
         error: (err) => {
-        
           this.cargando.set(false);
+          this.modalService.notify('No se pudo cargar tu historial de compras. Intenta nuevamente en unos minutos.');
         }
       });
     }

@@ -3,6 +3,7 @@ import { usuario } from '../modelos/usuario';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
+import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RouterLink } from "@angular/router";
 
@@ -24,9 +25,10 @@ export const sinEspaciosBordeValidator: ValidatorFn = (control: AbstractControl)
   styleUrls: ['./registrarse.css'],
 })
 export class Registrarse {
-  
+
   private readonly fb = inject(FormBuilder);
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalConfirmacionService);
 
   mensaje: string = '';
   tipoMensaje: 'error' | 'success' | '' = '';
@@ -67,14 +69,12 @@ export class Registrarse {
             this.form.reset({ rol: 'usuario' });
           },
           error: err => {
-            this.mensaje = 'Ocurrió un error al registrar el usuario.';
-            this.tipoMensaje = 'error';
+            this.modalService.notify('No se pudo registrar el usuario. Intenta nuevamente en unos minutos.');
           }
         });
       },
       error: err => {
-        this.mensaje = 'No se pudo verificar el email.';
-        this.tipoMensaje = 'error';
+        this.modalService.notify('No se pudo conectar con el servidor. Intenta nuevamente en unos minutos.');
       }
     });
   }

@@ -2,7 +2,7 @@
   <h2>Iniciar Sesión</h2>
 
   @if (mensaje) {
-    <div class="alert">
+    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
       {{ mensaje }}
     </div>
   }
@@ -20,8 +20,4 @@
 
     <button class="iniciar-sesion" type="submit" [disabled]="form.invalid">Iniciar Sesión</button>
   </form>
-
-  @if (error) {
-    <p class="error">{{ error }}</p>
-  }
 </div>
