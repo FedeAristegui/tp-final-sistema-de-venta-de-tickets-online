@@ -212,17 +212,15 @@ export class detalleEvento implements OnInit, OnDestroy {
       }
     });
 
-    // Marcar butacas como no disponibles en la base de datos
+    // Marcar butacas como no disponibles en la base de datos (todas juntas para evitar pisarse entre sí)
     if (butacasParaMarcar.length > 0) {
-      butacasParaMarcar.forEach(butaca => {
-        this.carritoServicio.marcarButacasComoNoDisponibles(evento.id!, [butaca]).subscribe({
-          next: () => {
-            // Butaca marcada exitosamente
-          },
-          error: (err) => {
-            console.error('Error marcando butaca como no disponible:', err);
-          }
-        });
+      this.carritoServicio.marcarButacasComoNoDisponibles(evento.id!, butacasParaMarcar).subscribe({
+        next: () => {
+          // Butacas marcadas exitosamente
+        },
+        error: (err) => {
+          console.error('Error marcando butacas como no disponibles:', err);
+        }
       });
     }
 

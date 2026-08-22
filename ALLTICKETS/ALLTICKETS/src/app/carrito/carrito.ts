@@ -36,6 +36,17 @@ export class Carrito implements OnInit {
   subtotal = computed(() => this.carritoServicio.calcularTotal());
   cantidadTotal = computed(() => this.carritoServicio.obtenerCantidadTotal());
 
+  // temporizador de reserva del carrito
+  tiempoRestanteMs = this.carritoServicio.obtenerTiempoRestante();
+  carritoExpirado = this.carritoServicio.obtenerCarritoExpirado();
+  tiempoRestanteFormateado = computed(() => {
+    const totalSegundos = Math.max(0, Math.floor(this.tiempoRestanteMs() / 1000));
+    const minutos = Math.floor(totalSegundos / 60);
+    const segundos = totalSegundos % 60;
+    return `${minutos}:${segundos.toString().padStart(2, '0')}`;
+  });
+  tiempoRestanteCritico = computed(() => this.tiempoRestanteMs() <= 60000);
+
   mensaje: string = '';
   tipoMensaje: 'error' | 'success' | '' = '';
   
@@ -84,8 +95,6 @@ export class Carrito implements OnInit {
   ngOnInit(): void {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario = data ? JSON.parse(data) : null;
-
-    this.carritoServicio.vaciarCarrito();
 
     if (this.usuario) {
       this.cargarTarjetasUsuario();
@@ -229,22 +238,30 @@ export class Carrito implements OnInit {
   }
 
   private confirmarVaciarCarrito() {
-    // Desmarcar todas las butacas antes de vaciar
+    // Desmarcar todas las butacas antes de vaciar (agrupadas por evento para no pisarse entre sí)
     const items = this.items();
+    const butacasPorEvento = new Map<string | number, { fila: string; numero: number }[]>();
     items.forEach(item => {
       if (item.tipoEntrada === 'butaca') {
         const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
         if (detalles) {
           const fila = detalles[1];
           const numero = parseInt(detalles[2], 10);
-          this.carritoServicio.desmarcarButacas(item.evento.id!, [{ fila, numero }]).subscribe({
-            next: () => {},
-            error: (err) => {
-              console.error('Error desmarcando butaca:', err);
-            }
-          });
+          const eventoId = item.evento.id!;
+          const lista = butacasPorEvento.get(eventoId) || [];
+          lista.push({ fila, numero });
+          butacasPorEvento.set(eventoId, lista);
         }
       }
+    });
+
+    butacasPorEvento.forEach((butacas, eventoId) => {
+      this.carritoServicio.desmarcarButacas(eventoId, butacas).subscribe({
+        next: () => {},
+        error: (err) => {
+          console.error('Error desmarcando butacas:', err);
+        }
+      });
     });
 
     this.carritoServicio.vaciarCarrito();
@@ -284,10 +301,12 @@ export class Carrito implements OnInit {
               cantidad: backend.items[id].cantidad,
               tipoEntrada: backend.items[id].tipoEntrada as 'sector' | 'butaca',
               detalleEntrada: backend.items[id].detalleEntrada,
-              precioUnitario: backend.items[id].precioUnitario
+              precioUnitario: backend.items[id].precioUnitario,
+              addedAt: backend.items[id].addedAt
             }));
 
-            this.carritoServicio.setItemsDirect(items);
+            // Se pasa el ancla guardada en el servidor para no reiniciar el plazo.
+            this.carritoServicio.setItemsDirect(items, backend.inicioReserva);
           },
           error: (err) => {}
         });
@@ -298,6 +317,10 @@ export class Carrito implements OnInit {
 
   continuarComprando(){
     this.router.navigate(['/lista-eventos']);
+  }
+
+  cerrarAvisoExpiracion(): void {
+    this.carritoServicio.resetearNotificacionExpiracion();
   }
 
   private resetearEstadoCompra(){
@@ -441,7 +464,6 @@ export class Carrito implements OnInit {
                 const numero = parseInt(match[2]);
                 const butaca = evento.butacas?.find((b: any) => b.fila === fila && b.numero === numero);
                 if (!butaca) throw `Butaca no encontrada para ${evento.titulo}: Fila ${fila} Butaca ${numero}`;
-                if (!butaca.disponible) throw `La butaca F${fila}#${numero} para ${evento.titulo} ya no está disponible.`;
               } else if (item.tipoEntrada === 'sector') {
                 const sector = evento.sectores?.find((s: any) => s.nombre === item.detalleEntrada);
                 if (!sector) throw `Sector ${item.detalleEntrada} no encontrado en ${evento.titulo}`;

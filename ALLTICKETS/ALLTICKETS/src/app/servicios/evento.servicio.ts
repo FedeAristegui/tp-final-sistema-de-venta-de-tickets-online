@@ -43,4 +43,19 @@ export class EventoServicio {
       })
     );
   }
+
+  // Actualiza varias butacas del mismo evento en una sola lectura/escritura, evitando pisar cambios al hacerlo en paralelo
+  actualizarDisponibilidadButacas(eventoId: number|string, cambios: { fila: string; numero: number; disponible: boolean }[]): Observable<Evento> {
+    return this.obtenerEvento(eventoId).pipe(
+      switchMap(evento => {
+        cambios.forEach(cambio => {
+          const butacaIndex = evento.butacas.findIndex(b => b.fila === cambio.fila && b.numero === cambio.numero);
+          if (butacaIndex !== -1) {
+            evento.butacas[butacaIndex].disponible = cambio.disponible;
+          }
+        });
+        return this.actualizarEvento(evento, String(eventoId));
+      })
+    );
+  }
 }

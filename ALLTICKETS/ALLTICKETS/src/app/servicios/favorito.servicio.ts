@@ -4,6 +4,7 @@ import { Observable, forkJoin, map } from 'rxjs';
 import { Favorito } from '../modelos/favorito';
 import { Evento } from '../modelos/evento';
 import { EventoServicio } from './evento.servicio';
+import { coincideCon } from './filtro-backend';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,11 @@ export class FavoritoServicio {
   }
 
   obtenerFavoritosPorUsuario(usuarioId: string): Observable<Favorito[]> {
-    return this.http.get<Favorito[]>(`${this.urlBase}?usuarioId=${usuarioId}`);
+    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` la lista de
+    // favoritos volvía vacía aunque el usuario tuviera eventos marcados.
+    return this.obtenerFavoritos().pipe(
+      map(favoritos => (favoritos ?? []).filter(f => coincideCon(f, { usuarioId })))
+    );
   }
 
   obtenerEventosFavoritos(usuarioId: string): Observable<Evento[]> {
@@ -40,7 +45,11 @@ export class FavoritoServicio {
   }
 
   verificarFavorito(usuarioId: string, eventoId: number | string): Observable<Favorito[]> {
-    return this.http.get<Favorito[]>(`${this.urlBase}?usuarioId=${usuarioId}&eventoId=${eventoId}`);
+    // Mismo motivo que arriba, y acá pega doble: tanto usuarioId como eventoId
+    // pueden ser strings de dígitos.
+    return this.obtenerFavoritos().pipe(
+      map(favoritos => (favoritos ?? []).filter(f => coincideCon(f, { usuarioId, eventoId })))
+    );
   }
 
   agregarFavorito(favorito: Favorito): Observable<Favorito> {

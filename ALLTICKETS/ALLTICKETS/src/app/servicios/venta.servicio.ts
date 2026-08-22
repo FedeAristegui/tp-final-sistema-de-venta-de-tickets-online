@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map, catchError, of } from 'rxjs';
 import { Venta, EstadisticaEvento } from '../modelos/venta';
 import { Evento } from '../modelos/evento';
+import { coincideCon } from './filtro-backend';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,11 @@ export class VentaServicio {
   }
 
   obtenerVentasPorEvento(eventoId: number): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.urlBase}/ventas?eventoId=${eventoId}`);
+    // Se filtra en el cliente (ver filtro-backend.ts): con `?eventoId=` la consulta
+    // devolvía vacío cuando el id era un string de dígitos.
+    return this.obtenerVentas().pipe(
+      map(ventas => (ventas ?? []).filter(v => coincideCon(v, { eventoId })))
+    );
   }
 
   crearVenta(venta: Venta): Observable<Venta> {
@@ -121,7 +126,11 @@ export class VentaServicio {
   }
 
   obtenerVentasPorUsuario(usuarioId: number | string): Observable<Venta[]>{
-    return this.http.get<Venta[]>(`${this.urlBase}/ventas?usuarioId=${usuarioId}`);
+    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` el historial
+    // de compras aparecía vacío aunque el usuario tuviera ventas registradas.
+    return this.obtenerVentas().pipe(
+      map(ventas => (ventas ?? []).filter(v => coincideCon(v, { usuarioId })))
+    );
   }
   
 }

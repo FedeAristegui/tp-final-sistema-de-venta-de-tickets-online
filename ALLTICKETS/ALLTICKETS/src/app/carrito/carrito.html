@@ -7,6 +7,13 @@
     </div>
   }
 
+  @if (carritoExpirado()) {
+    <div class="alert alert-error aviso-expiracion">
+      <span>Tu carrito se vació porque no confirmaste la compra dentro de los 10 minutos. Las entradas volvieron a estar disponibles.</span>
+      <button type="button" class="btn-cerrar-aviso" (click)="cerrarAvisoExpiracion()">✕</button>
+    </div>
+  }
+
   @if (compraExitosa()) {
     <div class="mensaje-compra-exitosa">
       <div class="icono-exito">✓</div>
@@ -39,6 +46,9 @@
       <a routerLink="/" class="btn-seguir-comprando">Explorar Eventos</a>
     </div>
   } @else if (items().length > 0) {
+    <div class="temporizador-carrito" [class.critico]="tiempoRestanteCritico()">
+      ⏱ Tienes reservadas tus entradas por <strong>{{ tiempoRestanteFormateado() }}</strong> minutos. Si no confirmas la compra en ese tiempo, el carrito se vaciará automáticamente.
+    </div>
     <div class="carrito-contenido">
       <div class="items-carrito">
         @for (item of items(); track $index) {
