@@ -8,6 +8,7 @@ import { ClienteDescuento } from '../servicios/cliente-descuento';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
+import { EmailService } from '../servicios/email.service';
 import { Venta } from '../modelos/venta';
 import { Descuento } from '../modelos/descuento';
 import { Tarjeta } from '../modelos/tarjeta';
@@ -29,6 +30,7 @@ export class Carrito implements OnInit {
   private tarjetaServicio = inject(TarjetaServicio);
   private eventoServicio = inject(EventoServicio);
   private modalService = inject(ModalConfirmacionService);
+  private emailService = inject(EmailService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   
@@ -615,6 +617,40 @@ export class Carrito implements OnInit {
         tarjetaUsada: tarjeta ? `${tarjeta.tipo} ****${tarjeta.numeroTarjeta}` : undefined
       });
       
+      // Capturar datos antes de vaciar el carrito para enviar el email
+      const itemsParaEmail = this.items().map(item => ({
+        eventoTitulo: item.evento.titulo,
+        cantidad: item.cantidad,
+        precioUnitario: item.precioUnitario,
+        detalleEntrada: item.detalleEntrada,
+        fecha: item.evento.fecha,
+        hora: item.evento.hora,
+        lugar: item.evento.lugar
+      }));
+
+      // Enviar email con resumen de compra
+      if (this.usuario && this.usuario.email) {
+        this.emailService.enviarResumenCompra({
+          usuarioNombre: `${this.usuario.nombre || ''} ${this.usuario.apellido || ''}`.trim() || 'Cliente',
+          usuarioEmail: this.usuario.email,
+          items: itemsParaEmail,
+          subtotal: this.subtotal(),
+          descuentoPorcentaje: this.descuentoPorcentaje(),
+          montoDescuento: this.montoDescuento(),
+          total: this.total(),
+          tarjetaUsada: tarjeta ? `${tarjeta.tipo} ****${tarjeta.numeroTarjeta}` : undefined,
+          fechaCompra: new Date().toLocaleString('es-AR', { 
+            dateStyle: 'long', 
+            timeStyle: 'short' 
+          })
+        }).then(() => {
+          console.log('Email de confirmación enviado exitosamente');
+        }).catch((error) => {
+          console.error('Error al enviar email de confirmación:', error);
+          // No mostramos error al usuario para no afectar la experiencia de compra exitosa
+        });
+      }
+      
       this.carritoServicio.vaciarCarrito();
       this.limpiarCupon();
       if (this.usuario && this.usuario.id) {
@@ -638,6 +674,39 @@ export class Carrito implements OnInit {
         descuentoAplicado: this.descuentoPorcentaje(),
         tarjetaUsada: tarjeta ? `${tarjeta.tipo} ****${tarjeta.numeroTarjeta}` : undefined
       });
+      
+      // Capturar datos antes de vaciar el carrito para enviar el email (compra parcial)
+      const itemsParaEmail = this.items().map(item => ({
+        eventoTitulo: item.evento.titulo,
+        cantidad: item.cantidad,
+        precioUnitario: item.precioUnitario,
+        detalleEntrada: item.detalleEntrada,
+        fecha: item.evento.fecha,
+        hora: item.evento.hora,
+        lugar: item.evento.lugar
+      }));
+
+      // Enviar email incluso si es compra parcial
+      if (this.usuario && this.usuario.email) {
+        this.emailService.enviarResumenCompra({
+          usuarioNombre: `${this.usuario.nombre || ''} ${this.usuario.apellido || ''}`.trim() || 'Cliente',
+          usuarioEmail: this.usuario.email,
+          items: itemsParaEmail,
+          subtotal: this.subtotal(),
+          descuentoPorcentaje: this.descuentoPorcentaje(),
+          montoDescuento: this.montoDescuento(),
+          total: this.total(),
+          tarjetaUsada: tarjeta ? `${tarjeta.tipo} ****${tarjeta.numeroTarjeta}` : undefined,
+          fechaCompra: new Date().toLocaleString('es-AR', { 
+            dateStyle: 'long', 
+            timeStyle: 'short' 
+          })
+        }).then(() => {
+          console.log('Email de confirmación enviado exitosamente');
+        }).catch((error) => {
+          console.error('Error al enviar email de confirmación:', error);
+        });
+      }
       
       this.carritoServicio.vaciarCarrito();
       this.limpiarCupon();

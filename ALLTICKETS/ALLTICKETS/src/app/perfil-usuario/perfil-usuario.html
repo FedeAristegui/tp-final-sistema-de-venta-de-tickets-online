@@ -49,9 +49,54 @@
             <small class="error">Mínimo 3 caracteres</small>
           }
         </div>
+
+        <button type="button" (click)="toggleCambiarContrasena()" class="btn-cambiar-contrasena">
+          🔒 {{ cambiandoContrasena ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
+        </button>
+
+        @if (cambiandoContrasena) {
+          <div class="seccion-contrasena" [formGroup]="contrasenaForm">
+            <div class="form-group">
+              <label>Contraseña actual:</label>
+              <input type="password" formControlName="contrasenaActual" class="form-control">
+              @if (contrasenaForm.get('contrasenaActual')?.invalid && contrasenaForm.get('contrasenaActual')?.touched) {
+                <small class="error">La contraseña actual es requerida</small>
+              }
+            </div>
+            <div class="form-group">
+              <label>Nueva contraseña:</label>
+              <div class="input-contrasena">
+                <input [type]="mostrarNuevaContrasena ? 'text' : 'password'" formControlName="nuevaContrasena" class="form-control">
+                <button type="button" class="btn-ver-contrasena" (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena">
+                  {{ mostrarNuevaContrasena ? 'Ocultar' : 'Ver' }}
+                </button>
+              </div>
+              @if (contrasenaForm.get('nuevaContrasena')?.invalid && contrasenaForm.get('nuevaContrasena')?.touched) {
+                <small class="error">Mínimo 6 caracteres</small>
+              }
+              @if (contrasenaForm.errors?.['mismaContrasena'] && contrasenaForm.get('nuevaContrasena')?.touched) {
+                <small class="error">La nueva contraseña no puede ser igual a la actual</small>
+              }
+            </div>
+            <div class="form-group">
+              <label>Confirmar nueva contraseña:</label>
+              <div class="input-contrasena">
+                <input [type]="mostrarConfirmarContrasena ? 'text' : 'password'" formControlName="confirmarContrasena" class="form-control">
+                <button type="button" class="btn-ver-contrasena" (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena">
+                  {{ mostrarConfirmarContrasena ? 'Ocultar' : 'Ver' }}
+                </button>
+              </div>
+              @if (contrasenaForm.errors?.['contrasenasDistintas'] && contrasenaForm.get('confirmarContrasena')?.touched) {
+                <small class="error">Las contraseñas no coinciden</small>
+              }
+            </div>
+          </div>
+        }
         
         <div class="botones">
-          <button type="button" (click)="guardarCambios()" class="btn-guardar">Guardar Cambios</button>
+          <button type="button" (click)="guardarCambios()" class="btn-guardar" [disabled]="guardando">
+            {{ guardando ? 'Verificando...' : 'Guardar Cambios' }}
+          </button>
           <button type="button" (click)="cancelarEdicion()" class="btn-cancelar">Cancelar</button>
         </div>
       </form>

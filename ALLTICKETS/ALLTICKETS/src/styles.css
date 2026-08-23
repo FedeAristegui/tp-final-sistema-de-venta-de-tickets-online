@@ -11,20 +11,23 @@ body {
   transform: translateX(-50%);
   background-color: #c6f6d5;
   color: #22543d;
-  padding: 14px 20px;
-  border-radius: 10px;
-  border-left: 4px solid #48bb78;
-  font-weight: 600;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 22px 36px;
+  border-radius: 12px;
+  border-left: 8px solid #48bb78;
+  font-weight: 700;
+  font-size: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   z-index: 1000;
   animation: slideDown 0.3s ease-out;
   max-width: 90%;
+  min-width: 320px;
+  text-align: center;
 }
 
 .alert-error {
-  background-color: #f9624a;
-  color: #22543d;
+  background: linear-gradient(90deg, #fff5f5, #ffe3e3);
+  color: #c0392b;
+  border: 1px solid rgba(197, 48, 48, 0.15);
   border-left-color: #c0392b;
 }
 
@@ -32,7 +35,23 @@ body {
   background: linear-gradient(90deg, #f0fff4, #ddffd9);
   color: #155724;
   border: 1px solid rgba(40, 167, 69, 0.12);
-  border-left: 4px solid #48bb78;
+  border-left: 6px solid #48bb78;
+}
+
+.alert-success::before {
+  content: "✓ ";
+}
+
+.alert-error::before {
+  content: "⚠ ";
+}
+
+/* Algunos navegadores (Edge, IE) dibujan su propio ícono de "mostrar contraseña"
+   que queda tapando el botón de ojo propio del formulario. Se oculta para
+   evitar que el botón personalizado quede invisible detrás del nativo. */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
 
 @keyframes slideDown {

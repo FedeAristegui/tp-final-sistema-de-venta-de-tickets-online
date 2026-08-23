@@ -81,3 +81,15 @@ input[type="password"] {
   font-size: 13px;
   color: #d9534f;
 }
+
+.link-olvide-contrasena {
+  display: inline-block;
+  margin-top: 12px;
+  color: #4b41c4;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.link-olvide-contrasena:hover {
+  text-decoration: underline;
+}

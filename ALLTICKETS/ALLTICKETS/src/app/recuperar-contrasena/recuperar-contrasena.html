@@ -1,0 +1,57 @@
+<div class="recuperar-container">
+  @if (paso() === 1) {
+    <h2>Recuperar Contraseña</h2>
+    <p class="subtexto">Ingresa tu email y te enviaremos un código para restablecer tu contraseña.</p>
+
+    @if (mensaje) {
+      <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+        {{ mensaje }}
+      </div>
+    }
+
+    <form [formGroup]="formEmail" (ngSubmit)="solicitarCodigo()">
+      <input type="email" placeholder="Email" formControlName="email" />
+      @if (formEmail.get('email')?.invalid && formEmail.get('email')?.touched) {
+        <div class="error">Email inválido</div>
+      }
+
+      <button class="btn-recuperar" type="submit" [disabled]="formEmail.invalid || enviando()">
+        {{ enviando() ? 'Enviando...' : 'Enviar código' }}
+      </button>
+    </form>
+
+    <a routerLink="/login" class="link-volver">Volver a Iniciar Sesión</a>
+  } @else {
+    <h2>Ingresar Código</h2>
+    <p class="subtexto">Revisa tu email y escribe el código de 6 dígitos junto a tu nueva contraseña.</p>
+
+    @if (mensaje) {
+      <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+        {{ mensaje }}
+      </div>
+    }
+
+    <form [formGroup]="formCodigo" (ngSubmit)="confirmarNuevaContrasena()">
+      <input type="text" placeholder="Código de 6 dígitos" formControlName="codigo" maxlength="6" />
+      @if (formCodigo.get('codigo')?.invalid && formCodigo.get('codigo')?.touched) {
+        <div class="error">Ingresa el código de 6 dígitos</div>
+      }
+
+      <input type="password" placeholder="Nueva contraseña" formControlName="nuevaContrasena" />
+      @if (formCodigo.get('nuevaContrasena')?.invalid && formCodigo.get('nuevaContrasena')?.touched) {
+        <div class="error">Mínimo 6 caracteres</div>
+      }
+
+      <input type="password" placeholder="Confirmar contraseña" formControlName="confirmarContrasena" />
+      @if (formCodigo.errors?.['contrasenasDistintas'] && formCodigo.get('confirmarContrasena')?.touched) {
+        <div class="error">Las contraseñas no coinciden</div>
+      }
+
+      <button class="btn-recuperar" type="submit" [disabled]="formCodigo.invalid || enviando()">
+        {{ enviando() ? 'Guardando...' : 'Restablecer contraseña' }}
+      </button>
+    </form>
+
+    <a class="link-volver" (click)="volverAEmail()">Volver a ingresar email</a>
+  }
+</div>

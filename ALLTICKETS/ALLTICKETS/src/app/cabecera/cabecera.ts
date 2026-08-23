@@ -24,13 +24,13 @@ export class Cabecera implements OnInit{
   if (!navego) {
     return; // el usuario canceló la salida en el popup de confirmación
   }
-  localStorage.removeItem('usuarioLogueado');
-  this.usuario = null;
-  this.favoritosUsuario = [];
-  if (this.user) {
-    this.user.ultimaActividad = Date.now().toString();
+  if (this.user?.id) {
+    this.client.actualizarActividad(this.user.id).subscribe();
   }
-  this.client.actualizarActividad(this.user?.id || '').subscribe();
+  localStorage.removeItem('usuarioLogueado');
+  // Recarga completa: así todas las páginas (no solo la cabecera) dejan de mostrar
+  // opciones de usuario logueado (ej. marcar favoritos) sin esperar un refresh manual
+  window.location.href = '/menu-principal';
   }
 
     ngOnInit() {

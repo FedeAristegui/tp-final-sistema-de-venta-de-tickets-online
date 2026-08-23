@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { usuario } from  '../modelos/usuario';
+import { coincideCon } from './filtro-backend';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,14 @@ export class Autenticador {
  
   buscarPorCredenciales(email: string, contrasena: string): Observable<usuario[]> {
     return this.http.get<usuario[]>(`${this.url}?email=${email}&contrasena=${contrasena}`);
+  }
+
+  // Se filtra en el cliente (ver filtro-backend.ts) para evitar el problema de
+  // comparación numérica vs. string que tiene json-server con los query params.
+  buscarPorEmail(email: string): Observable<usuario[]> {
+    return this.obtenerUsuarios().pipe(
+      map(usuarios => (usuarios ?? []).filter(u => coincideCon(u, { email })))
+    );
   }
 
   
@@ -89,5 +98,27 @@ export class Autenticador {
 
   eliminarUsuario(id: string): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  // Guarda el código de recuperación y su vencimiento (15 minutos) para el usuario.
+  guardarCodigoRecuperacion(id: string | number, resetCode: string): Observable<usuario> {
+    const resetCodeExpira = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+    return this.http.patch<usuario>(`${this.url}/${id}`, { resetCode, resetCodeExpira });
+  }
+
+  // Valida que el código ingresado coincida y no haya vencido.
+  validarCodigoRecuperacion(usuario: usuario, codigo: string): boolean {
+    if (!usuario.resetCode || !usuario.resetCodeExpira) return false;
+    if (usuario.resetCode !== codigo) return false;
+    return new Date(usuario.resetCodeExpira).getTime() > Date.now();
+  }
+
+  // Establece la nueva contraseña y limpia el código usado.
+  restablecerContrasena(id: string | number, nuevaContrasena: string): Observable<usuario> {
+    return this.http.patch<usuario>(`${this.url}/${id}`, {
+      contrasena: nuevaContrasena,
+      resetCode: null,
+      resetCodeExpira: null
+    });
   }
 }

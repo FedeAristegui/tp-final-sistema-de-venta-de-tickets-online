@@ -8,4 +8,6 @@ export interface usuario {
   fechaRegistro?: string;
   ultimaActividad?: string;
   activo?: boolean;
+  resetCode?: string;
+  resetCodeExpira?: string;
 }

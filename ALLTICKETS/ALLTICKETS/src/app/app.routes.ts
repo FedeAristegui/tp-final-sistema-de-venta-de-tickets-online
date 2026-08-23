@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
 import { Registrarse } from './registrarse/registrarse';
+import { RecuperarContrasena } from './recuperar-contrasena/recuperar-contrasena';
 import { PaginaPrincipal } from './pagina-principal/pagina-principal';
 import { AdminEventos } from './Evento/crear-evento/admin-eventos';
 import { detalleEvento } from './Evento/detalle-evento/detalle-evento';
@@ -36,6 +37,10 @@ export const routes: Routes = [
   {
     path: 'registro', component: Registrarse,
     title: 'Registrarse' 
+  },
+  {
+    path: 'recuperar-contrasena', component: RecuperarContrasena,
+    title: 'Recuperar Contraseña'
   },
   {
     path: 'eventos', component: AdminEventos,
