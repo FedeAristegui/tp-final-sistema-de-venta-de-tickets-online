@@ -12,10 +12,15 @@ import { EmailService } from '../servicios/email.service';
 import { Venta } from '../modelos/venta';
 import { Descuento } from '../modelos/descuento';
 import { Tarjeta } from '../modelos/tarjeta';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Evento } from '../modelos/evento';
-import { tarjetaNoVencidaValidator } from '../mis-tarjetas/mis-tarjetas';
+import { tarjetaNoVencidaValidator, titularValidoValidator } from '../mis-tarjetas/mis-tarjetas';
+
+/** El stock cambió entre que se armó el carrito y se confirmó la compra. */
+class SinDisponibilidad {
+  constructor(readonly mensaje: string) {}
+}
 
 @Component({
   selector: 'app-carrito',
@@ -87,7 +92,7 @@ export class Carrito implements OnInit {
   constructor() {
     this.tarjetaForm = this.fb.group({
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
-      titular: ['', [Validators.required, Validators.minLength(3)]],
+      titular: ['', [Validators.required, Validators.minLength(3), titularValidoValidator]],
       vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), tarjetaNoVencidaValidator]],
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
       tipo: ['Visa', Validators.required]
@@ -190,7 +195,7 @@ export class Carrito implements OnInit {
     const index = this.pendingItemIndex;
     const item = this.items()[index];
     
-    // Si es una butaca, desmarcarla en la base de datos
+    // Devolver al evento el stock que tenía reservado esta línea
     if (item && item.tipoEntrada === 'butaca') {
       const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
       if (detalles) {
@@ -205,8 +210,14 @@ export class Carrito implements OnInit {
           }
         });
       }
+    } else if (item && item.tipoEntrada === 'sector') {
+      this.carritoServicio.liberarSectores(item.evento.id!, [
+        { nombre: item.detalleEntrada, cantidad: item.cantidad }
+      ]).subscribe({
+        error: (err) => console.error('Error devolviendo las entradas del sector:', err)
+      });
     }
-    
+
     this.carritoServicio.eliminarDelCarrito(index);
     if (this.usuario) {
       this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
@@ -218,21 +229,6 @@ export class Carrito implements OnInit {
     this.closeConfirmModal();
   }
 
-  actualizarCantidad(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const cantidad = parseInt(input.value, 10);
-    
-    if (cantidad > 0) {
-      this.carritoServicio.actualizarCantidad(index, cantidad);
-      if (this.usuario) {
-        this.carritoServicio.sincronizarConServidor(this.usuario.id).subscribe({
-          next: () => {},
-          error: (err) => {}
-        });
-      }
-    }
-  }
-
   vaciarCarrito() {
     this.pendingAction = 'vaciar';
     this.confirmMessage.set('¿Estás seguro de que deseas vaciar el carrito?');
@@ -240,20 +236,28 @@ export class Carrito implements OnInit {
   }
 
   private confirmarVaciarCarrito() {
-    // Desmarcar todas las butacas antes de vaciar (agrupadas por evento para no pisarse entre sí)
+    // Devolver todo el stock reservado antes de vaciar (agrupado por evento para
+    // no pisar las escrituras entre sí)
     const items = this.items();
     const butacasPorEvento = new Map<string | number, { fila: string; numero: number }[]>();
+    const sectoresPorEvento = new Map<string | number, { nombre: string; cantidad: number }[]>();
+
     items.forEach(item => {
+      const eventoId = item.evento.id!;
+
       if (item.tipoEntrada === 'butaca') {
         const detalles = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
         if (detalles) {
           const fila = detalles[1];
           const numero = parseInt(detalles[2], 10);
-          const eventoId = item.evento.id!;
           const lista = butacasPorEvento.get(eventoId) || [];
           lista.push({ fila, numero });
           butacasPorEvento.set(eventoId, lista);
         }
+      } else if (item.tipoEntrada === 'sector') {
+        const lista = sectoresPorEvento.get(eventoId) || [];
+        lista.push({ nombre: item.detalleEntrada, cantidad: item.cantidad });
+        sectoresPorEvento.set(eventoId, lista);
       }
     });
 
@@ -263,6 +267,12 @@ export class Carrito implements OnInit {
         error: (err) => {
           console.error('Error desmarcando butacas:', err);
         }
+      });
+    });
+
+    sectoresPorEvento.forEach((sectores, eventoId) => {
+      this.carritoServicio.liberarSectores(eventoId, sectores).subscribe({
+        error: (err) => console.error('Error devolviendo las entradas del sector:', err)
       });
     });
 
@@ -295,17 +305,29 @@ export class Carrito implements OnInit {
           return;
         }
 
-        const eventosObs = backend.items.map(i => this.eventoServicio.obtenerEvento(String(i.eventoId)));
+        // Si un evento del carrito fue eliminado, su lectura devuelve 404. Antes eso
+        // hacía fallar el forkJoin completo y el carrito no se cargaba nunca: el
+        // usuario veía el carrito vacío aunque tuviera entradas guardadas. Ahora se
+        // descarta sólo la línea que quedó huérfana.
+        const eventosObs = backend.items.map(i =>
+          this.eventoServicio.obtenerEvento(String(i.eventoId)).pipe(catchError(() => of(null)))
+        );
+
         forkJoin(eventosObs).subscribe({
           next: (eventos) => {
-            const items: ItemCarrito[] = eventos.map((evento, id) => ({
-              evento,
-              cantidad: backend.items[id].cantidad,
-              tipoEntrada: backend.items[id].tipoEntrada as 'sector' | 'butaca',
-              detalleEntrada: backend.items[id].detalleEntrada,
-              precioUnitario: backend.items[id].precioUnitario,
-              addedAt: backend.items[id].addedAt
-            }));
+            const items: ItemCarrito[] = [];
+
+            eventos.forEach((evento, id) => {
+              if (!evento) return;
+              items.push({
+                evento,
+                cantidad: backend.items[id].cantidad,
+                tipoEntrada: backend.items[id].tipoEntrada as 'sector' | 'butaca',
+                detalleEntrada: backend.items[id].detalleEntrada,
+                precioUnitario: backend.items[id].precioUnitario,
+                addedAt: backend.items[id].addedAt
+              });
+            });
 
             // Se pasa el ancla guardada en el servidor para no reiniciar el plazo.
             this.carritoServicio.setItemsDirect(items, backend.inicioReserva);
@@ -427,119 +449,101 @@ export class Carrito implements OnInit {
 
     this.procesandoCompra.set(true);
 
-    // Antes de intentar comprar, valida si la entrada está disponible
-    this.validarDisponibilidad(items).then(() => {
-      this.actualizarEventosDisponibilidad(items).subscribe({
-        next: () => {
-          this.crearVentas(items);
-        },
-        error: (error) => {
-          this.procesandoCompra.set(false);
+    this.reservarEntradas(items).subscribe({
+      next: () => {
+        this.crearVentas(items);
+      },
+      error: (error) => {
+        this.procesandoCompra.set(false);
+        if (error instanceof SinDisponibilidad) {
+          this.mensaje = error.mensaje;
+          this.tipoMensaje = 'error';
+        } else {
           this.modalService.notify('No se pudo procesar la compra. Intenta nuevamente en unos minutos.');
         }
-      });
-    }).catch((msg) => {
-      this.procesandoCompra.set(false);
-      const texto = typeof msg === 'string' ? msg : 'Algunos artículos ya no están disponibles.';
-      this.mensaje = texto;
-      this.tipoMensaje = 'error';
-    });
-  }
-
-  private validarDisponibilidad(items: ItemCarrito[]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const itemsPorEvento = new Map<string, ItemCarrito[]>();
-      items.forEach(item => {
-        const eventoId = String(item.evento.id);
-        if (!itemsPorEvento.has(eventoId)) itemsPorEvento.set(eventoId, []);
-        itemsPorEvento.get(eventoId)!.push(item);
-      });
-
-      const checks = Array.from(itemsPorEvento.entries()).map(([eventoId, itemsEvento]) =>
-        this.eventoServicio.obtenerEvento(eventoId).pipe(
-          map((evento: Evento) => {
-            for (const item of itemsEvento) {
-              if (item.tipoEntrada === 'butaca') {
-                const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
-                if (!match) throw `Detalle de butaca inválido para el evento ${evento.titulo}`;
-                const fila = match[1];
-                const numero = parseInt(match[2]);
-                const butaca = evento.butacas?.find((b: any) => b.fila === fila && b.numero === numero);
-                if (!butaca) throw `Butaca no encontrada para ${evento.titulo}: Fila ${fila} Butaca ${numero}`;
-              } else if (item.tipoEntrada === 'sector') {
-                const sector = evento.sectores?.find((s: any) => s.nombre === item.detalleEntrada);
-                if (!sector) throw `Sector ${item.detalleEntrada} no encontrado en ${evento.titulo}`;
-                if ((sector.capacidad || 0) < item.cantidad) throw `No hay suficientes entradas en ${item.detalleEntrada} para ${evento.titulo} (disponible: ${sector.capacidad || 0})`;
-              }
-            }
-            return true;
-          })
-        )
-      );
-
-      if (checks.length === 0) return resolve();
-
-      forkJoin(checks).subscribe({
-        next: () => resolve(),
-        error: (err) => reject(err)
-      });
-    });
-  }
-
-  private actualizarEventosDisponibilidad(items: ItemCarrito[]) {
-    const itemsPorEvento = new Map<string, ItemCarrito[]>();
-    
-    items.forEach(item => {
-      const eventoId = item.evento.id!.toString();
-      if (!itemsPorEvento.has(eventoId)) {
-        itemsPorEvento.set(eventoId, []);
       }
+    });
+  }
+
+  /**
+   * Confirma contra el evento las entradas que se están comprando.
+   *
+   * El stock ya se descontó cuando cada ítem entró al carrito (la butaca quedó
+   * marcada como no disponible y la capacidad del sector ya bajó), así que acá
+   * NO se vuelve a descontar: sólo se verifica que las entradas sigan
+   * existiendo y se dejan las butacas en estado vendido.
+   *
+   * Se lee una sola vez por evento y se valida todo antes de escribir nada, para
+   * no tocar un evento si otro del mismo carrito ya no es válido.
+   */
+  private reservarEntradas(items: ItemCarrito[]): Observable<unknown> {
+    const itemsPorEvento = new Map<string, ItemCarrito[]>();
+    items.forEach(item => {
+      const eventoId = String(item.evento.id);
+      if (!itemsPorEvento.has(eventoId)) itemsPorEvento.set(eventoId, []);
       itemsPorEvento.get(eventoId)!.push(item);
     });
 
-    const actualizaciones = Array.from(itemsPorEvento.entries()).map(([eventoId, itemsEvento]) => {
-      return new Promise((resolve, reject) => {
-        this.eventoServicio.obtenerEvento(eventoId).subscribe({
-          next: (evento) => {
-            let eventoModificado = { ...evento };
+    const ids = Array.from(itemsPorEvento.keys());
+    if (ids.length === 0) return of([]);
 
-            itemsEvento.forEach(item => {
-              if (item.tipoEntrada === 'butaca') {
-                const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
-                if (match && eventoModificado.butacas) {
-                  const fila = match[1];
-                  const numero = parseInt(match[2]);
-                  
-                  eventoModificado.butacas = eventoModificado.butacas.map(b => {
-                    if (b.fila === fila && b.numero === numero) {
-                      return { ...b, disponible: false };
-                    }
-                    return b;
-                  });
-                }
-              } else if (item.tipoEntrada === 'sector') {
-                if (eventoModificado.sectores) {
-                  eventoModificado.sectores = eventoModificado.sectores.map(s => {
-                    if (s.nombre === item.detalleEntrada) {
-                      return { ...s, capacidad: s.capacidad - item.cantidad };
-                    }
-                    return s;
-                  });
-                }
-              }
-            });
+    return forkJoin(ids.map(id => this.eventoServicio.obtenerEvento(id))).pipe(
+      map(eventos =>
+        eventos
+          .map((evento, i) => this.confirmarEntradas(evento, itemsPorEvento.get(ids[i])!))
+          .filter((ev): ev is Evento => ev !== null)
+      ),
+      switchMap(modificados =>
+        modificados.length === 0
+          ? of([])
+          : forkJoin(modificados.map(ev => this.eventoServicio.actualizarEvento(ev, ev.id!)))
+      )
+    );
+  }
 
-            this.eventoServicio.actualizarEvento(eventoModificado, evento.id!).subscribe({
-              next: () => resolve(true),
-              error: (err) => reject(err)
-            });
-          },
-          error: (err) => reject(err)
-        });
-      });
-    });
+  /**
+   * Copia del evento con las butacas compradas en estado vendido, o `null` si no
+   * hizo falta cambiar nada (por ejemplo una compra sólo de sectores, cuyo cupo
+   * ya se había descontado al agregarlo al carrito).
+   *
+   * Lanza `SinDisponibilidad` si alguna entrada del carrito ya no existe.
+   */
+  private confirmarEntradas(evento: Evento, items: ItemCarrito[]): Evento | null {
+    let butacas = evento.butacas;
+    let huboCambios = false;
 
-    return forkJoin(actualizaciones);
+    for (const item of items) {
+      if (item.tipoEntrada === 'butaca') {
+        const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
+        if (!match) {
+          throw new SinDisponibilidad(`Detalle de butaca inválido para el evento ${evento.titulo}`);
+        }
+
+        const fila = match[1];
+        const numero = parseInt(match[2]);
+        const butaca = butacas?.find(b => b.fila === fila && b.numero === numero);
+        if (!butaca) {
+          throw new SinDisponibilidad(`Butaca no encontrada para ${evento.titulo}: Fila ${fila} Butaca ${numero}`);
+        }
+
+        // Normalmente ya está en false desde que se agregó al carrito; se
+        // reescribe sólo si por algún motivo quedó disponible.
+        if (butaca.disponible) {
+          butacas = butacas.map(b =>
+            b.fila === fila && b.numero === numero ? { ...b, disponible: false } : b
+          );
+          huboCambios = true;
+        }
+      } else if (item.tipoEntrada === 'sector') {
+        const sector = evento.sectores?.find(s => s.nombre === item.detalleEntrada);
+        if (!sector) {
+          throw new SinDisponibilidad(`Sector ${item.detalleEntrada} no encontrado en ${evento.titulo}`);
+        }
+        // Sin descuento: la capacidad ya se reservó al agregar la entrada al carrito.
+      }
+    }
+
+    return huboCambios ? { ...evento, butacas } : null;
   }
 
   private crearVentas(items: ItemCarrito[]) {

@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { RouterLink } from "@angular/router";
+import { FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 // Validador: rechaza espacios en blanco al inicio o al final del valor
 export const sinEspaciosBordeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -32,6 +31,7 @@ export class Registrarse {
 
   mensaje: string = '';
   tipoMensaje: 'error' | 'success' | '' = '';
+  mostrarContrasena: boolean = false;
 
   protected readonly form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/), sinEspaciosBordeValidator]],

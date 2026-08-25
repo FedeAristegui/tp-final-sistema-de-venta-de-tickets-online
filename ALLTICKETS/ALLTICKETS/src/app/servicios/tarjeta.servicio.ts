@@ -44,11 +44,6 @@ export class TarjetaServicio {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
-  establecerTarjetaPrincipal(usuarioId: string, tarjetaId: string): Observable<any> {
-    
-    return this.obtenerTarjetasPorUsuario(usuarioId);
-  }
-
   private generarId(): string {
     return Math.random().toString(36).substring(2, 9);
   }

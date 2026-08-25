@@ -62,7 +62,12 @@
         </div>
     }
 
-    <input type="password" formControlName="contrasena" placeholder="Contraseña" />
+    <div class="input-contrasena">
+      <input [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena" placeholder="Contraseña" />
+      <button type="button" class="btn-ver-contrasena" (click)="mostrarContrasena = !mostrarContrasena">
+        {{ mostrarContrasena ? 'Ocultar' : 'Ver' }}
+      </button>
+    </div>
     @if (form.get('contrasena')?.invalid && (form.get('contrasena')?.dirty || form.get('contrasena')?.touched)) {
         <div class="error-message">
           @if (form.get('contrasena')?.errors?.['required']) {

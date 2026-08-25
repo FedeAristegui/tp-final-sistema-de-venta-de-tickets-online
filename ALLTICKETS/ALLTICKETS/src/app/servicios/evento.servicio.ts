@@ -8,7 +8,7 @@ import { Evento } from '../modelos/evento';
   providedIn: 'root'
 })
 export class EventoServicio {
-  private urlBase = 'http://localhost:3000/eventos'; 
+  private urlBase = 'http://localhost:3000/eventos';
 
   constructor(private http: HttpClient) {}
 
@@ -24,22 +24,33 @@ export class EventoServicio {
     return this.http.post<Evento>(this.urlBase, evento);
   }
 
-  actualizarEvento(evento: Evento, id:string|number){
-    return this.http.put<Evento>(`${this.urlBase}/${evento.id}`, evento);
+  actualizarEvento(evento: Evento, id: string|number){
+    return this.http.put<Evento>(`${this.urlBase}/${id}`, evento);
   }
 
   borrarEvento(id: number|string): Observable<void> {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
-  actualizarDisponibilidadButaca(eventoId: number|string, fila: string, numero: number, disponible: boolean): Observable<Evento> {
+  /**
+   * Suma o resta capacidad a varios sectores del mismo evento en una sola
+   * lectura/escritura (delta negativo = se reservan entradas).
+   *
+   * Es el equivalente, para eventos por sector, de marcar una butaca como no
+   * disponible: permite que el stock se descuente apenas se agrega al carrito y
+   * que el resto de los usuarios lo vea al refrescar la ficha.
+   */
+  ajustarCapacidadSectores(eventoId: number|string, cambios: { nombre: string; delta: number }[]): Observable<Evento> {
     return this.obtenerEvento(eventoId).pipe(
       switchMap(evento => {
-        const butacaIndex = evento.butacas.findIndex(b => b.fila === fila && b.numero === numero);
-        if (butacaIndex !== -1) {
-          evento.butacas[butacaIndex].disponible = disponible;
-        }
-        return this.actualizarEvento(evento, String(eventoId));
+        cambios.forEach(cambio => {
+          const sectorIndex = evento.sectores.findIndex(s => s.nombre === cambio.nombre);
+          if (sectorIndex !== -1) {
+            const capacidad = evento.sectores[sectorIndex].capacidad + cambio.delta;
+            evento.sectores[sectorIndex].capacidad = Math.max(0, capacidad);
+          }
+        });
+        return this.actualizarEvento(evento, eventoId);
       })
     );
   }
@@ -54,7 +65,7 @@ export class EventoServicio {
             evento.butacas[butacaIndex].disponible = cambio.disponible;
           }
         });
-        return this.actualizarEvento(evento, String(eventoId));
+        return this.actualizarEvento(evento, eventoId);
       })
     );
   }

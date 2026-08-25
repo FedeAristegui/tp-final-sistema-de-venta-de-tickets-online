@@ -5,7 +5,8 @@ import { FavoritoServicio } from '../servicios/favorito.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Evento } from '../modelos/evento';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lista-favoritos',
@@ -18,6 +19,12 @@ export class ListaFavoritos implements OnInit {
   usuario: any = null;
   eventosFavoritos = signal<Evento[]>([]);
   isLoading = signal(true);
+
+  /**
+   * `eventoId -> id del favorito`, guardado al cargar la lista. Sin esto había
+   * que releer toda la colección de favoritos para poder borrar uno.
+   */
+  private favoritosPorEvento = new Map<string, string>();
 
   private readonly favoritoService = inject(FavoritoServicio);
   private readonly eventoService = inject(EventoServicio);
@@ -42,20 +49,26 @@ export class ListaFavoritos implements OnInit {
 
     this.favoritoService.obtenerFavoritosPorUsuario(this.usuario.id).subscribe({
       next: (favoritos) => {
-        
-        
+        this.favoritosPorEvento = new Map(
+          favoritos.filter(f => f.id).map(f => [String(f.eventoId), f.id!])
+        );
+
         if (favoritos.length === 0) {
           this.eventosFavoritos.set([]);
           this.isLoading.set(false);
           return;
         }
 
-        // se cargan los detalles de cada evento favorito
-        const eventosObservables = favoritos.map(fav => this.eventoService.obtenerEvento(fav.eventoId));
+        // se cargan los detalles de cada evento favorito. Un favorito puede apuntar
+        // a un evento ya eliminado (404): se descarta ese solo, antes tiraba abajo
+        // la lista entera.
+        const eventosObservables = favoritos.map(fav =>
+          this.eventoService.obtenerEvento(fav.eventoId).pipe(catchError(() => of(null)))
+        );
 
         forkJoin(eventosObservables).subscribe({
           next: (eventos) => {
-            this.eventosFavoritos.set(eventos);
+            this.eventosFavoritos.set(eventos.filter((e): e is Evento => e !== null));
             this.isLoading.set(false);
           },
           error: (err) => {
@@ -76,18 +89,16 @@ export class ListaFavoritos implements OnInit {
   quitarFavorito(eventoId: number | undefined): void {
     if (!eventoId) return;
 
-    this.favoritoService.verificarFavorito(this.usuario.id, String(eventoId)).subscribe({
-      next: (favoritos) => {
-        if (favoritos.length > 0 && favoritos[0].id) {
-          this.favoritoService.eliminarFavorito(favoritos[0].id).subscribe({
-            next: () => {
-              this.eventosFavoritos.update(eventos => eventos.filter(e => e.id !== eventoId));
-            },
-            error: (err) => {
-              this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
-            }
-          });
-        }
+    const favoritoId = this.favoritosPorEvento.get(String(eventoId));
+    if (!favoritoId) return;
+
+    this.favoritoService.eliminarFavorito(favoritoId).subscribe({
+      next: () => {
+        this.favoritosPorEvento.delete(String(eventoId));
+        this.eventosFavoritos.update(eventos => eventos.filter(e => e.id !== eventoId));
+      },
+      error: (err) => {
+        this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
       }
     });
   }

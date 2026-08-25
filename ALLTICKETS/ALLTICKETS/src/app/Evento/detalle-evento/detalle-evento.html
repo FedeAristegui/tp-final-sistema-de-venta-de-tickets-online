@@ -1,8 +1,8 @@
 @if (evento()) {
 
-  @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
+  @if (mensaje()) {
+    <div class="alert" [class.alert-error]="tipoMensaje() === 'error'" [class.alert-success]="tipoMensaje() === 'success'">
+      {{ mensaje() }}
     </div>
   }
   
@@ -171,10 +171,9 @@
                 −
               </button>
               <span class="cantidad-display">{{ cantidadSector() }}</span>
-              <button 
-                (click)="aumentarCantidad()" 
-                [disabled]="cantidadSector() >= getCapacidadDisponible(sectorSeleccionado())"
-                [disabled]="cantidadSector() > 9"
+              <button
+                (click)="aumentarCantidad()"
+                [disabled]="cantidadSector() >= getCapacidadDisponible(sectorSeleccionado()) || cantidadSector() > 9"
                 class="btn-contador"
               >
                 +

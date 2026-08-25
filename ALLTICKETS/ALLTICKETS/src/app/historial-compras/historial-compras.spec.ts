@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistorialCompras } from './historial-compras';
+import { proveedoresDePrueba } from '../testing/proveedores-de-prueba';
 
 describe('HistorialCompras', () => {
   let component: HistorialCompras;
@@ -8,7 +9,8 @@ describe('HistorialCompras', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HistorialCompras]
+      imports: [HistorialCompras],
+      providers: proveedoresDePrueba()
     })
     .compileComponents();
 

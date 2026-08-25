@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { VentaServicio } from '../servicios/venta.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { EstadisticaEvento } from '../modelos/venta';

@@ -2,6 +2,34 @@ body {
   margin: 0;
 }
 
+/*
+ * Armazón de la app: la cabecera ocupa lo que necesita y la pantalla enrutada se
+ * queda con el resto exacto de la ventana.
+ *
+ * Antes cada pantalla se estiraba a 100vh por su cuenta, sin descontar la altura
+ * de la cabecera. Como la cabecera es `sticky`, la página terminaba siendo más
+ * alta que la ventana y quedaba scroll sobrante aunque el contenido entrara de
+ * sobra: al scrollear, la cabecera se quedaba fija y el recuadro del formulario
+ * se desplazaba por debajo, dando la sensación de que el recuadro "se movía".
+ */
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* `router-outlet` es sólo un ancla: el componente enrutado se inserta como
+   hermano, así que el outlet no debe ocupar lugar en el layout. */
+app-root > router-outlet {
+  display: none;
+}
+
+/* La pantalla enrutada llena el alto libre, pero puede crecer si su contenido
+   es más largo (ahí sí corresponde que aparezca el scroll). */
+app-root > *:not(app-cabecera):not(router-outlet) {
+  flex: 1 0 auto;
+}
+
 /* Aviso inline de resultado de una acción (éxito o error de validación/reintento).
    Compartido por todos los componentes para que se vean y se comporten igual. */
 .alert {
@@ -52,6 +80,46 @@ body {
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
+}
+
+/* Campo de contraseña con botón para mostrar u ocultar lo escrito.
+   Está acá y no en cada componente para que se vea igual en todos los
+   formularios (login, registro, recuperación y cambio de contraseña). */
+.input-contrasena {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* El margen lo lleva el contenedor: si lo conservara el input, el botón
+   quedaría descentrado (el alto de la línea incluiría ese margen). */
+.input-contrasena input {
+  width: 100%;
+  padding-right: 84px;
+  margin-bottom: 0;
+}
+
+.btn-ver-contrasena {
+  position: absolute;
+  right: 8px;
+  z-index: 2;
+  border: none;
+  background: #667eea;
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 8px 12px;
+  line-height: 1;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.btn-ver-contrasena:hover {
+  background: #4b41c4;
 }
 
 @keyframes slideDown {

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 

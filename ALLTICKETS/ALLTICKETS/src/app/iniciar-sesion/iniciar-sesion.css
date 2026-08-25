@@ -1,8 +1,9 @@
+/* Sin alto propio: el armazón (styles.css) ya le da el alto libre que queda
+   debajo de la cabecera, así que la tarjeta queda centrada sin generar scroll. */
 :host {
   display: flex;
-  justify-content: center;   
-  align-items: center;  
-  height: 100vh;           
+  justify-content: center;
+  align-items: center;
   background-color: #667eea;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

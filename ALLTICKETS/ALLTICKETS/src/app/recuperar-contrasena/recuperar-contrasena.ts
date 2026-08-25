@@ -31,6 +31,8 @@ export class RecuperarContrasena {
   enviando = signal<boolean>(false);
   mensaje: string = '';
   tipoMensaje: 'error' | 'success' | '' = '';
+  mostrarNuevaContrasena: boolean = false;
+  mostrarConfirmarContrasena: boolean = false;
 
   private usuarioEncontrado: usuario | null = null;
 
@@ -148,5 +150,7 @@ export class RecuperarContrasena {
     this.mensaje = '';
     this.tipoMensaje = '';
     this.formCodigo.reset();
+    this.mostrarNuevaContrasena = false;
+    this.mostrarConfirmarContrasena = false;
   }
 }

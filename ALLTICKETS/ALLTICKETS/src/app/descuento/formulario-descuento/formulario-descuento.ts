@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, Validati
 import { ClienteDescuento } from '../../servicios/cliente-descuento';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { Descuento } from '../../modelos/descuento';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 // Validador: fecha inicio no puede ser pasada (sí permite hoy)
 export const minDateTodayValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

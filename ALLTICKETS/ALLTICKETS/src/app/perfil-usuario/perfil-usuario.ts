@@ -1,11 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { usuario } from '../modelos/usuario';
-import { PaginaPrincipal } from '../pagina-principal/pagina-principal';
 
 // Validador: confirma que "nuevaContrasena" y "confirmarContrasena" coincidan
 function contrasenasIgualesValidator(control: AbstractControl): ValidationErrors | null {
@@ -38,6 +37,7 @@ export class PerfilUsuario implements OnInit {
   editando: boolean = false;
   cambiandoContrasena: boolean = false;
   guardando: boolean = false;
+  mostrarContrasenaActual: boolean = false;
   mostrarNuevaContrasena: boolean = false;
   mostrarConfirmarContrasena: boolean = false;
   mensaje: string = '';
@@ -86,6 +86,7 @@ export class PerfilUsuario implements OnInit {
   toggleCambiarContrasena() {
     this.cambiandoContrasena = !this.cambiandoContrasena;
     this.contrasenaForm.reset();
+    this.mostrarContrasenaActual = false;
     this.mostrarNuevaContrasena = false;
     this.mostrarConfirmarContrasena = false;
   }

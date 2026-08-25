@@ -8,12 +8,18 @@ body {
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* El alto libre lo reparte el armazón de la app (ver styles.css). */
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .perfil-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  flex: 1 0 auto;
   padding: 40px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -214,37 +220,10 @@ form {
   animation: slideIn 0.3s ease-out;
 }
 
-.input-contrasena {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-contrasena .form-control {
-  width: 100%;
-  padding-right: 78px;
-}
-
-.btn-ver-contrasena {
-  position: absolute;
-  right: 8px;
-  z-index: 2;
-  border: none;
-  background: #667eea;
-  color: white;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  padding: 8px 12px;
-  line-height: 1;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.btn-ver-contrasena:hover {
-  background: #4b41c4;
+/* El estilo del campo con botón de "ver contraseña" es global (styles.css).
+   Acá sólo se anula el margen porque el espaciado ya lo da .form-group. */
+.form-group .input-contrasena {
+  margin-bottom: 0;
 }
 
 .btn-guardar:disabled {

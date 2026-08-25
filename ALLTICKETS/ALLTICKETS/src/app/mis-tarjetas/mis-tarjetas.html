@@ -45,7 +45,11 @@
               class="form-input"
             />
             @if (tarjetaForm.get('titular')?.touched && tarjetaForm.get('titular')?.invalid) {
-              <span class="error">El nombre del titular es requerido</span>
+              @if (tarjetaForm.get('titular')?.errors?.['espaciosEnLosBordes']) {
+                <span class="error">El titular no puede empezar ni terminar con espacios</span>
+              } @else {
+                <span class="error">El nombre del titular es requerido (mínimo 3 caracteres)</span>
+              }
             }
           </div>
 

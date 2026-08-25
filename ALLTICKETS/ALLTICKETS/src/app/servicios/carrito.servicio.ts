@@ -136,19 +136,6 @@ export class CarritoServicio {
     this.guardarCarritoEnLocalStorage();
   }
 
-  actualizarCantidad(index: number, cantidad: number): void {
-    if (cantidad <= 0) {
-      this.eliminarDelCarrito(index);
-      return;
-    }
-
-    // Copia del ítem por el mismo motivo que en agregarAlCarrito.
-    this.itemsCarrito.set(
-      this.itemsCarrito().map((i, idx) => (idx === index ? { ...i, cantidad } : i))
-    );
-    this.guardarCarritoEnLocalStorage();
-  }
-
   vaciarCarrito(): void {
     this.itemsCarrito.set([]);
     this.inicioReserva = null;
@@ -284,6 +271,37 @@ export class CarritoServicio {
     );
   }
 
+  /**
+   * Descuenta del evento las entradas de sector que se acaban de poner en el
+   * carrito, para que el stock baje en el momento y no recién al pagar.
+   *
+   * Es el análogo de `marcarButacasComoNoDisponibles`: mientras las entradas
+   * estén en un carrito no las puede tomar nadie más, y si el carrito se vacía
+   * o vence se devuelven con `liberarSectores`.
+   */
+  reservarSectores(eventoId: number|string, sectores: { nombre: string; cantidad: number }[]): Observable<any> {
+    if (sectores.length === 0) {
+      return of(null);
+    }
+
+    return this.eventoServicio.ajustarCapacidadSectores(
+      eventoId,
+      sectores.map(s => ({ nombre: s.nombre, delta: -s.cantidad }))
+    );
+  }
+
+  /** Devuelve al evento las entradas de sector que salen del carrito. */
+  liberarSectores(eventoId: number|string, sectores: { nombre: string; cantidad: number }[]): Observable<any> {
+    if (sectores.length === 0) {
+      return of(null);
+    }
+
+    return this.eventoServicio.ajustarCapacidadSectores(
+      eventoId,
+      sectores.map(s => ({ nombre: s.nombre, delta: s.cantidad }))
+    );
+  }
+
   private guardarCarritoEnLocalStorage(): void {
     localStorage.setItem('carrito', JSON.stringify(this.itemsCarrito()));
 
@@ -356,21 +374,28 @@ export class CarritoServicio {
     return marcas.length > 0 ? Math.min(...marcas) : Date.now();
   }
 
-  // Vacía el carrito por vencimiento de la reserva y libera las butacas ocupadas
+  // Vacía el carrito por vencimiento de la reserva y devuelve el stock ocupado
   private expirarCarrito(): void {
     const items = this.itemsCarrito();
 
-    // se agrupan por evento para liberar todas las butacas de un mismo evento en una sola petición
+    // se agrupan por evento para liberar todo lo de un mismo evento en una sola petición
     const butacasPorEvento = new Map<string, { fila: string; numero: number }[]>();
+    const sectoresPorEvento = new Map<string, { nombre: string; cantidad: number }[]>();
+
     items.forEach(item => {
+      const eventoId = String(item.evento.id);
+
       if (item.tipoEntrada === 'butaca') {
         const match = item.detalleEntrada.match(/Fila (\w+) - Butaca (\d+)/);
         if (match) {
-          const eventoId = String(item.evento.id);
           const lista = butacasPorEvento.get(eventoId) || [];
           lista.push({ fila: match[1], numero: parseInt(match[2], 10) });
           butacasPorEvento.set(eventoId, lista);
         }
+      } else if (item.tipoEntrada === 'sector') {
+        const lista = sectoresPorEvento.get(eventoId) || [];
+        lista.push({ nombre: item.detalleEntrada, cantidad: item.cantidad });
+        sectoresPorEvento.set(eventoId, lista);
       }
     });
 
@@ -379,6 +404,12 @@ export class CarritoServicio {
         // Si esto falla, las butacas quedan bloqueadas sin estar en ningún carrito,
         // así que conviene que quede rastro en la consola.
         error: err => console.error('No se pudieron liberar las butacas vencidas:', err)
+      });
+    });
+
+    sectoresPorEvento.forEach((sectores, eventoId) => {
+      this.liberarSectores(eventoId, sectores).subscribe({
+        error: err => console.error('No se pudieron liberar las entradas vencidas:', err)
       });
     });
 

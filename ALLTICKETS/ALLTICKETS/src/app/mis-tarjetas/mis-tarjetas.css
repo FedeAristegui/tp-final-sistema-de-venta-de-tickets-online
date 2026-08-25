@@ -1,6 +1,14 @@
 
+/* El alto libre lo reparte el armazón de la app (ver styles.css): el host recibe
+   lo que queda bajo la cabecera y el contenedor lo llena. Antes esto era
+   `min-height: 100vh` y sumaba scroll de más. */
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .tarjetas-container {
-  min-height: 100vh;
+  flex: 1 0 auto;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 40px 20px;
 }

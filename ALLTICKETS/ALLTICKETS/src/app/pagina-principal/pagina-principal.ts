@@ -19,11 +19,17 @@ export class PaginaPrincipal implements OnInit {
   usuario = signal<any>(null);
   eventos = signal<Evento[]>([]);
   eventosFiltrados = signal<Evento[]>([]);
-  isLoading = signal(false);  
-  favoritosUsuario = signal<string[]>([]); 
+  isLoading = signal(false);
+  /**
+   * Favoritos del usuario indexados por evento: `eventoId -> id del favorito`.
+   * Se guarda también el id del favorito (y no sólo el del evento) porque es lo
+   * que hace falta para borrarlo; antes había que pedir toda la colección de
+   * favoritos cada vez que se desmarcaba un corazón.
+   */
+  favoritosUsuario = signal<Map<string, string>>(new Map());
   protected readonly categorias = ['Deportes', 'Música', 'Comedia', 'Teatro'];
 
-  
+
   filtrosForm: FormGroup;
 
   private readonly eventoService = inject(EventoServicio);
@@ -31,17 +37,17 @@ export class PaginaPrincipal implements OnInit {
   private readonly modalService = inject(ModalConfirmacionService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
-  
+
 
   constructor() {
-    
+
     this.filtrosForm = this.fb.group({
       nombre: [''],
       fecha: [''],
       categoria: ['']
     });
 
-    
+
     this.filtrosForm.valueChanges.subscribe(() => {
       this.aplicarFiltros();
     });
@@ -51,7 +57,7 @@ export class PaginaPrincipal implements OnInit {
     const data = localStorage.getItem('usuarioLogueado');
     this.usuario.set(data ? JSON.parse(data) : null);
     this.cargarEventos();
-    
+
     if (this.usuario()) {
       this.cargarFavoritos();
     }
@@ -60,7 +66,7 @@ export class PaginaPrincipal implements OnInit {
   cargarEventos(): void {
     this.isLoading.set(true);
     this.eventos.set([]);
-    
+
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
         const hoy = new Date().toISOString().split('T')[0];
@@ -74,24 +80,16 @@ export class PaginaPrincipal implements OnInit {
         this.eventosFiltrados.set([]);
         this.isLoading.set(false);
         this.modalService.notify('No se pudieron cargar los eventos. Intenta nuevamente en unos minutos.');
-      },
-      complete: () => {
       }
     });
-    
-    setTimeout(() => {
-      if (this.isLoading()) {
-        this.isLoading.set(false);
-      }
-    }, 10000);
   }
 
   aplicarFiltros(): void {
     const filtros = this.filtrosForm.value;
-    
+
     this.eventosFiltrados.set(this.eventos().filter(evento => {
       // Filtro por nombre/título
-      const cumpleNombre = !filtros.nombre || 
+      const cumpleNombre = !filtros.nombre ||
         evento.titulo.toLowerCase().includes(filtros.nombre.toLowerCase()) ||
         evento.lugar.toLowerCase().includes(filtros.nombre.toLowerCase());
 
@@ -116,22 +114,29 @@ export class PaginaPrincipal implements OnInit {
 
   cargarFavoritos(): void {
     if (!this.usuario()) return;
-    
+
     this.favoritoService.obtenerFavoritosPorUsuario(this.usuario().id).subscribe({
       next: (favoritos) => {
-        this.favoritosUsuario.set(favoritos.map(f => String(f.eventoId)));
-        
+        this.favoritosUsuario.set(this.indexarFavoritos(favoritos));
       },
       error: (err) => {
-        this.favoritosUsuario.set([]);
+        this.favoritosUsuario.set(new Map());
         this.modalService.notify('No se pudieron cargar tus favoritos. Intenta nuevamente en unos minutos.');
       }
     });
   }
 
+  private indexarFavoritos(favoritos: Favorito[]): Map<string, string> {
+    const indice = new Map<string, string>();
+    favoritos.forEach(f => {
+      if (f.id) indice.set(String(f.eventoId), f.id);
+    });
+    return indice;
+  }
+
   esFavorito(eventoId: number | undefined): boolean {
     if (!eventoId) return false;
-    return this.favoritosUsuario().includes(String(eventoId));
+    return this.favoritosUsuario().has(String(eventoId));
   }
 
   async toggleFavorito(evento: Evento, event: Event): Promise<void> {
@@ -146,21 +151,20 @@ export class PaginaPrincipal implements OnInit {
     if (!evento.id) return;
 
     const eventoId = String(evento.id);
-    
-    if (this.esFavorito(evento.id)) {
-      // Eliminar de favoritos
-      this.favoritoService.verificarFavorito(this.usuario().id, eventoId).subscribe({
-        next: (favoritos) => {
-          if (favoritos.length > 0 && favoritos[0].id) {
-            this.favoritoService.eliminarFavorito(favoritos[0].id).subscribe({
-              next: () => {
-                this.favoritosUsuario.update(favs => favs.filter(id => id !== eventoId));
-              },
-              error: (err) => {
-                this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
-              }
-            });
-          }
+    const favoritoId = this.favoritosUsuario().get(eventoId);
+
+    if (favoritoId) {
+      // Eliminar de favoritos: el id ya lo teníamos en memoria.
+      this.favoritoService.eliminarFavorito(favoritoId).subscribe({
+        next: () => {
+          this.favoritosUsuario.update(favs => {
+            const copia = new Map(favs);
+            copia.delete(eventoId);
+            return copia;
+          });
+        },
+        error: (err) => {
+          this.modalService.notify('No se pudo quitar el favorito. Intenta nuevamente en unos minutos.');
         }
       });
     } else {
@@ -172,8 +176,9 @@ export class PaginaPrincipal implements OnInit {
       };
 
       this.favoritoService.agregarFavorito(nuevoFavorito).subscribe({
-        next: () => {
-          this.favoritosUsuario.update(favs => [...favs, eventoId]);
+        next: (creado) => {
+          if (!creado.id) return;
+          this.favoritosUsuario.update(favs => new Map(favs).set(eventoId, creado.id!));
         },
         error: (err) => {
           this.modalService.notify('No se pudo agregar el favorito. Intenta nuevamente en unos minutos.');

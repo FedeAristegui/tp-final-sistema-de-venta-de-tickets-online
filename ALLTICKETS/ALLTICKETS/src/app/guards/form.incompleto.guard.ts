@@ -1,6 +1,8 @@
 import { CanDeactivateFn } from '@angular/router';
 import { inject } from '@angular/core';
-import { AdminEventos } from '../Evento/crear-evento/admin-eventos';
+// Sólo se usa como tipo: con un import normal, el guard (que es eager por estar
+// en las rutas) arrastraría el componente entero al bundle inicial.
+import type { AdminEventos } from '../Evento/crear-evento/admin-eventos';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 
 export const formIncompletoGuard: CanDeactivateFn<AdminEventos> = async (component, currentRoute, currentState, nextState) => {

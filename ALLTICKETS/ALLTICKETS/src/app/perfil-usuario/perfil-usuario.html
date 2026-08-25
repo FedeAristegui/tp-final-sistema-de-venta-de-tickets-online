@@ -58,7 +58,12 @@
           <div class="seccion-contrasena" [formGroup]="contrasenaForm">
             <div class="form-group">
               <label>Contraseña actual:</label>
-              <input type="password" formControlName="contrasenaActual" class="form-control">
+              <div class="input-contrasena">
+                <input [type]="mostrarContrasenaActual ? 'text' : 'password'" formControlName="contrasenaActual" class="form-control">
+                <button type="button" class="btn-ver-contrasena" (click)="mostrarContrasenaActual = !mostrarContrasenaActual">
+                  {{ mostrarContrasenaActual ? 'Ocultar' : 'Ver' }}
+                </button>
+              </div>
               @if (contrasenaForm.get('contrasenaActual')?.invalid && contrasenaForm.get('contrasenaActual')?.touched) {
                 <small class="error">La contraseña actual es requerida</small>
               }

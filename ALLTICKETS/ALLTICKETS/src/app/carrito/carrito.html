@@ -189,7 +189,11 @@
                     placeholder="Nombre como aparece en la tarjeta"
                     class="input-tarjeta">
                   @if (tarjetaForm.get('titular')?.invalid && tarjetaForm.get('titular')?.touched) {
-                    <span class="error-msg">Nombre requerido</span>
+                    @if (tarjetaForm.get('titular')?.errors?.['espaciosEnLosBordes']) {
+                      <span class="error-msg">No puede empezar ni terminar con espacios</span>
+                    } @else {
+                      <span class="error-msg">Nombre requerido</span>
+                    }
                   }
                 </div>
 

@@ -1,6 +1,12 @@
 
+/* El alto libre lo reparte el armazón de la app (ver styles.css). */
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .favoritos-container {
-  min-height: 100vh;
+  flex: 1 0 auto;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 40px 20px;
 }

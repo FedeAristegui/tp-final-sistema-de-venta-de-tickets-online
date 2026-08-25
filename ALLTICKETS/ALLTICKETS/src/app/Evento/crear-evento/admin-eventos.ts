@@ -99,7 +99,7 @@ export const requireSectorOrButacaByModo: ValidatorFn = (group: AbstractControl)
 
   return (sectoresCount === 0 && butacasCount === 0) ? { requireSectorOrButaca: true } : null;
 };
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { Evento, Ubicacion } from '../../modelos/evento';
@@ -115,6 +115,9 @@ import { SelectorUbicacion } from '../../mapa/selector-ubicacion/selector-ubicac
 })
 export class AdminEventos implements OnInit {
 
+  /** Ancho máximo con el que se guarda la imagen de un evento. */
+  private static readonly ANCHO_MAX_IMAGEN = 1000;
+
   @Input() isEditing: boolean = false;
   @Input() evento?: Evento;
   @Output() edited = new EventEmitter<Evento>();
@@ -125,15 +128,14 @@ export class AdminEventos implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  protected eventos = signal<Evento[]>([]);
   protected modoEdicion = signal(false);
   protected mostrarTodasButacas = signal(false);
   protected archivoSeleccionado = signal<string>('');
-  
+
   // modal de confirmación
   protected showConfirmModal = signal<boolean>(false);
   protected confirmMessage = signal<string>('');
-  protected pendingAction: 'eliminarSector' | 'eliminarButaca' | 'limpiarButacas' | 'generarButacas' | 'eliminarEvento' | null = null;
+  protected pendingAction: 'eliminarSector' | 'eliminarButaca' | 'limpiarButacas' | 'generarButacas' | null = null;
   protected pendingData: any = null;
   
   @Output() cancelled = new EventEmitter<void>();
@@ -172,16 +174,53 @@ export class AdminEventos implements OnInit {
         return;
       }
 
-      // Leer el archivo como base64
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const base64String = e.target?.result as string;
-        
-        // Guardar el base64 en el formulario
-        this.form.get('imagen')?.setValue(base64String);
-        this.archivoSeleccionado.set(file.name);
-      };
-      reader.readAsDataURL(file);
+      // La imagen se guarda dentro del propio evento, así que conviene achicarla
+      // antes: un PNG de 400 kB queda en unos 40 kB y deja de inflar todas las
+      // lecturas de `/eventos` y el refresco periódico de la ficha.
+      this.comprimirImagen(file)
+        .then(dataUrl => {
+          this.form.get('imagen')?.setValue(dataUrl);
+          this.archivoSeleccionado.set(file.name);
+        })
+        .catch(() => {
+          // Si el navegador no pudo procesarla, se guarda tal cual vino: es
+          // preferible un evento pesado a no poder cargar la imagen.
+          const reader = new FileReader();
+          reader.onload = (e: ProgressEvent<FileReader>) => {
+            this.form.get('imagen')?.setValue(e.target?.result as string);
+            this.archivoSeleccionado.set(file.name);
+          };
+          reader.readAsDataURL(file);
+        });
+    }
+  }
+
+  /**
+   * Redimensiona la imagen a lo sumo a ANCHO_MAX_IMAGEN y la reencoda a WebP
+   * (JPEG de respaldo para los navegadores que no lo soporten).
+   */
+  private async comprimirImagen(archivo: File): Promise<string> {
+    const bitmap = await createImageBitmap(archivo);
+
+    try {
+      const escala = Math.min(1, AdminEventos.ANCHO_MAX_IMAGEN / bitmap.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * escala);
+      canvas.height = Math.round(bitmap.height * escala);
+
+      const contexto = canvas.getContext('2d');
+      if (!contexto) throw new Error('El navegador no expone un contexto 2d');
+
+      // Fondo blanco: si el PNG venía con transparencia, el respaldo JPEG la
+      // pintaría de negro.
+      contexto.fillStyle = '#ffffff';
+      contexto.fillRect(0, 0, canvas.width, canvas.height);
+      contexto.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      const webp = canvas.toDataURL('image/webp', 0.82);
+      return webp.startsWith('data:image/webp') ? webp : canvas.toDataURL('image/jpeg', 0.82);
+    } finally {
+      bitmap.close();
     }
   }
 
@@ -267,8 +306,6 @@ export class AdminEventos implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarEventos();
-
     // Si viene desde @Input, usar ese evento
     if (this.isEditing && this.evento) {
       this.modoEdicion.set(true);
@@ -289,17 +326,6 @@ export class AdminEventos implements OnInit {
         }
       });
     }
-  }
-
-  cargarEventos(): void {
-    this.eventoService.obtenerEventos().subscribe({
-      next: (lista: Evento[]) => {
-        this.eventos.set(lista || []);
-      },
-      error: err => {
-        this.eventos.set([]);
-      }
-    });
   }
 
   cargarEventoEnFormulario(ev: Evento): void {
@@ -349,12 +375,6 @@ export class AdminEventos implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  seleccionarEvento(ev: Evento): void {
-    this.modoEdicion.set(true);
-    this.cargarEventoEnFormulario(ev);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   agregarSector(): void {
     this.sectores.push(
       this.fb.group({
@@ -380,39 +400,59 @@ export class AdminEventos implements OnInit {
     this.closeConfirmModal();
   }
 
+  /**
+   * Agrega una butaca en el primer lugar libre de la grilla.
+   *
+   * Antes se miraba únicamente la última butaca del arreglo y se daba por hecho
+   * que las filas eran de 10. Con eso, al borrar una butaca del medio la nueva
+   * no tapaba el hueco: se iba al final y, si la última fila estaba completa,
+   * abría una fila nueva.
+   */
   agregarButaca(): void {
-    const ultimaButaca = this.butacas.length > 0 ? this.butacas.at(this.butacas.length - 1).value : null;
-    
-    let filaDefault = 'A';
-    let numeroDefault = 1;
-    
-    if (ultimaButaca?.fila) {
-      const filaActual = ultimaButaca.fila;
-      const numeroActual = ultimaButaca.numero || 0;
-      
-      // Si el número actual es menor que 10, continuar en la misma fila
-      if (numeroActual < 10) {
-        filaDefault = filaActual;
-        numeroDefault = numeroActual + 1;
-      } else {
-        // Si ya hay 10 butacas, cambiar a la siguiente fila
-        const codigoFila = filaActual.charCodeAt(0);
-        filaDefault = String.fromCharCode(codigoFila + 1);
-        numeroDefault = 1;
-      }
-    }
-    
-    const precioDefault = ultimaButaca?.precio || 0;
+    const existentes = this.butacas.controls.map(
+      c => c.value as { fila: string; numero: number; precio: number }
+    );
+
+    const { fila, numero } = this.primerLugarLibre(existentes);
+
+    // Precio de referencia: el de la fila destino si ya tiene butacas; si no, el
+    // de la última cargada.
+    const precioDefault =
+      existentes.find(b => b.fila === fila)?.precio ??
+      existentes[existentes.length - 1]?.precio ??
+      0;
 
     this.butacas.push(
       this.fb.group({
-        fila: [filaDefault, [Validators.required, onlyLettersValidator]],
-        numero: [numeroDefault, [Validators.required, positiveNumberValidator,Validators.max(30)]],
+        fila: [fila, [Validators.required, onlyLettersValidator]],
+        numero: [numero, [Validators.required, positiveNumberValidator, Validators.max(30)]],
         precio: [precioDefault, [Validators.required, positiveNumberValidator]],
         disponible: [true]
       })
     );
     this.form.updateValueAndValidity();
+  }
+
+  /**
+   * Primer par (fila, número) que no esté ocupado, recorriendo las filas en orden.
+   * El ancho de fila se deduce del número más alto ya cargado, así funciona igual
+   * con filas de 8, de 10 o de 12. Si no quedan huecos, abre la fila siguiente.
+   */
+  private primerLugarLibre(butacas: { fila: string; numero: number }[]): { fila: string; numero: number } {
+    if (butacas.length === 0) return { fila: 'A', numero: 1 };
+
+    const ocupadas = new Set(butacas.map(b => `${b.fila}-${b.numero}`));
+    const anchoFila = Math.max(...butacas.map(b => b.numero));
+    const filas = [...new Set(butacas.map(b => b.fila))].sort();
+
+    for (const fila of filas) {
+      for (let numero = 1; numero <= anchoFila; numero++) {
+        if (!ocupadas.has(`${fila}-${numero}`)) return { fila, numero };
+      }
+    }
+
+    const ultimaFila = filas[filas.length - 1];
+    return { fila: String.fromCharCode(ultimaFila.charCodeAt(0) + 1), numero: 1 };
   }
 
   eliminarButaca(index: number): void {
@@ -447,8 +487,6 @@ export class AdminEventos implements OnInit {
   //  Generar butacas automáticamente
   generarButacas(){
     if (this.generadorButacas.invalid) {
-      const cantidadControl = this.generadorButacas.get('butacasPorFila');
-      
       this.generadorButacas.markAllAsTouched();
       return;
     }
@@ -604,15 +642,6 @@ export class AdminEventos implements OnInit {
     if (this.modoEdicion() && evento.id != null) {
       this.eventoService.actualizarEvento(evento, evento.id).subscribe({
         next: () => {
-          this.eventos.update(eventos => {
-            const index = eventos.findIndex(e => e.id === evento.id);
-            if (index !== -1) {
-              const updated = [...eventos];
-              updated[index] = { ...evento };
-              return updated;
-            }
-            return eventos;
-          });
           this.mensaje = 'Evento actualizado con éxito';
           this.tipoMensaje = 'success';
 
@@ -620,9 +649,11 @@ export class AdminEventos implements OnInit {
           if (this.isEditing) {
             this.edited.emit(evento);
             this.cancelled.emit();
+            this.cancelarEdicion();
+            return;
           }
-          
-          this.cancelarEdicion();
+
+          this.irAlDetalle(evento.id!);
         },
         error: err => {
           this.modalService.notify('No se pudo actualizar el evento. Intenta nuevamente en unos minutos.');
@@ -631,11 +662,10 @@ export class AdminEventos implements OnInit {
     } else {
       delete (evento as any).id;
       this.eventoService.crearEvento(evento).subscribe({
-        next: (nuevoEvento: Evento) => {
-          this.eventos.update(eventos => [...eventos, nuevoEvento]);
+        next: (creado: Evento) => {
           this.mensaje = '🎉 Evento creado con éxito';
           this.tipoMensaje = 'success';
-          this.cancelarEdicion();
+          this.irAlDetalle(creado?.id);
         },
         error: err => {
           this.modalService.notify('No se pudo crear el evento. Intenta nuevamente en unos minutos.');
@@ -644,39 +674,25 @@ export class AdminEventos implements OnInit {
     }
   }
 
-  eliminarEvento(id: number | undefined): void {
-    if (!id) return;
-    
-    this.pendingAction = 'eliminarEvento';
-    this.pendingData = id;
-    this.confirmMessage.set('¿Está seguro que desea eliminar este evento?');
-    this.showConfirmModal.set(true);
-  }
+  /**
+   * Lleva a la ficha del evento recién guardado.
+   *
+   * Se limpia el formulario antes de navegar: si queda `dirty`, el guard de
+   * "salir sin guardar" pediría confirmación para irse de una pantalla cuyos
+   * cambios ya se guardaron.
+   *
+   * Cuando el formulario está embebido en la propia ficha (`isEditing`) no se
+   * navega: ya se está en la pantalla de destino y sólo hay que cerrar el editor.
+   */
+  private irAlDetalle(id: number | string | undefined): void {
+    this.cancelarEdicion();
 
-  private confirmarEliminarEvento() {
-    if (this.pendingData === null) return;
-    
-    const id = this.pendingData;
-    this.eventos.update(eventos => eventos.filter(e => e.id !== id));
-
-    this.eventoService.borrarEvento(id).subscribe({
-      next: () => {
-        this.mensaje = 'Evento eliminado con éxito';
-        this.tipoMensaje = 'success';
-      },
-      error: err => {
-        this.cargarEventos();
-        this.modalService.notify('No se pudo eliminar el evento. Intenta nuevamente en unos minutos.');
-      }
-    });
-    
-    this.closeConfirmModal();
-  }
-
-  navegarAdetalles(id: number | undefined): void {
-    if (id != null) {
-      this.router.navigate(['/ficha-evento', id]);
+    if (id == null) {
+      // Sin id no hay a dónde ir (no debería pasar); se queda en el formulario.
+      return;
     }
+
+    this.router.navigate(['/ficha-evento', id]);
   }
 
   closeConfirmModal(): void {
@@ -699,9 +715,6 @@ export class AdminEventos implements OnInit {
         break;
       case 'generarButacas':
         this.confirmarGenerarButacas();
-        break;
-      case 'eliminarEvento':
-        this.confirmarEliminarEvento();
         break;
     }
   }

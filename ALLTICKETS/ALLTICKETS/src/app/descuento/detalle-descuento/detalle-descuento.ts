@@ -1,5 +1,4 @@
 import { Component, inject, linkedSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ClienteDescuento } from '../../servicios/cliente-descuento';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';

@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { ClienteDescuento } from '../../servicios/cliente-descuento';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
 @Component({

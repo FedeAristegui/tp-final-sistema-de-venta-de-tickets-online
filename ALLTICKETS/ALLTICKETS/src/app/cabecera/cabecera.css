@@ -4,11 +4,14 @@
   padding: 0;
 }
 
+/* La cabecera queda fija en el flujo de la página: antes era `sticky`, así que
+   el menú (con "Iniciar Sesión", "Mis Tarjetas", etc.) acompañaba al usuario al
+   scrollear. `relative` mantiene el z-index para que la sombra siga cayendo
+   sobre el contenido, sin que el bloque se mueva. */
 .menu-container {
   background: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
 }
 

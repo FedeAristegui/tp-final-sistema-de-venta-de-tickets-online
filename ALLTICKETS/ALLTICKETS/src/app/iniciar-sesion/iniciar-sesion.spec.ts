@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IniciarSesion } from './iniciar-sesion';
+import { proveedoresDePrueba } from '../testing/proveedores-de-prueba';
 
 describe('IniciarSesion', () => {
   let component: IniciarSesion;
@@ -8,7 +9,8 @@ describe('IniciarSesion', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IniciarSesion]
+      imports: [IniciarSesion],
+      providers: proveedoresDePrueba()
     })
     .compileComponents();
 

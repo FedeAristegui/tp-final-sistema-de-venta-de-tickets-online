@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { inject } from '@angular/core';
@@ -16,12 +16,12 @@ import { inject } from '@angular/core';
 export class IniciarSesion {
 
   private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
   private readonly autenticador = inject(Autenticador);
   private readonly modalService = inject(ModalConfirmacionService);
 
   mensaje: string = '';
   tipoMensaje: 'error' | 'success' | '' = '';
+  mostrarContrasena: boolean = false;
 
   protected readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

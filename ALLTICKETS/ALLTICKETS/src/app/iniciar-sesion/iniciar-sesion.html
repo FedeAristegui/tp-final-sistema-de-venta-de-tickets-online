@@ -13,7 +13,12 @@
       <div class="error">Email inválido</div>
     }
 
-    <input type="password" placeholder="Contraseña" formControlName="contrasena" />
+    <div class="input-contrasena">
+      <input [type]="mostrarContrasena ? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasena" />
+      <button type="button" class="btn-ver-contrasena" (click)="mostrarContrasena = !mostrarContrasena">
+        {{ mostrarContrasena ? 'Ocultar' : 'Ver' }}
+      </button>
+    </div>
     @if (form.get('contrasena')?.invalid && form.get('contrasena')?.touched) {
       <div class="error">Contraseña requerida</div>
     }

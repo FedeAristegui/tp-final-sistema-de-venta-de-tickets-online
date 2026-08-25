@@ -37,12 +37,22 @@
         <div class="error">Ingresa el código de 6 dígitos</div>
       }
 
-      <input type="password" placeholder="Nueva contraseña" formControlName="nuevaContrasena" />
+      <div class="input-contrasena">
+        <input [type]="mostrarNuevaContrasena ? 'text' : 'password'" placeholder="Nueva contraseña" formControlName="nuevaContrasena" />
+        <button type="button" class="btn-ver-contrasena" (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena">
+          {{ mostrarNuevaContrasena ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
       @if (formCodigo.get('nuevaContrasena')?.invalid && formCodigo.get('nuevaContrasena')?.touched) {
         <div class="error">Mínimo 6 caracteres</div>
       }
 
-      <input type="password" placeholder="Confirmar contraseña" formControlName="confirmarContrasena" />
+      <div class="input-contrasena">
+        <input [type]="mostrarConfirmarContrasena ? 'text' : 'password'" placeholder="Confirmar contraseña" formControlName="confirmarContrasena" />
+        <button type="button" class="btn-ver-contrasena" (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena">
+          {{ mostrarConfirmarContrasena ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
       @if (formCodigo.errors?.['contrasenasDistintas'] && formCodigo.get('confirmarContrasena')?.touched) {
         <div class="error">Las contraseñas no coinciden</div>
       }

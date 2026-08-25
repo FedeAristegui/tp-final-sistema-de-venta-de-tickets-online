@@ -30,6 +30,17 @@ export const tarjetaNoVencidaValidator: ValidatorFn = (control: AbstractControl)
   return null;
 };
 
+/**
+ * Titular válido: se admiten espacios entre las palabras (para separar nombre y
+ * apellido) pero no al principio ni al final. Así deja de pasar un titular
+ * cargado sólo con espacios, que con `minLength` solo se daba por bueno.
+ */
+export const titularValidoValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const valor = control.value;
+  if (typeof valor !== 'string' || valor === '') return null;
+  return valor !== valor.trim() ? { espaciosEnLosBordes: true } : null;
+};
+
 @Component({
   selector: 'app-mis-tarjetas',
   standalone: true,
@@ -56,7 +67,7 @@ export class MisTarjetas implements OnInit {
   constructor() {
     this.tarjetaForm = this.fb.group({
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
-      titular: ['', [Validators.required, Validators.minLength(3)]],
+      titular: ['', [Validators.required, Validators.minLength(3), titularValidoValidator]],
       vencimiento: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), tarjetaNoVencidaValidator]],
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
       tipo: ['Visa', Validators.required],
@@ -169,16 +180,21 @@ export class MisTarjetas implements OnInit {
   }
 
   private actualizarTarjetasPrincipales(tarjetaPrincipalId: string): void {
-   
-    this.tarjetas.update(tarjetas => 
-      tarjetas.map(t => ({
-        ...t,
-        esPrincipal: t.id === tarjetaPrincipalId
-      }))
+    const actuales = this.tarjetas();
+
+    const siguientes = actuales.map(t =>
+      t.esPrincipal === (t.id === tarjetaPrincipalId)
+        ? t
+        : { ...t, esPrincipal: t.id === tarjetaPrincipalId }
     );
 
-   
-    this.tarjetas().forEach(t => {
+    // Sólo se persisten las que realmente cambiaron de estado: antes se mandaba
+    // un PUT por cada tarjeta del usuario aunque ninguna otra se hubiera tocado.
+    const cambiadas = siguientes.filter((t, i) => t !== actuales[i]);
+
+    this.tarjetas.set(siguientes);
+
+    cambiadas.forEach(t => {
       if (t.id) {
         this.tarjetaService.actualizarTarjeta(t).subscribe({
           error: (err) => {}

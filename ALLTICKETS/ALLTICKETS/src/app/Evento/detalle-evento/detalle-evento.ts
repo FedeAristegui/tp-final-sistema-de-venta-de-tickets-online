@@ -1,22 +1,25 @@
-import { Component, inject, linkedSignal, signal, computed, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventoServicio } from '../../servicios/evento.servicio';
 import { CarritoServicio } from '../../servicios/carrito.servicio';
 import { Evento } from '../../modelos/evento';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Autenticador } from '../../servicios/autenticador';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { AdminEventos } from '../crear-evento/admin-eventos';
 import { MapaUbicacion } from '../../mapa/mapa-ubicacion/mapa-ubicacion';
-import { interval, Subscription } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription, timer } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
+
+/** Cada cuánto se relee el evento para detectar entradas que tomó otro usuario. */
+const INTERVALO_REFRESCO_MS = 2500;
+
+/** Cuánto queda a la vista un aviso antes de esconderse solo. */
+const DURACION_MENSAJE_MS = 4000;
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, CommonModule, FormsModule, AdminEventos, MapaUbicacion],
+  imports: [DatePipe, CommonModule, AdminEventos, MapaUbicacion],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
@@ -31,22 +34,40 @@ export class detalleEvento implements OnInit, OnDestroy {
   private readonly modalService = inject(ModalConfirmacionService);
   private pollingSubscription?: Subscription;
 
-  protected readonly eventoFuente = toSignal(this.cliente.obtenerEvento(this.id!));
-  protected readonly evento = linkedSignal(() => this.eventoFuente());
+  protected readonly evento = signal<Evento | undefined>(undefined);
   protected readonly isEditing = signal(false);
   protected readonly usuario = signal(this.autenticador.obtenerUsuarioActual());
 
   protected butacasSeleccionadas = signal<{ fila: string; numero: number }[]>([]);
 
-    mensaje: string = '';
-    tipoMensaje: 'error' | 'success' | '' = '';
+  /**
+   * Aviso flotante. Va en signals y no en campos sueltos porque la app corre en
+   * modo zoneless: al esconderse desde un temporizador, sin signal la vista no
+   * se enteraría del cambio y el cartel quedaría pegado en pantalla.
+   */
+  protected readonly mensaje = signal<string>('');
+  protected readonly tipoMensaje = signal<'error' | 'success' | ''>('');
+  private ocultarMensajeId: ReturnType<typeof setTimeout> | null = null;
+
+  /** Muestra un aviso y lo esconde solo a los pocos segundos. */
+  private mostrarMensaje(texto: string, tipo: 'error' | 'success'): void {
+    this.mensaje.set(texto);
+    this.tipoMensaje.set(tipo);
+
+    if (this.ocultarMensajeId) clearTimeout(this.ocultarMensajeId);
+    this.ocultarMensajeId = setTimeout(() => {
+      this.mensaje.set('');
+      this.tipoMensaje.set('');
+      this.ocultarMensajeId = null;
+    }, DURACION_MENSAJE_MS);
+  }
 
   protected butacasPorFila = computed(() => {
     const evento = this.evento();
     if (!evento?.butacas) return {};
 
     const agrupadas: { [fila: string]: any[] } = {};
-    
+
     evento.butacas.forEach(butaca => {
       if (!agrupadas[butaca.fila]) {
         agrupadas[butaca.fila] = [];
@@ -65,7 +86,7 @@ export class detalleEvento implements OnInit, OnDestroy {
     return Object.keys(this.butacasPorFila()).sort();
   });
 
-  
+
   protected sectorSeleccionado = signal<string>('');
   protected cantidadSector = signal<number>(1);
 
@@ -87,8 +108,7 @@ export class detalleEvento implements OnInit, OnDestroy {
   // MÉTODOS DE BUTACAS
   seleccionarButaca(fila: string, numero: number, disponible: boolean): void {
     if (!disponible) {
-      this.mensaje = '⚠️ Esta butaca no está disponible';
-      this.tipoMensaje = 'error';
+      this.mostrarMensaje('⚠️ Esta butaca no está disponible', 'error');
       return;
     }
 
@@ -96,7 +116,7 @@ export class detalleEvento implements OnInit, OnDestroy {
     const index = butacas.findIndex(b => b.fila === fila && b.numero === numero);
 
     if (index >= 0) {
-      this.butacasSeleccionadas.update(lista => 
+      this.butacasSeleccionadas.update(lista =>
         lista.filter(b => !(b.fila === fila && b.numero === numero))
       );
     } else {
@@ -137,7 +157,7 @@ export class detalleEvento implements OnInit, OnDestroy {
   aumentarCantidad(): void {
     const sector = this.evento()?.sectores.find(s => s.nombre === this.sectorSeleccionado());
     if (!sector) return;
-    
+
     const disponible = this.getCapacidadDisponible(sector.nombre);
     if (this.cantidadSector() < disponible) {
         this.cantidadSector.update(c => c + 1);
@@ -184,18 +204,18 @@ export class detalleEvento implements OnInit, OnDestroy {
     const butacasYaEnCarrito: string[] = [];
     const butacasAgregadas: string[] = [];
     const butacasParaMarcar: { fila: string; numero: number }[] = [];
-    
+
     butacas.forEach(sel => {
       const butaca = evento.butacas.find(b => b.fila === sel.fila && b.numero === sel.numero);
       if (butaca) {
         const detalleButaca = `Fila ${butaca.fila} - Butaca ${butaca.numero}`;
-        
+
         // Verificar si esta butaca específica ya está en el carrito
-        const yaExiste = itemsCarrito.some(item => 
-          item.evento.id === evento.id && 
+        const yaExiste = itemsCarrito.some(item =>
+          item.evento.id === evento.id &&
           item.detalleEntrada === detalleButaca
         );
-        
+
         if (yaExiste) {
           butacasYaEnCarrito.push(detalleButaca);
         } else {
@@ -225,14 +245,11 @@ export class detalleEvento implements OnInit, OnDestroy {
     }
 
     if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length === 0) {
-      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito`;
-      this.tipoMensaje = 'success';
+      this.mostrarMensaje(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito`, 'success');
     } else if (butacasAgregadas.length > 0 && butacasYaEnCarrito.length > 0) {
-      this.mensaje = `${butacasAgregadas.length} butaca(s) agregada(s) al carrito. Ya tenías en el carrito: ${butacasYaEnCarrito.join(', ')}`;
-      this.tipoMensaje = 'success';
+      this.mostrarMensaje(`${butacasAgregadas.length} butaca(s) agregada(s) al carrito. Ya tenías en el carrito: ${butacasYaEnCarrito.join(', ')}`, 'success');
     } else {
-      this.mensaje = `Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`;
-      this.tipoMensaje = 'error';
+      this.mostrarMensaje(`Todas las butacas seleccionadas ya están en el carrito:\n${butacasYaEnCarrito.join('\n')}`, 'error');
     }
 
     this.limpiarSeleccion();
@@ -262,8 +279,7 @@ export class detalleEvento implements OnInit, OnDestroy {
     const disponible = this.getCapacidadDisponible(sector.nombre);
 
     if (cantidad > disponible) {
-      this.mensaje = `Solo hay ${disponible} entradas disponibles`;
-      this.tipoMensaje = 'error';
+      this.mostrarMensaje(`Solo hay ${disponible} entradas disponibles`, 'error');
       return;
     }
 
@@ -275,12 +291,19 @@ export class detalleEvento implements OnInit, OnDestroy {
       precioUnitario: sector.precio
     });
 
-    this.mensaje = `${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`;
-    this.tipoMensaje = 'success';
+    // Se descuenta el stock del sector en el momento, igual que se marcan las
+    // butacas como no disponibles. Sin esto la capacidad sólo bajaba al pagar,
+    // así que se podían poner en el carrito (acá y desde otra sesión) más
+    // entradas de las que el sector realmente tenía.
+    this.carritoServicio.reservarSectores(evento.id!, [{ nombre: sector.nombre, cantidad }]).subscribe({
+      error: (err) => console.error('Error reservando las entradas del sector:', err)
+    });
+
+    this.mostrarMensaje(`${cantidad} entrada(s) para ${sector.nombre} agregada(s) al carrito`, 'success');
     this.sectorSeleccionado.set('');
     this.cantidadSector.set(1);
 
-    
+
     const usuarioLocal = this.usuario();
     if (usuarioLocal && usuarioLocal.id) {
       try {
@@ -290,7 +313,7 @@ export class detalleEvento implements OnInit, OnDestroy {
         });
       } catch (e) {}
     }
-  }  
+  }
 
   volverAtras(): void {
     const usuario = this.usuario();
@@ -302,10 +325,17 @@ export class detalleEvento implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Iniciar polling cada 2.5 segundos para obtener actualizaciones del evento
-    this.pollingSubscription = interval(2500)
+    // `timer(0, ...)` emite de entrada, así que la carga inicial y el refresco
+    // periódico son el mismo flujo: antes había además un pedido suelto que
+    // duplicaba la primera lectura del evento.
+    this.pollingSubscription = timer(0, INTERVALO_REFRESCO_MS)
       .pipe(
-        switchMap(() => 
+        // La primera lectura va siempre (hay que pintar la pantalla). Después se
+        // saltea el refresco si la pestaña está en segundo plano (nadie lo está
+        // mirando) o si el admin está editando, porque el formulario ya es dueño
+        // de esos datos y refrescar por debajo no aporta nada.
+        filter(tick => tick === 0 || (!document.hidden && !this.isEditing())),
+        switchMap(() =>
           this.cliente.obtenerEvento(this.id!).pipe(
             catchError(() => of(null))
           )
@@ -315,7 +345,7 @@ export class detalleEvento implements OnInit, OnDestroy {
         if (eventoActualizado) {
           // Actualizar el evento
           this.evento.set(eventoActualizado);
-          
+
           // Verificar si alguna butaca seleccionada se volvió no disponible
           const butacasNoDisponibles = this.butacasSeleccionadas().filter(sel => {
             const butaca = eventoActualizado.butacas.find(
@@ -323,7 +353,7 @@ export class detalleEvento implements OnInit, OnDestroy {
             );
             return butaca && !butaca.disponible;
           });
-          
+
           // Si hay butacas que se volvieron no disponibles, removerlas de la selección
           if (butacasNoDisponibles.length > 0) {
             this.butacasSeleccionadas.update(lista =>
@@ -331,13 +361,12 @@ export class detalleEvento implements OnInit, OnDestroy {
                 !butacasNoDisponibles.some(nd => nd.fila === sel.fila && nd.numero === sel.numero)
               )
             );
-            
+
             const detalles = butacasNoDisponibles
               .map(b => `Fila ${b.fila} - Butaca ${b.numero}`)
               .join('\n');
-            
-            this.mensaje = `⚠️ Las siguientes butacas seleccionadas ya no están disponibles:\n${detalles}`;
-            this.tipoMensaje = 'error';
+
+            this.mostrarMensaje(`⚠️ Las siguientes butacas seleccionadas ya no están disponibles:\n${detalles}`, 'error');
           }
         }
       });
@@ -347,6 +376,9 @@ export class detalleEvento implements OnInit, OnDestroy {
     // Limpiar polling al destruir el componente
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();
+    }
+    if (this.ocultarMensajeId) {
+      clearTimeout(this.ocultarMensajeId);
     }
   }
 }
