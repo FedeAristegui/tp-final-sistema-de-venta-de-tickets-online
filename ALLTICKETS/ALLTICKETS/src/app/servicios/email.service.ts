@@ -27,8 +27,8 @@ export interface DatosCompra {
 export class EmailService {
   private readonly SERVICE_ID = 'service_0m22ydp';
   private readonly PUBLIC_KEY = '9MBk0zUwOiBriG86_';
-  // Nota: Necesitas crear una plantilla en EmailJS con este ID o cambiarlo por tu plantilla
-  private readonly TEMPLATE_ID = 'template_q9t71sl';
+  // Plantilla del resumen de compra
+  private readonly TEMPLATE_ID = 'template_sr10ake';
   // Plantilla separada para el código de recuperación de contraseña (crear en EmailJS)
   private readonly TEMPLATE_ID_RECUPERACION = 'template_co2ahee';
 
