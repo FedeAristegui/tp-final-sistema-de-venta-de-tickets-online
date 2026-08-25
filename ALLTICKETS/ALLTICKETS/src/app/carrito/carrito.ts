@@ -8,7 +8,7 @@ import { ClienteDescuento } from '../servicios/cliente-descuento';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
-import { EmailService } from '../servicios/email.service';
+import { EmailService, EventoCompra } from '../servicios/email.service';
 import { Venta } from '../modelos/venta';
 import { Descuento } from '../modelos/descuento';
 import { Tarjeta } from '../modelos/tarjeta';
@@ -606,6 +606,37 @@ export class Carrito implements OnInit {
     });
   }
 
+  /** Agrupa los ítems del carrito por evento para armar el resumen que espera la plantilla de email. */
+  private armarEventosParaEmail(): EventoCompra[] {
+    const eventos = new Map<string, EventoCompra>();
+
+    for (const item of this.items()) {
+      const clave = String(item.evento.id ?? item.evento.titulo);
+      if (!eventos.has(clave)) {
+        eventos.set(clave, {
+          titulo: item.evento.titulo,
+          fecha: item.evento.fecha,
+          hora: item.evento.hora,
+          lugar: item.evento.lugar,
+          direccion: item.evento.ubicacion?.direccion,
+          mapaUrl: item.evento.ubicacion
+            ? `https://www.google.com/maps/search/?api=1&query=${item.evento.ubicacion.lat},${item.evento.ubicacion.lng}`
+            : undefined,
+          entradas: []
+        });
+      }
+
+      eventos.get(clave)!.entradas.push({
+        detalle: item.detalleEntrada,
+        tipoTexto: item.tipoEntrada === 'butaca' ? 'Entrada numerada' : 'Entrada de sector',
+        cantidad: item.cantidad,
+        precioUnitario: item.precioUnitario
+      });
+    }
+
+    return Array.from(eventos.values());
+  }
+
   private finalizarCompra(exitosas: number, fallidas: number){
     this.procesandoCompra.set(false);
 
@@ -622,22 +653,14 @@ export class Carrito implements OnInit {
       });
       
       // Capturar datos antes de vaciar el carrito para enviar el email
-      const itemsParaEmail = this.items().map(item => ({
-        eventoTitulo: item.evento.titulo,
-        cantidad: item.cantidad,
-        precioUnitario: item.precioUnitario,
-        detalleEntrada: item.detalleEntrada,
-        fecha: item.evento.fecha,
-        hora: item.evento.hora,
-        lugar: item.evento.lugar
-      }));
+      const eventosParaEmail = this.armarEventosParaEmail();
 
       // Enviar email con resumen de compra
       if (this.usuario && this.usuario.email) {
         this.emailService.enviarResumenCompra({
           usuarioNombre: `${this.usuario.nombre || ''} ${this.usuario.apellido || ''}`.trim() || 'Cliente',
           usuarioEmail: this.usuario.email,
-          items: itemsParaEmail,
+          eventos: eventosParaEmail,
           subtotal: this.subtotal(),
           descuentoPorcentaje: this.descuentoPorcentaje(),
           montoDescuento: this.montoDescuento(),
@@ -680,22 +703,14 @@ export class Carrito implements OnInit {
       });
       
       // Capturar datos antes de vaciar el carrito para enviar el email (compra parcial)
-      const itemsParaEmail = this.items().map(item => ({
-        eventoTitulo: item.evento.titulo,
-        cantidad: item.cantidad,
-        precioUnitario: item.precioUnitario,
-        detalleEntrada: item.detalleEntrada,
-        fecha: item.evento.fecha,
-        hora: item.evento.hora,
-        lugar: item.evento.lugar
-      }));
+      const eventosParaEmail = this.armarEventosParaEmail();
 
       // Enviar email incluso si es compra parcial
       if (this.usuario && this.usuario.email) {
         this.emailService.enviarResumenCompra({
           usuarioNombre: `${this.usuario.nombre || ''} ${this.usuario.apellido || ''}`.trim() || 'Cliente',
           usuarioEmail: this.usuario.email,
-          items: itemsParaEmail,
+          eventos: eventosParaEmail,
           subtotal: this.subtotal(),
           descuentoPorcentaje: this.descuentoPorcentaje(),
           montoDescuento: this.montoDescuento(),

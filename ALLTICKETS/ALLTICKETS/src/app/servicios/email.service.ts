@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
 import emailjs from '@emailjs/browser';
 
+export interface EntradaCompra {
+  detalle: string;
+  tipoTexto: string;
+  cantidad: number;
+  precioUnitario: number;
+}
+
+export interface EventoCompra {
+  titulo: string;
+  fecha: string;
+  hora: string;
+  lugar: string;
+  direccion?: string;
+  mapaUrl?: string;
+  entradas: EntradaCompra[];
+}
+
 export interface DatosCompra {
   usuarioNombre: string;
   usuarioEmail: string;
-  items: {
-    eventoTitulo: string;
-    cantidad: number;
-    precioUnitario: number;
-    detalleEntrada: string;
-    fecha: string;
-    hora: string;
-    lugar: string;
-  }[];
+  eventos: EventoCompra[];
   subtotal: number;
   descuentoPorcentaje: number;
   montoDescuento: number;
@@ -20,6 +29,8 @@ export interface DatosCompra {
   tarjetaUsada?: string;
   fechaCompra: string;
 }
+
+const formatearMoneda = (valor: number) => `$${valor.toFixed(2)}`;
 
 @Injectable({
   providedIn: 'root'
@@ -42,27 +53,49 @@ export class EmailService {
    */
   async enviarResumenCompra(datos: DatosCompra): Promise<void> {
     try {
-      // Formatear la lista de items para el email
-      const itemsFormateados = datos.items.map(item => 
-        `- ${item.eventoTitulo}
-  Fecha: ${item.fecha} - ${item.hora}
-  Lugar: ${item.lugar}
-  ${item.detalleEntrada}
-  Cantidad: ${item.cantidad} x $${item.precioUnitario.toFixed(2)} = $${(item.cantidad * item.precioUnitario).toFixed(2)}`
-      ).join('\n\n');
+      // Un bloque {{#eventos}} con su propia tabla anidada {{#entradas}}
+      const eventos = datos.eventos.map(evento => {
+        const cantidadTotal = evento.entradas.reduce((acc, e) => acc + e.cantidad, 0);
+        const subtotalEvento = evento.entradas.reduce((acc, e) => acc + e.cantidad * e.precioUnitario, 0);
 
-      // Preparar los parámetros para la plantilla de EmailJS
+        return {
+          titulo: evento.titulo,
+          fecha_texto: evento.fecha,
+          hora: evento.hora,
+          lugar: evento.lugar,
+          direccion: evento.direccion || '',
+          mapa_url: evento.mapaUrl || '',
+          entradas: evento.entradas.map(entrada => ({
+            detalle: entrada.detalle,
+            tipo_texto: entrada.tipoTexto,
+            cantidad: entrada.cantidad,
+            precio_unitario: formatearMoneda(entrada.precioUnitario),
+            subtotal_entrada: formatearMoneda(entrada.cantidad * entrada.precioUnitario)
+          })),
+          resumen_cantidad: `${cantidadTotal} entrada${cantidadTotal === 1 ? '' : 's'}`,
+          subtotal_evento: formatearMoneda(subtotalEvento)
+        };
+      });
+
+      // El bloque {{#descuento}} solo se muestra si este objeto existe
+      const descuento = datos.montoDescuento > 0
+        ? { etiqueta: `Descuento (${datos.descuentoPorcentaje}%)`, monto: formatearMoneda(datos.montoDescuento) }
+        : '';
+
+      // Los nombres deben coincidir con las variables de la plantilla en EmailJS
+      // (To Email = {{email_destinatario}}, Reply To = {{responder_a}})
       const templateParams = {
-        to_email: datos.usuarioEmail,
-        to_name: datos.usuarioNombre,
-        items_detalle: itemsFormateados,
-        subtotal: datos.subtotal.toFixed(2),
-        descuento_porcentaje: datos.descuentoPorcentaje,
-        monto_descuento: datos.montoDescuento.toFixed(2),
-        total: datos.total.toFixed(2),
-        tarjeta_usada: datos.tarjetaUsada || 'N/A',
+        preheader: `Tu compra fue confirmada. Total pagado: ${formatearMoneda(datos.total)}`,
+        email_destinatario: datos.usuarioEmail,
+        nombre_destinatario: datos.usuarioNombre,
+        responder_a: datos.usuarioEmail,
         fecha_compra: datos.fechaCompra,
-        cantidad_items: datos.items.length
+        eventos,
+        subtotal_etiqueta: 'Subtotal',
+        subtotal_compra: formatearMoneda(datos.subtotal),
+        descuento,
+        total_compra: formatearMoneda(datos.total),
+        medio_pago: datos.tarjetaUsada || ''
       };
 
       // Enviar el email
@@ -83,9 +116,13 @@ export class EmailService {
    * Envía un correo con el código para restablecer la contraseña
    */
   async enviarCodigoRecuperacion(email: string, nombre: string, codigo: string): Promise<void> {
+    // Los nombres deben coincidir con las variables de la plantilla en EmailJS
+    // (To Email = {{email_destinatario}}, Reply To = {{responder_a}})
     const templateParams = {
-      to_email: email,
-      to_name: nombre || 'Usuario',
+      preheader: `Tu código para restablecer la contraseña es ${codigo}`,
+      email_destinatario: email,
+      nombre_destinatario: nombre || 'Usuario',
+      responder_a: email,
       codigo_recuperacion: codigo
     };
 
