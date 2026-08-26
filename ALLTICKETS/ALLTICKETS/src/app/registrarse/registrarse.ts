@@ -16,6 +16,42 @@ export const sinEspaciosBordeValidator: ValidatorFn = (control: AbstractControl)
   return Object.keys(errores).length > 0 ? errores : null;
 };
 
+/** Parte anterior al `@`: palabras separadas por puntos, sin puntos sueltos ni pegados. */
+const PARTE_LOCAL = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*$/;
+
+/** Cada tramo del dominio: letras, números y guiones, nunca empezando ni terminando en guión. */
+const ETIQUETA_DOMINIO = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;
+
+/**
+ * Validador de email más estricto que `Validators.email`.
+ *
+ * El de Angular es deliberadamente permisivo y da por bueno un dominio sin punto
+ * ni extensión, así que aceptaba direcciones como `juan@j`. Acá se exige un
+ * dominio con al menos dos tramos y una extensión de dos o más letras.
+ *
+ * Importante: esto valida la FORMA del dominio, no que exista de verdad. Para
+ * eso hace falta una consulta DNS o un mail de confirmación.
+ */
+export const emailValidoValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const valor = control.value;
+  // De los vacíos se ocupa `Validators.required`.
+  if (typeof valor !== 'string' || valor.trim() === '') return null;
+
+  const partes = valor.split('@');
+  if (partes.length !== 2) return { emailFormato: true };
+
+  const [local, dominio] = partes;
+  if (local.length > 64 || !PARTE_LOCAL.test(local)) return { emailFormato: true };
+
+  const etiquetas = dominio.split('.');
+  // Un solo tramo significa que no hay extensión: el caso `juan@j`.
+  if (etiquetas.length < 2) return { emailDominio: true };
+  if (!etiquetas.every(etiqueta => ETIQUETA_DOMINIO.test(etiqueta))) return { emailDominio: true };
+  if (!/^[A-Za-z]{2,}$/.test(etiquetas[etiquetas.length - 1])) return { emailDominio: true };
+
+  return null;
+};
+
 @Component({
   selector: 'app-registrarse',
   standalone: true,
@@ -36,7 +72,9 @@ export class Registrarse {
   protected readonly form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/), sinEspaciosBordeValidator]],
     apellido: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/), sinEspaciosBordeValidator]], 
-    email: ['', [Validators.required, Validators.email]],
+    // Se reemplaza `Validators.email` por el validador propio: el de Angular
+    // dejaba pasar dominios sin extensión.
+    email: ['', [Validators.required, emailValidoValidator]],
     contrasena: ['', [Validators.required, Validators.minLength(6), sinEspaciosBordeValidator]],
     rol: ['usuario', Validators.required]
   });

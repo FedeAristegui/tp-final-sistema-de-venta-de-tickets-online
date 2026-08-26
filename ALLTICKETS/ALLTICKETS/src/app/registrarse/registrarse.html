@@ -56,8 +56,11 @@
           @if (form.get('email')?.errors?.['required']) {
             <span>El email es obligatorio</span>
           }
-          @if (form.get('email')?.errors?.['email']) {
+          @if (form.get('email')?.errors?.['emailFormato']) {
             <span>El formato del email no es válido</span>
+          }
+          @if (form.get('email')?.errors?.['emailDominio']) {
+            <span>El dominio no es válido: debe incluir una extensión (por ejemplo, gmail.com)</span>
           }
         </div>
     }
