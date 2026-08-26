@@ -95,7 +95,9 @@
                     {{ stat.totalRecaudado | currency: 'ARS' : 'symbol' : '1.2-2' }}
                   </td>
                   <td class="tabla__centrado">
-                    @if (stat.porcentajeOcupacion >= 80) {
+                    @if (haFinalizado(stat)) {
+                      <span class="badge">Finalizado</span>
+                    } @else if (stat.porcentajeOcupacion >= 80) {
                       <span class="badge badge--peligro">Casi lleno</span>
                     } @else if (stat.porcentajeOcupacion >= 50) {
                       <span class="badge badge--exito">Buena venta</span>

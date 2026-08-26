@@ -362,7 +362,7 @@ Las claves de estos servicios son propias del proyecto y **no deben compartirse 
 ### Acceso como Administrador
 
 1. Inicia sesión con credenciales de administrador:
-   - **Email**: `agus@gmail.com`
+   - **Email**: `alltickets.alltickets@gmail.com`
    - **Contraseña**: `hola123`
 2. Accede al panel de administración
 3. Crea eventos, gestiona descuentos y visualiza estadísticas
@@ -680,7 +680,7 @@ Este proyecto es un trabajo académico desarrollado como proyecto final.
 
 **Equipo de Desarrollo AllTickets**
 
--  Email: agus@gmail.com
+-  Email: alltickets.alltickets@gmail.com
 
 
 **Link del Proyecto**: [https://github.com/tu-usuario/tp-final-sistema-de-venta-de-tickets-online](https://github.com/tu-usuario/tp-final-sistema-de-venta-de-tickets-online)

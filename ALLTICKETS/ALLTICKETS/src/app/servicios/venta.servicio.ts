@@ -112,6 +112,7 @@ export class VentaServicio {
             eventoId: evento.id!,
             eventoTitulo: evento.titulo,
             eventoFecha: evento.fecha,
+            eventoHora: evento.hora,
             totalVendidas,
             totalRecaudado,
             porcentajeOcupacion,

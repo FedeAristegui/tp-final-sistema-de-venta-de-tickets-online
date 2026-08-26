@@ -70,8 +70,8 @@ export class PaginaPrincipal implements OnInit {
 
     this.eventoService.obtenerEventos().subscribe({
       next: (eventos) => {
-        const hoy = new Date().toISOString().split('T')[0];
-        const eventosFuturos = eventos.filter(evento => evento.fecha >= hoy);
+        const ahora = new Date();
+        const eventosFuturos = eventos.filter(evento => new Date(`${evento.fecha}T${evento.hora}`) >= ahora);
         this.eventos.set(eventosFuturos);
         this.eventosFiltrados.set(eventosFuturos);
         this.isLoading.set(false);

@@ -84,4 +84,8 @@ export class Estadisticas implements OnInit {
     if (porcentaje >= 25) return 'var(--aviso)';
     return 'var(--peligro)';
   }
+
+  haFinalizado(stat: EstadisticaEvento): boolean {
+    return new Date(`${stat.eventoFecha}T${stat.eventoHora}`) < new Date();
+  }
 }
