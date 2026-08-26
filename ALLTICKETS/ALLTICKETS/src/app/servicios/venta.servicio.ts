@@ -111,6 +111,7 @@ export class VentaServicio {
           return {
             eventoId: evento.id!,
             eventoTitulo: evento.titulo,
+            eventoFecha: evento.fecha,
             totalVendidas,
             totalRecaudado,
             porcentajeOcupacion,

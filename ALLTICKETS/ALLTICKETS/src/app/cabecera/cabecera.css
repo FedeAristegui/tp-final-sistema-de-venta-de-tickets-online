@@ -180,3 +180,46 @@ nav ul li a:active {
 .modal-error .confirm-btn {
   background: linear-gradient(135deg, #f44336, #ff7961);
 }
+
+@media (max-width: 768px) {
+  .header-top {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px 20px;
+    gap: 12px;
+  }
+
+  .logo {
+    width: 90px;
+    align-self: center;
+  }
+
+  .menu-visitante,
+  .menu-usuario,
+  .menu-admin {
+    padding: 15px 20px;
+  }
+
+  .menu-visitante h1 {
+    font-size: 1.6rem;
+  }
+
+  .menu-usuario h2,
+  .menu-admin h2 {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  nav ul {
+    gap: 10px;
+  }
+
+  nav ul li a {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  .btn-volver {
+    align-self: center;
+  }
+}

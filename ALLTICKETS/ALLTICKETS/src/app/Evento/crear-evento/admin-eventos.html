@@ -77,13 +77,13 @@
       }
     }
 
-      <label for="imagen">Imagen (PNG):</label>
+      <label for="imagen">Imagen (PNG o JPG):</label>
       <input 
         id="imagen" 
         type="file" 
-        accept=".png,image/png"
+        accept=".png,.jpg,.jpeg,image/png,image/jpeg"
         (change)="onImageSelected($event)"
-        placeholder="Selecciona una imagen PNG"
+        placeholder="Selecciona una imagen PNG o JPG"
       />
       @if (archivoSeleccionado()) {
         <div class="archivo-info">
@@ -95,7 +95,7 @@
           <span>La foto es requerida</span>
         }
         @else if (imagen.hasError('invalidImage')) {
-          <span>La imagen debe ser una foto PNG válida</span>
+          <span>La imagen debe ser una foto PNG o JPG válida</span>
         }
       }
   

@@ -7,6 +7,11 @@
       padding: 15px; 
       margin-bottom: 15px; 
     }
-    .compra-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .compra-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .total { font-size: 1.2em; color: #28a745; }
     .sin-compras { text-align: center; padding: 40px; }
+
+    @media (max-width: 480px) {
+      .historial-container { padding: 15px; }
+      .compra-header { flex-direction: column; }
+    }

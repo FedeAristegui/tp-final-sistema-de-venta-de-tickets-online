@@ -5,15 +5,19 @@
   align-items: center;
   background-color: #667eea;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .recuperar-container {
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
   padding: 20px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   text-align: center;
+  box-sizing: border-box;
 }
 
 .recuperar-container h2 {

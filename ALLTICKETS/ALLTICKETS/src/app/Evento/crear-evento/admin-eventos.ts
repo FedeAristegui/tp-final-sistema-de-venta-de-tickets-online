@@ -153,9 +153,9 @@ export class AdminEventos implements OnInit {
     const file = input.files?.[0];
     
     if (file) {
-      // Validar que sea un archivo PNG
-      if (!file.type.match('image/png')) {
-        this.mensaje = '⚠️ Solo se aceptan archivos PNG';
+      // Validar que sea un archivo PNG o JPG
+      if (!['image/png', 'image/jpeg'].includes(file.type)) {
+        this.mensaje = '⚠️ Solo se aceptan archivos PNG o JPG';
         this.tipoMensaje = 'error';
         input.value = '';
         this.archivoSeleccionado.set('');

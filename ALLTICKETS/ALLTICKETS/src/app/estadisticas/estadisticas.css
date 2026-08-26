@@ -107,12 +107,60 @@
 }
 
 .tabla-container h2 {
-  margin: 0 0 25px 0;
+  margin: 0;
   color: #667eea;
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.tabla-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
   padding-bottom: 15px;
   border-bottom: 3px solid #667eea;
+}
+
+.buscador-eventos {
+  flex: 1;
+  min-width: 220px;
+  max-width: 320px;
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.buscador-eventos:focus {
+  border-color: #667eea;
+}
+
+.tabla-scroll {
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabla-scroll table {
+  min-width: 640px;
+}
+
+.tabla-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.sin-resultados {
+  text-align: center;
+  padding: 24px 16px;
+  color: #888;
 }
 
 .tabla-estadisticas {
@@ -418,6 +466,23 @@
 }
 
 @media (max-width: 768px) {
+  .contenedor-estadisticas {
+    padding: 15px 12px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .tabla-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador-eventos {
+    max-width: 100%;
+  }
+
   .resumen-general {
     grid-template-columns: 1fr;
   }

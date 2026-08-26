@@ -49,6 +49,7 @@ export const routes: Routes = [
     path: 'ficha-evento/:id',
     loadComponent: () => import('./Evento/detalle-evento/detalle-evento').then(m => m.detalleEvento),
     title: 'Detalle de Evento',
+    canActivate: [authGuard]
   },
   {
     path: 'formulario-descuento',

@@ -144,6 +144,23 @@ tbody tr:hover {
 
 
 @media (max-width: 768px) {
+  :host {
+    padding: 20px 12px;
+  }
+
+  .tabla-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .tabla-scroll-x table {
+    box-shadow: none;
+    border-radius: 0;
+    min-width: 640px;
+  }
+
   table {
     font-size: 0.9rem;
   }

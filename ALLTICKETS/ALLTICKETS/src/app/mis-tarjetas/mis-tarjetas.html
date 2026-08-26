@@ -1,8 +1,8 @@
 <div class="tarjetas-container">
 
-  @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
+  @if (mensaje()) {
+    <div class="alert" [class.alert-error]="tipoMensaje() === 'error'" [class.alert-success]="tipoMensaje() === 'success'">
+      {{ mensaje() }}
     </div>
   }
 

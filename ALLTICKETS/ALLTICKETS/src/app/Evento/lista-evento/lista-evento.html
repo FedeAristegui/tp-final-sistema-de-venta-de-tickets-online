@@ -13,6 +13,7 @@
   <p>Cargando eventos...</p>
 }
 @else if (evento && evento.length > 0) {
+  <div class="tabla-scroll-x">
   <table class="tabla-eventos">
     <thead>
       <tr>
@@ -40,6 +41,7 @@
       }
     </tbody>
   </table>
+  </div>
 }
 @else {
   <p>No hay eventos disponibles.</p>

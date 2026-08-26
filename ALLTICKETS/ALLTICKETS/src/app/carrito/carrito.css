@@ -164,6 +164,12 @@
   gap: 30px;
 }
 
+@media (max-width: 900px) {
+  .carrito-contenido {
+    grid-template-columns: 1fr;
+  }
+}
+
 .items-carrito {
   display: flex;
   flex-direction: column;
@@ -556,6 +562,51 @@
 .btn-agregar-tarjeta:hover {
   background: #0b7dda;
   transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .carrito-container h1 {
+    font-size: 1.6rem;
+  }
+
+  .item-carrito {
+    grid-template-columns: 70px 1fr;
+    grid-template-areas:
+      "imagen info"
+      "cantidad cantidad"
+      "precio precio"
+      "eliminar eliminar";
+    gap: 12px;
+  }
+
+  .item-imagen {
+    grid-area: imagen;
+    width: 70px;
+    height: 70px;
+  }
+
+  .item-info { grid-area: info; }
+
+  .item-cantidad {
+    grid-area: cantidad;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .item-precio {
+    grid-area: precio;
+    text-align: left;
+  }
+
+  .btn-eliminar {
+    grid-area: eliminar;
+    justify-self: start;
+  }
+
+  .cupon-input-group {
+    flex-wrap: wrap;
+  }
 }
 
 .formulario-tarjeta {

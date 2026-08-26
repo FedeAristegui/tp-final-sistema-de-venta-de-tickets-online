@@ -32,11 +32,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  // Solo aceptar PNG
-  if (file.mimetype === 'image/png') {
+  // Aceptar PNG y JPG/JPEG
+  if (['image/png', 'image/jpeg'].includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Solo se aceptan archivos PNG'), false);
+    cb(new Error('Solo se aceptan archivos PNG o JPG'), false);
   }
 };
 

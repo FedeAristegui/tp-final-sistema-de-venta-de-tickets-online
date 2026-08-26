@@ -614,5 +614,41 @@ button.editar:disabled {
   .acciones {
     flex-direction: column;
   }
+
+  .leyenda {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .total-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .total-label {
+    font-size: 1.1rem;
+  }
+
+  .total-precio {
+    font-size: 1.8rem;
+  }
+
+  .sector-precio {
+    font-size: 1.5rem;
+  }
+
+  .cantidad-selector,
+  .sectores-container,
+  .mapa-butacas,
+  .ubicacion-evento,
+  .resumen-seleccion {
+    padding: 1.2rem;
+  }
+
+  .escenario span {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
 }
 

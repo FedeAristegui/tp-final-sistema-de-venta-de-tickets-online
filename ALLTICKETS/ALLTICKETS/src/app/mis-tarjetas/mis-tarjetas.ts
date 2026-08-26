@@ -61,8 +61,8 @@ export class MisTarjetas implements OnInit {
   protected readonly modalService = inject(ModalConfirmacionService);
   private readonly fb = inject(FormBuilder);
 
-  mensaje: string = '';
-  tipoMensaje: 'error' | 'success' | '' = '';
+  mensaje = signal('');
+  tipoMensaje = signal<'error' | 'success' | ''>('');
 
   constructor() {
     this.tarjetaForm = this.fb.group({
@@ -146,8 +146,9 @@ export class MisTarjetas implements OnInit {
         this.tarjetas.update(tarjetas => [...tarjetas, tarjeta]);
         this.tarjetaForm.reset({ tipo: 'Visa', esPrincipal: false });
         this.mostrarFormulario.set(false);
-        this.mensaje = 'Tarjeta agregada con éxito';
-        this.tipoMensaje = 'success';
+        this.mensaje.set('Tarjeta agregada con éxito');
+        this.tipoMensaje.set('success');
+        setTimeout(() => { this.mensaje.set(''); this.tipoMensaje.set(''); }, 3000);
       },
       error: (err) => {
         this.modalService.notify('No se pudo agregar la tarjeta. Intenta nuevamente en unos minutos.');
@@ -163,8 +164,9 @@ export class MisTarjetas implements OnInit {
       this.tarjetaService.eliminarTarjeta(tarjeta.id).subscribe({
         next: () => {
           this.tarjetas.update(tarjetas => tarjetas.filter(t => t.id !== tarjeta.id));
-          this.mensaje = 'Tarjeta eliminada con éxito';
-          this.tipoMensaje = 'success';
+          this.mensaje.set('Tarjeta eliminada con éxito');
+          this.tipoMensaje.set('success');
+          setTimeout(() => { this.mensaje.set(''); this.tipoMensaje.set(''); }, 3000);
         },
         error: (err) => {
           this.modalService.notify('No se pudo eliminar la tarjeta. Intenta nuevamente en unos minutos.');

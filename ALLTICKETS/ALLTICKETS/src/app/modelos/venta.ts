@@ -15,6 +15,7 @@ export interface Venta {
 export interface EstadisticaEvento {
   eventoId: number | string; 
   eventoTitulo: string;
+  eventoFecha: string;
   totalVendidas: number;
   totalRecaudado: number;
   porcentajeOcupacion: number;

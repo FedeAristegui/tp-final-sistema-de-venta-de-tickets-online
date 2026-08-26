@@ -40,7 +40,16 @@
     </div>
     @if (estadisticas().length > 0) {
       <div class="tabla-container">
-        <h2>Detalle por Evento</h2>
+        <div class="tabla-header">
+          <h2>Detalle por Evento</h2>
+          <input
+            type="text"
+            class="buscador-eventos"
+            placeholder="Buscar evento por nombre..."
+            [ngModel]="busqueda()"
+            (ngModelChange)="busqueda.set($event)" />
+        </div>
+        <div class="tabla-scroll">
         <table class="tabla-estadisticas">
           <thead>
             <tr>
@@ -53,7 +62,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (stat of estadisticas(); track stat.eventoId) {
+            @for (stat of estadisticasTabla(); track stat.eventoId) {
               <tr>
                 <td class="evento-titulo">
                   <strong>{{ stat.eventoTitulo }}</strong>
@@ -123,8 +132,14 @@
                 </tr>
               }
             }
+            @empty {
+              <tr>
+                <td colspan="6" class="sin-resultados">No se encontraron eventos para "{{ busqueda() }}"</td>
+              </tr>
+            }
           </tbody>
         </table>
+        </div>
       </div>
 
       <div class="grafico-barras">

@@ -79,3 +79,31 @@ button:hover {
 .volver-btn:hover {
   background: rgba(255, 255, 255, 0.65);
 }
+
+@media (max-width: 768px) {
+  :host {
+    padding: 20px 12px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .tabla-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .tabla-scroll-x table {
+    box-shadow: none;
+    border-radius: 0;
+    min-width: 560px;
+  }
+
+  th, td {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+}

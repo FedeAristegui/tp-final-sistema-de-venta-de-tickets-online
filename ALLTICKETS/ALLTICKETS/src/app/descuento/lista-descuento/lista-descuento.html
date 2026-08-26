@@ -5,6 +5,7 @@
 @if (isLoading()) {
   <p>Cargando descuentos...</p>
 } @else if (descuento && descuentos()!.length > 0) {
+  <div class="tabla-scroll-x">
   <table>
     <thead>
       <tr>
@@ -32,6 +33,7 @@
       }
     </tbody>
   </table>
+  </div>
 } @else {
   <p>No hay descuentos registrados.</p>
 }

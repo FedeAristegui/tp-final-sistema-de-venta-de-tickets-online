@@ -324,6 +324,10 @@ button[type="submit"]:hover {
 
 @media (max-width: 768px) {
 
+  .formulario-container {
+    padding: 20px;
+  }
+
   .sector-item {
     grid-template-columns: 1fr 1fr;
   }
@@ -335,6 +339,16 @@ button[type="submit"]:hover {
   .butaca-item {
     flex-direction: column;
     gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sector-item {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-eliminar-item {
+    align-self: stretch;
   }
 }
 
