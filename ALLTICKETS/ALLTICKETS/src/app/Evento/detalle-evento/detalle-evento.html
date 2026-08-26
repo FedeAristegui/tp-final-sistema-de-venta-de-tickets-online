@@ -1,203 +1,275 @@
 @if (evento()) {
+  <div class="pagina">
+    @if (mensaje()) {
+      <div
+        class="alert"
+        [class.alert-error]="tipoMensaje() === 'error'"
+        [class.alert-success]="tipoMensaje() === 'success'"
+        role="status"
+      >
+        {{ mensaje() }}
+      </div>
+    }
 
-  @if (mensaje()) {
-    <div class="alert" [class.alert-error]="tipoMensaje() === 'error'" [class.alert-success]="tipoMensaje() === 'success'">
-      {{ mensaje() }}
-    </div>
-  }
-  
-  <div class="detalle-evento">
-    <div class="header-evento">
-      <button (click)="volverAtras()" class="btn-volver">
-        <span>←</span> Volver
-      </button>
+    <button type="button" (click)="volverAtras()" class="btn btn--fantasma btn--sm volver">
+      <app-icono nombre="flecha-izq" [tamano]="16" />
+      Volver
+    </button>
+
+    <div class="encabezado-pagina">
+      <div>
+        @if (evento()!.categoria) {
+          <span class="badge badge--marca">{{ evento()!.categoria }}</span>
+        }
+        <h1 class="encabezado-pagina__titulo evento-titulo">{{ evento()!.titulo }}</h1>
+      </div>
+
       @if (usuario()?.rol === 'admin') {
-        <button class="editar" (click)="toggleEdit()" [disabled]="isEditing()">Editar</button>
+        <button
+          type="button"
+          class="btn btn--secundario"
+          (click)="toggleEdit()"
+          [disabled]="isEditing()"
+        >
+          <app-icono nombre="lapiz" [tamano]="16" />
+          Editar
+        </button>
       }
-      <h1>{{ evento()!.titulo }}</h1>
     </div>
 
     @if (evento()!.imagen) {
       <div class="imagen-evento">
-        <img [src]="evento()!.imagen" [alt]="evento()!.titulo" />
+        <img [src]="evento()!.imagen" [alt]="'Imagen del evento ' + evento()!.titulo" />
       </div>
     }
 
-    
-
-    <div class="info-basica">
+    <dl class="info-basica">
       <div class="info-item">
-        <span class="icono">📅</span>
-        <strong>Fecha:</strong> {{ evento()!.fecha | date : "dd/MM/yyyy" }}
+        <app-icono nombre="calendario" [tamano]="18" />
+        <div>
+          <dt>Fecha</dt>
+          <dd>{{ evento()!.fecha | date: 'dd/MM/yyyy' }}</dd>
+        </div>
       </div>
       <div class="info-item">
-        <span class="icono">🕐</span>
-        <strong>Hora:</strong> {{ evento()!.hora }}
+        <app-icono nombre="reloj" [tamano]="18" />
+        <div>
+          <dt>Hora</dt>
+          <dd>{{ evento()!.hora }}</dd>
+        </div>
       </div>
       <div class="info-item">
-        <span class="icono">📍</span>
-        <strong>Lugar:</strong> {{ evento()!.lugar }}
+        <app-icono nombre="pin" [tamano]="18" />
+        <div>
+          <dt>Lugar</dt>
+          <dd>{{ evento()!.lugar }}</dd>
+        </div>
       </div>
       <div class="info-item">
-        <span class="icono">🎭</span>
-        <strong>Categoría:</strong> {{ evento()!.categoria }}
+        <app-icono nombre="mascara" [tamano]="18" />
+        <div>
+          <dt>Categoría</dt>
+          <dd>{{ evento()!.categoria }}</dd>
+        </div>
       </div>
-    </div>
+    </dl>
 
     @if (evento()!.ubicacion; as ubicacion) {
-      <div class="ubicacion-evento">
-        <h2>Cómo llegar</h2>
-        <app-mapa-ubicacion
-          [lat]="ubicacion.lat"
-          [lng]="ubicacion.lng"
-          [direccion]="ubicacion.direccion"
-          [titulo]="evento()!.lugar" />
-      </div>
+      <section class="panel bloque">
+        <header class="bloque__encabezado">
+          <h2 class="bloque__titulo">Cómo llegar</h2>
+        </header>
+        <div class="bloque__cuerpo">
+          <app-mapa-ubicacion
+            [lat]="ubicacion.lat"
+            [lng]="ubicacion.lng"
+            [direccion]="ubicacion.direccion"
+            [titulo]="evento()!.lugar"
+          />
+        </div>
+      </section>
     }
 
     @if (evento()!.modoVenta === 'butaca') {
       <!-- MAPA DE BUTACAS -->
-      <div class="mapa-butacas">
-        <h2>Selecciona tus butacas</h2>
-        
-        <div class="escenario">
-          <span>ESCENARIO</span>
-        </div>
+      <section class="panel bloque">
+        <header class="bloque__encabezado">
+          <h2 class="bloque__titulo">Elegí tus butacas</h2>
 
-        <div class="butacas-container">
-          @for (fila of filasOrdenadas(); track fila) {
-            <div class="butacas-fila">
-              <span class="fila-label">{{ fila }}</span>
-              <div class="asientos">
-                @for (butaca of butacasPorFila()[fila]; track butaca.numero) {
-                  <button
-                    class="butaca"
-                    [class.disponible]="butaca.disponible"
-                    [class.ocupada]="!butaca.disponible"
-                    [class.seleccionada]="estaSeleccionada(fila, butaca.numero)"
-                    [disabled]="!butaca.disponible"
-                    (click)="seleccionarButaca(fila, butaca.numero, butaca.disponible)"
-                    [title]="'Fila ' + fila + ' - Asiento ' + butaca.numero + ' - $' + butaca.precio"
-                  >
-                    {{ butaca.numero }}
-                  </button>
-                }
-              </div>
-            </div>
-          }
-        </div>
+          <ul class="leyenda">
+            <li>
+              <span class="butaca-muestra butaca-muestra--disponible"></span>
+              Disponible
+            </li>
+            <li>
+              <span class="butaca-muestra butaca-muestra--seleccionada"></span>
+              Seleccionada
+            </li>
+            <li>
+              <span class="butaca-muestra butaca-muestra--ocupada"></span>
+              Ocupada
+            </li>
+          </ul>
+        </header>
 
-        <div class="leyenda">
-          <div class="leyenda-item">
-            <span class="butaca-ejemplo disponible"></span>
-            <span>Disponible</span>
-          </div>
-          <div class="leyenda-item">
-            <span class="butaca-ejemplo seleccionada"></span>
-            <span>Seleccionada</span>
-          </div>
-          <div class="leyenda-item">
-            <span class="butaca-ejemplo ocupada"></span>
-            <span>Ocupada</span>
-          </div>
-        </div>
+        <div class="bloque__cuerpo">
+          <p class="escenario">Escenario</p>
 
-        @if (butacasSeleccionadas().length > 0) {
-          <div class="resumen-seleccion">
-            <h3>Butacas Seleccionadas</h3>
-            <div class="butacas-seleccionadas-lista">
-              @for (butaca of butacasSeleccionadas(); track butaca.fila + '-' + butaca.numero) {
-                <span class="butaca-tag">
-                  Fila {{ butaca.fila }} - Asiento {{ butaca.numero }}
-                </span>
-              }
-            </div>
-            <div class="total-container">
-              <span class="total-label">Total:</span>
-              <span class="total-precio">{{ totalButacas() | currency }}</span>
-            </div>
-            <div class="acciones">
-              @if (usuario()?.rol !== 'admin') {
-                <button (click)="limpiarSeleccion()" class="btn-limpiar">
-                Limpiar Selección
-              </button>
-              <button (click)="agregarAlCarrito()" class="btn-agregar">
-                Agregar al Carrito
-              </button>
-              }  
-            </div>
-          </div>
-        }
-      </div>
-    } @else {
-      <!-- SELECCIÓN POR SECTORES -->
-      <div class="sectores-container">
-        <h2>Selecciona tu sector</h2>
-        
-        <div class="sectores-grid">
-          @for (sector of evento()!.sectores; track sector.nombre) {
-            <div 
-              class="sector-card"
-              [class.seleccionado]="sectorSeleccionado() === sector.nombre"
-              [class.sin-capacidad]="sector.capacidad === 0"
-              (click)="sector.capacidad > 0 && seleccionarSector(sector.nombre)"
-            >
-              <h3>{{ sector.nombre }}</h3>
-              <div class="sector-precio">{{ sector.precio | currency }}</div>
-              <div class="sector-capacidad">
-                <div class="capacidad-barra">
-                  <div 
-                    class="capacidad-progreso"
-                    [style.width.%]="(sector.capacidad / getCapacidadDisponible(sector.nombre)) * 100"
-                  ></div>
+          <div class="butacas-container">
+            @for (fila of filasOrdenadas(); track fila) {
+              <div class="butacas-fila">
+                <span class="fila-label">{{ fila }}</span>
+                <div class="asientos">
+                  @for (butaca of butacasPorFila()[fila]; track butaca.numero) {
+                    <button
+                      type="button"
+                      class="butaca"
+                      [class.butaca--disponible]="butaca.disponible"
+                      [class.butaca--ocupada]="!butaca.disponible"
+                      [class.butaca--seleccionada]="estaSeleccionada(fila, butaca.numero)"
+                      [disabled]="!butaca.disponible"
+                      (click)="seleccionarButaca(fila, butaca.numero, butaca.disponible)"
+                      [attr.aria-pressed]="estaSeleccionada(fila, butaca.numero)"
+                      [title]="
+                        'Fila ' + fila + ' · Asiento ' + butaca.numero + ' · $' + butaca.precio
+                      "
+                    >
+                      {{ butaca.numero }}
+                    </button>
+                  }
                 </div>
               </div>
+            }
+          </div>
+
+          @if (butacasSeleccionadas().length > 0) {
+            <div class="resumen">
+              <h3 class="resumen__titulo">Butacas seleccionadas</h3>
+
+              <ul class="resumen__tags">
+                @for (butaca of butacasSeleccionadas(); track butaca.fila + '-' + butaca.numero) {
+                  <li class="badge badge--marca">Fila {{ butaca.fila }} · {{ butaca.numero }}</li>
+                }
+              </ul>
+
+              <div class="resumen__total">
+                <span>Total</span>
+                <strong>{{ totalButacas() | currency: 'ARS' : 'symbol' : '1.2-2' }}</strong>
+              </div>
+
+              @if (usuario()?.rol !== 'admin') {
+                <div class="resumen__acciones">
+                  <button type="button" (click)="limpiarSeleccion()" class="btn btn--secundario">
+                    Limpiar selección
+                  </button>
+                  <button type="button" (click)="agregarAlCarrito()" class="btn btn--primario">
+                    <app-icono nombre="carrito" [tamano]="16" />
+                    Agregar al carrito
+                  </button>
+                </div>
+              }
             </div>
           }
         </div>
+      </section>
+    } @else {
+      <!-- SELECCIÓN POR SECTORES -->
+      <section class="panel bloque">
+        <header class="bloque__encabezado">
+          <h2 class="bloque__titulo">Elegí tu sector</h2>
+        </header>
 
-        @if (sectorSeleccionado()) {
-          <div class="cantidad-selector">
-            <h3>¿Cuántas entradas? (Máximo 10 entradas)</h3>
-            <div class="contador">
-              <button 
-                (click)="disminuirCantidad()" 
-                [disabled]="cantidadSector() <= 1"
-                class="btn-contador"
-              >
-                −
-              </button>
-              <span class="cantidad-display">{{ cantidadSector() }}</span>
+        <div class="bloque__cuerpo">
+          <div class="sectores-grid">
+            @for (sector of evento()!.sectores; track sector.nombre) {
               <button
-                (click)="aumentarCantidad()"
-                [disabled]="cantidadSector() >= getCapacidadDisponible(sectorSeleccionado()) || cantidadSector() > 9"
-                class="btn-contador"
+                type="button"
+                class="sector-card"
+                [class.sector-card--seleccionado]="sectorSeleccionado() === sector.nombre"
+                [disabled]="sector.capacidad === 0"
+                [attr.aria-pressed]="sectorSeleccionado() === sector.nombre"
+                (click)="seleccionarSector(sector.nombre)"
               >
-                +
+                <span class="sector-card__nombre">{{ sector.nombre }}</span>
+                <span class="sector-card__precio">
+                  {{ sector.precio | currency: 'ARS' : 'symbol' : '1.0-0' }}
+                </span>
+
+                <!-- Acá había una barra de progreso que calculaba
+                     `capacidad / capacidad`, así que siempre se dibujaba al
+                     100%. El modelo sólo guarda la capacidad restante (no la
+                     original), de modo que el porcentaje no es calculable: se
+                     muestra el número, que sí es información real. -->
+                <span class="sector-card__disponibles">
+                  @if (sector.capacidad === 0) {
+                    Agotado
+                  } @else {
+                    {{ sector.capacidad | number }} disponibles
+                  }
+                </span>
               </button>
-            </div>
-            <div class="total-container">
-              <span class="total-label">Total:</span>
-              <span class="total-precio">{{ totalSector() | currency }}</span>
-            </div>
-            @if (usuario()?.rol !== 'admin') {
-              <button (click)="agregarAlCarrito()" class="btn-agregar">
-              Agregar al Carrito
-            </button>
-            } 
+            }
           </div>
-        }
-      </div>
+
+          @if (sectorSeleccionado()) {
+            <div class="resumen">
+              <h3 class="resumen__titulo">¿Cuántas entradas?</h3>
+              <p class="resumen__ayuda">Máximo 10 entradas por compra.</p>
+
+              <div class="contador">
+                <button
+                  type="button"
+                  (click)="disminuirCantidad()"
+                  [disabled]="cantidadSector() <= 1"
+                  class="btn-contador"
+                  aria-label="Quitar una entrada"
+                >
+                  <app-icono nombre="menos" [tamano]="18" />
+                </button>
+
+                <span class="contador__valor" aria-live="polite">{{ cantidadSector() }}</span>
+
+                <button
+                  type="button"
+                  (click)="aumentarCantidad()"
+                  [disabled]="
+                    cantidadSector() >= getCapacidadDisponible(sectorSeleccionado()) ||
+                    cantidadSector() > 9
+                  "
+                  class="btn-contador"
+                  aria-label="Agregar una entrada"
+                >
+                  <app-icono nombre="mas" [tamano]="18" />
+                </button>
+              </div>
+
+              <div class="resumen__total">
+                <span>Total</span>
+                <strong>{{ totalSector() | currency: 'ARS' : 'symbol' : '1.2-2' }}</strong>
+              </div>
+
+              @if (usuario()?.rol !== 'admin') {
+                <div class="resumen__acciones">
+                  <button type="button" (click)="agregarAlCarrito()" class="btn btn--primario">
+                    <app-icono nombre="carrito" [tamano]="16" />
+                    Agregar al carrito
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (isEditing()) {
+      <app-admin-eventos
+        id="form-edicion"
+        [isEditing]="true"
+        [evento]="evento()"
+        (edited)="handleEdit($event)"
+        (cancelled)="toggleEdit()"
+      />
     }
   </div>
-  @if (isEditing()) {
-    <app-admin-eventos
-      id="form-edicion"
-      [isEditing]="true"
-      [evento]="evento()" 
-      (edited)="handleEdit($event)" 
-      (cancelled)="toggleEdit()">
-        </app-admin-eventos>
-    }
-
 }

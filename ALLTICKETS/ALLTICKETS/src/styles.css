@@ -1,143 +1,1366 @@
+/* =========================================================================
+   ALLTICKETS — sistema de diseño
+   =========================================================================
+   Una sola fuente de verdad para color, tipografía, espaciado y superficies.
+   Los componentes NO declaran colores propios: consumen estas variables. Si
+   algo tiene que cambiar de tono, se cambia acá y se propaga a las 16 rutas.
+
+   Criterios:
+   - Fondo neutro en toda la app; el violeta de marca es acento, no relleno.
+   - Sin animaciones: los estados se comunican con color, borde y peso.
+   - Superficies con sombra teñida de violeta (nunca negro puro) y radio 10px.
+   ========================================================================= */
+
+:root {
+  /* --- Marca ------------------------------------------------------------
+     Violeta muestreado del logo (la estrella promedia #8D42DC ≈ hsl 269 69% 56%).
+     El gradiente #667eea→#764ba2 que había antes no era el color de la marca. */
+  --marca-50: #f4edfe;
+  --marca-100: #ebe0fc;
+  --marca-200: #ddc9f6;
+  --marca-300: #c3a3ee;
+  --marca-400: #a673e4;
+  --marca-500: #8d42dc;
+  --marca-600: #7a2fc7;
+  --marca-700: #6524a3;
+  --marca-800: #4f1c80;
+  --marca-900: #391259;
+
+  /* --- Neutros ---------------------------------------------------------
+     Una sola familia de grises, toda teñida con el matiz del violeta de marca
+     (269°). Un gris neutro al lado de un violeta se lee sucio; tintándolos, el
+     fondo, los bordes y el texto pertenecen visiblemente a la misma paleta y la
+     app deja de ser "blanco con un acento". */
+  --fondo: #f6f3fc;
+  --superficie: #ffffff;
+  --superficie-2: #f2edfa;
+  --superficie-3: #e7dff5;
+  --borde: #e6dff4;
+  --borde-fuerte: #cdc0e4;
+  --texto: #1d1626;
+  --texto-medio: #574c68;
+  --texto-suave: #685d7b;
+  --texto-inverso: #ffffff;
+
+  /* --- Semánticos (desaturados para convivir con el violeta) ----------- */
+  --exito: #146c43;
+  --exito-fondo: #edf9f2;
+  --exito-borde: #bfe3ce;
+
+  --peligro: #b02a2a;
+  --peligro-fondo: #fdf1f1;
+  --peligro-borde: #f0c9c9;
+
+  --aviso: #8a5a05;
+  --aviso-fondo: #fdf7ea;
+  --aviso-borde: #eddfb8;
+
+  /* --- Tipografía ------------------------------------------------------
+     Geist se carga desde Google Fonts en index.html. Si no hay red, el stack
+     del sistema mantiene la métrica y la página no se rompe. */
+  --fuente: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
+
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-base: 0.9375rem;
+  --t-md: 1rem;
+  --t-lg: 1.125rem;
+  --t-xl: 1.3125rem;
+  --t-2xl: clamp(1.5rem, 1.28rem + 1.1vw, 1.875rem);
+  --t-3xl: clamp(1.75rem, 1.35rem + 2vw, 2.375rem);
+
+  /* --- Espaciado (escala de 4px) --------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* --- Radios ----------------------------------------------------------
+     Más ajustado hacia adentro (inputs, chips) que hacia afuera (paneles). */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-full: 999px;
+
+  /* --- Sombras ---------------------------------------------------------
+     Teñidas con el violeta oscuro de marca, no con negro: sobre un fondo
+     cálido-neutro el negro puro se lee como suciedad. */
+  --sombra-sm: 0 1px 2px rgba(57, 18, 89, 0.06);
+  --sombra: 0 1px 3px rgba(57, 18, 89, 0.08), 0 1px 2px rgba(57, 18, 89, 0.04);
+  --sombra-md: 0 4px 12px rgba(57, 18, 89, 0.09);
+  --sombra-lg: 0 12px 32px rgba(57, 18, 89, 0.14);
+
+  /* --- Capas ------------------------------------------------------------
+     Escala explícita: se acabaron los z-index: 9999 sueltos. */
+  --z-base: 1;
+  --z-flotante: 10;
+  --z-cabecera: 50;
+  --z-modal: 1000;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --ancho-max: 1200px;
+  --ancho-max-angosto: 640px;
+
+  /* Cambios de color al pasar el mouse. No hay movimiento ni escalado:
+     el requisito es "sin animaciones". */
+  --transicion: 120ms ease;
+}
+
+/* =========================================================================
+   Reset
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--marca-200);
+  color: var(--marca-900);
+}
+
+html {
+  /* Scrollbar en la paleta de marca en vez del gris del sistema. */
+  scrollbar-color: var(--marca-300) transparent;
+  -webkit-text-size-adjust: 100%;
+  /* La app es sólo clara: sin esto, con el SO en modo oscuro Chrome tiñe los
+     inputs de fecha/hora y los componentes de terceros. */
+  color-scheme: light;
+}
+
 body {
+  margin: 0;
+  background-color: var(--fondo);
+  color: var(--texto);
+  font-family: var(--fuente);
+  font-size: var(--t-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
   margin: 0;
 }
 
-/*
- * Armazón de la app: la cabecera ocupa lo que necesita y la pantalla enrutada se
- * queda con el resto exacto de la ventana.
- *
- * Antes cada pantalla se estiraba a 100vh por su cuenta, sin descontar la altura
- * de la cabecera. Como la cabecera es `sticky`, la página terminaba siendo más
- * alta que la ventana y quedaba scroll sobrante aunque el contenido entrara de
- * sobra: al scrollear, la cabecera se quedaba fija y el recuadro del formulario
- * se desplazaba por debajo, dando la sensación de que el recuadro "se movía".
- */
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  /* Tracking negativo en títulos: a tamaño grande el espaciado por defecto
+     se ve suelto. */
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  font-weight: 600;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--marca-600);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/* Las cifras se alinean en columna: sin esto, los precios de una tabla
+   bailan de fila en fila porque el 1 es más angosto que el 8. */
+.tabular,
+td,
+th,
+.precio,
+input[type='number'] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   Accesibilidad
+   ========================================================================= */
+
+/* Un solo anillo de foco para toda la app. Visible siempre que se navegue
+   con teclado; nunca al hacer click. */
+:focus-visible {
+  outline: 2px solid var(--marca-500);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.sr-solo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Salto directo al contenido para quien navega con teclado. */
+.salto-contenido {
+  position: fixed;
+  left: var(--sp-4);
+  top: -100px;
+  z-index: var(--z-modal);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--marca-600);
+  color: var(--texto-inverso);
+  border-radius: var(--r-md);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.salto-contenido:focus {
+  top: var(--sp-4);
+}
+
+/* =========================================================================
+   Armazón de la app
+   =========================================================================
+   La cabecera ocupa lo que necesita y la pantalla enrutada se queda con el
+   resto exacto de la ventana. Sin esto, cada pantalla se estiraba a 100vh sin
+   descontar la cabecera y sobraba scroll aunque el contenido entrara. */
+
 app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* El landmark principal se queda con todo el alto libre bajo la cabecera. */
+app-root > main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  /* Lavado de marca que baja desde la cabecera y se funde con el fondo. Da
+     presencia de violeta arriba de cada pantalla sin cortes ni bloques. */
+  background: linear-gradient(to bottom, var(--marca-100), transparent 380px);
 }
 
 /* `router-outlet` es sólo un ancla: el componente enrutado se inserta como
    hermano, así que el outlet no debe ocupar lugar en el layout. */
-app-root > router-outlet {
+main > router-outlet {
   display: none;
 }
 
 /* La pantalla enrutada llena el alto libre, pero puede crecer si su contenido
    es más largo (ahí sí corresponde que aparezca el scroll). */
-app-root > *:not(app-cabecera):not(router-outlet) {
+main > *:not(router-outlet) {
   flex: 1 0 auto;
 }
 
-/* Aviso inline de resultado de una acción (éxito o error de validación/reintento).
-   Compartido por todos los componentes para que se vean y se comporten igual. */
-.alert {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #c6f6d5;
-  color: #22543d;
-  padding: 22px 36px;
-  border-radius: 12px;
-  border-left: 8px solid #48bb78;
-  font-weight: 700;
-  font-size: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  z-index: 1000;
-  animation: slideDown 0.3s ease-out;
-  max-width: 90%;
-  min-width: 320px;
+/* `main` recibe foco al usar el salto de contenido, pero no debe dibujar un
+   anillo alrededor de toda la página. */
+main:focus {
+  outline: none;
+}
+
+/* --- Contenedores de página ------------------------------------------- */
+
+.pagina {
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin-inline: auto;
+  /* El padding inferior es mayor que el superior a propósito: ópticamente,
+     un bloque centrado con padding simétrico se ve pegado al borde de abajo. */
+  padding: var(--sp-8) var(--sp-6) var(--sp-12);
+}
+
+.pagina--angosta {
+  max-width: var(--ancho-max-angosto);
+}
+
+.pagina--centrada {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+@media (max-width: 640px) {
+  .pagina {
+    padding: var(--sp-5) var(--sp-4) var(--sp-10);
+  }
+}
+
+/* Encabezado de sección: título a la izquierda, acción opcional a la derecha.
+   Alineado a la izquierda en vez de centrado, que es lo que hace que un
+   listado se lea como una app y no como una landing. */
+.encabezado-pagina {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.encabezado-pagina__titulo {
+  font-size: var(--t-2xl);
+  font-weight: 600;
+}
+
+.encabezado-pagina__bajada {
+  margin-top: var(--sp-1);
+  color: var(--texto-medio);
+  font-size: var(--t-base);
+  max-width: 60ch;
+}
+
+/* =========================================================================
+   Superficies
+   ========================================================================= */
+
+.panel {
+  background: var(--superficie);
+  border-radius: var(--r-md);
+  /* Contorno teñido de 1px además de la sombra: sobre un fondo ya violeta la
+     sombra sola no alcanza para despegar la tarjeta. */
+  border: 1px solid var(--marca-100);
+  box-shadow: var(--sombra);
+  padding: var(--sp-6);
+}
+
+.panel--compacto {
+  padding: var(--sp-4);
+}
+
+.panel--plano {
+  box-shadow: none;
+  background: var(--superficie-2);
+}
+
+/* =========================================================================
+   Botones
+   =========================================================================
+   Tres niveles: primario (violeta sólido), secundario (superficie con borde)
+   y fantasma (sólo texto). Peligro es una variante del secundario, no un
+   cuarto color compitiendo con la marca. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 0.625rem var(--sp-4);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  font-size: var(--t-base);
+  font-weight: 500;
+  line-height: 1.2;
   text-align: center;
+  text-decoration: none;
+  /* La etiqueta no se parte: dentro de una celda angosta "Ver detalles"
+     caía en dos renglones y descuadraba el alto de la fila. */
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--transicion), border-color var(--transicion),
+    color var(--transicion);
 }
 
-.alert-error {
-  background: linear-gradient(90deg, #fff5f5, #ffe3e3);
-  color: #c0392b;
-  border: 1px solid rgba(197, 48, 48, 0.15);
-  border-left-color: #c0392b;
+.btn:hover {
+  text-decoration: none;
 }
 
-.alert-success {
-  background: linear-gradient(90deg, #f0fff4, #ddffd9);
-  color: #155724;
-  border: 1px solid rgba(40, 167, 69, 0.12);
-  border-left: 6px solid #48bb78;
+.btn:disabled,
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.alert-success::before {
-  content: "✓ ";
+.btn--primario {
+  background: var(--marca-500);
+  border-color: var(--marca-500);
+  color: var(--texto-inverso);
 }
 
-.alert-error::before {
-  content: "⚠ ";
+.btn--primario:hover:not(:disabled) {
+  background: var(--marca-600);
+  border-color: var(--marca-600);
 }
 
-/* Algunos navegadores (Edge, IE) dibujan su propio ícono de "mostrar contraseña"
-   que queda tapando el botón de ojo propio del formulario. Se oculta para
-   evitar que el botón personalizado quede invisible detrás del nativo. */
-input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear {
+.btn--primario:active:not(:disabled) {
+  background: var(--marca-700);
+  border-color: var(--marca-700);
+}
+
+.btn--secundario {
+  background: var(--superficie);
+  border-color: var(--borde-fuerte);
+  color: var(--texto);
+}
+
+.btn--secundario:hover:not(:disabled) {
+  background: var(--marca-50);
+  border-color: var(--marca-300);
+  color: var(--marca-700);
+}
+
+.btn--fantasma {
+  background: transparent;
+  border-color: transparent;
+  color: var(--texto-medio);
+}
+
+.btn--fantasma:hover:not(:disabled) {
+  background: var(--marca-50);
+  color: var(--marca-700);
+}
+
+/* Acción destructiva: se anuncia con color de texto y borde, no con un bloque
+   rojo sólido que compite en peso con la acción principal. */
+.btn--peligro {
+  background: var(--superficie);
+  border-color: var(--peligro-borde);
+  color: var(--peligro);
+}
+
+.btn--peligro:hover:not(:disabled) {
+  background: var(--peligro-fondo);
+  border-color: var(--peligro);
+}
+
+.btn--peligro-solido {
+  background: var(--peligro);
+  border-color: var(--peligro);
+  color: var(--texto-inverso);
+}
+
+.btn--peligro-solido:hover:not(:disabled) {
+  background: #8f2020;
+  border-color: #8f2020;
+}
+
+.btn--sm {
+  padding: 0.375rem var(--sp-3);
+  font-size: var(--t-sm);
+}
+
+.btn--lg {
+  padding: 0.8125rem var(--sp-5);
+  font-size: var(--t-md);
+}
+
+.btn--bloque {
+  width: 100%;
+}
+
+/* Botón que sólo contiene un icono: cuadrado y con `aria-label` obligatorio. */
+.btn-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--texto-medio);
+  cursor: pointer;
+  transition: background-color var(--transicion), color var(--transicion),
+    border-color var(--transicion);
+}
+
+.btn-icono:hover {
+  background: var(--marca-50);
+  color: var(--marca-700);
+}
+
+.btn-icono--peligro:hover {
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+}
+
+/* =========================================================================
+   Formularios
+   ========================================================================= */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.campo__label,
+label.campo__label {
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--texto-medio);
+}
+
+.control,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
+input[type='time'],
+input[type='search'],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5625rem var(--sp-3);
+  background: var(--superficie);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--r-sm);
+  font-size: var(--t-base);
+  color: var(--texto);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--texto-suave);
+}
+
+.control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--marca-500);
+  /* Halo en vez de outline para que no se corte contra el borde redondeado. */
+  box-shadow: 0 0 0 3px var(--marca-100);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: var(--superficie-2);
+  color: var(--texto-suave);
+  cursor: not-allowed;
+}
+
+select {
+  /* Flecha propia: la nativa cambia de forma en cada navegador. */
+  appearance: none;
+  padding-right: var(--sp-8);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237c7c86' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--sp-3) center;
+}
+
+input[type='checkbox'] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--marca-500);
+  cursor: pointer;
+}
+
+input[type='file'] {
+  padding: var(--sp-2);
+  font-size: var(--t-sm);
+  color: var(--texto-medio);
+  cursor: pointer;
+}
+
+input[type='file']::file-selector-button {
+  margin-right: var(--sp-3);
+  padding: 0.375rem var(--sp-3);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Campo inválido ya tocado por el usuario: nunca en la primera carga. */
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: var(--peligro-borde);
+}
+
+.campo__error,
+.error,
+.error-message,
+.error-msg,
+.error-inline {
+  display: block;
+  color: var(--peligro);
+  font-size: var(--t-sm);
+  font-weight: 400;
+}
+
+.campo__ayuda,
+.hint {
+  color: var(--texto-suave);
+  font-size: var(--t-sm);
+}
+
+/* Algunos navegadores (Edge) dibujan su propio ícono de "mostrar contraseña"
+   que queda tapando el botón propio del formulario. */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
   display: none;
 }
 
 /* Campo de contraseña con botón para mostrar u ocultar lo escrito.
-   Está acá y no en cada componente para que se vea igual en todos los
-   formularios (login, registro, recuperación y cambio de contraseña). */
+   Vive acá y no en cada componente para que login, registro, recuperación y
+   cambio de contraseña se vean y se comporten igual. */
 .input-contrasena {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
 }
 
-/* El margen lo lleva el contenedor: si lo conservara el input, el botón
-   quedaría descentrado (el alto de la línea incluiría ese margen). */
 .input-contrasena input {
   width: 100%;
-  padding-right: 84px;
-  margin-bottom: 0;
+  padding-right: 2.75rem;
 }
 
 .btn-ver-contrasena {
   position: absolute;
-  right: 8px;
-  z-index: 2;
+  right: var(--sp-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
   border: none;
-  background: #667eea;
-  color: white;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--texto-suave);
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  padding: 8px 12px;
-  line-height: 1;
-  border-radius: 8px;
-  transition: background 0.2s ease;
+  transition: color var(--transicion), background-color var(--transicion);
 }
 
 .btn-ver-contrasena:hover {
-  background: #4b41c4;
+  background: var(--superficie-2);
+  color: var(--texto);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -20px);
+/* =========================================================================
+   Avisos en línea
+   =========================================================================
+   Antes esto era un toast `position: fixed` que tapaba la cabecera. Ahora se
+   inserta donde lo pone el template, junto a la acción que lo disparó. */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-sm);
+  background: var(--superficie-2);
+  color: var(--texto);
+  font-size: var(--t-base);
+  margin-bottom: var(--sp-4);
+}
+
+.alert-success {
+  background: var(--exito-fondo);
+  border-color: var(--exito-borde);
+  color: var(--exito);
+}
+
+.alert-error {
+  background: var(--peligro-fondo);
+  border-color: var(--peligro-borde);
+  color: var(--peligro);
+}
+
+.alert-aviso {
+  background: var(--aviso-fondo);
+  border-color: var(--aviso-borde);
+  color: var(--aviso);
+}
+
+/* =========================================================================
+   Badges
+   ========================================================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0.1875rem var(--sp-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-sm);
+  background: var(--superficie-2);
+  color: var(--texto-medio);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.badge--marca {
+  background: var(--marca-50);
+  border-color: var(--marca-200);
+  color: var(--marca-700);
+}
+
+.badge--exito {
+  background: var(--exito-fondo);
+  border-color: var(--exito-borde);
+  color: var(--exito);
+}
+
+.badge--peligro {
+  background: var(--peligro-fondo);
+  border-color: var(--peligro-borde);
+  color: var(--peligro);
+}
+
+.badge--aviso {
+  background: var(--aviso-fondo);
+  border-color: var(--aviso-borde);
+  color: var(--aviso);
+}
+
+/* =========================================================================
+   Bloque con encabezado
+   =========================================================================
+   Panel con una franja de título/acciones arriba y contenido a sangre abajo.
+   Lo usan los listados de eventos y descuentos, y las estadísticas. */
+
+.bloque {
+  margin-bottom: var(--sp-6);
+  padding: 0;
+  overflow: hidden;
+}
+
+.bloque__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--marca-50);
+  border-bottom: 1px solid var(--borde);
+}
+
+.bloque__titulo {
+  font-size: var(--t-lg);
+  font-weight: 600;
+}
+
+.bloque__cuerpo {
+  padding: var(--sp-5);
+}
+
+/* Input con icono adosado. El icono es decorativo y no debe robar el click. */
+.campo-con-icono {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-con-icono app-icono {
+  position: absolute;
+  left: var(--sp-3);
+  color: var(--texto-suave);
+  pointer-events: none;
+}
+
+.campo-con-icono input {
+  padding-left: 2.25rem;
+}
+
+.buscador {
+  width: 18rem;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .bloque__encabezado {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--sp-4);
   }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
+
+  .buscador {
+    width: 100%;
   }
+}
+
+/* =========================================================================
+   Tablas
+   ========================================================================= */
+
+.tabla-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Encabezado de columna ordenable: es un `button` real, no un `th` con
+   (click), para que se pueda accionar con teclado. */
+.th-orden {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: color var(--transicion);
+}
+
+.th-orden:hover {
+  color: var(--texto);
+}
+
+.th-orden__flecha {
+  color: var(--borde-fuerte);
+  transition: color var(--transicion);
+}
+
+.th-orden__flecha--activa {
+  color: var(--marca-500);
+}
+
+/* Grupo de acciones al final de una fila de tabla. */
+.acciones-fila {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-2);
+}
+
+.tabla {
+  width: 100%;
+  font-size: var(--t-base);
+}
+
+.tabla th {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  /* Franja teñida en lugar de blanco sobre blanco: separa el encabezado de los
+     datos sin necesitar un borde grueso. */
+  background: var(--marca-100);
+  color: var(--marca-700);
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+
+.tabla td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla tbody tr:hover {
+  background: var(--marca-50);
+}
+
+.tabla__centrado {
+  text-align: center;
+}
+
+.tabla__derecha {
+  text-align: right;
+}
+
+/* =========================================================================
+   Modales
+   =========================================================================
+   Los tres componentes que tenían su propia copia de estos estilos ahora
+   comparten esta. */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+  background: rgba(24, 24, 27, 0.45);
+}
+
+.modal {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--sp-6);
+  background: var(--superficie);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra-lg);
+}
+
+.modal p {
+  margin: 0;
+  color: var(--texto);
+  font-size: var(--t-md);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--sp-2);
+  justify-content: flex-end;
+  margin-top: var(--sp-6);
+}
+
+/* Nombres heredados de los templates: se mantienen para no tocar el HTML de
+   los modales, pero ahora apuntan al sistema de botones. */
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem var(--sp-4);
+  border: 1px solid var(--marca-500);
+  border-radius: var(--r-sm);
+  background: var(--marca-500);
+  color: var(--texto-inverso);
+  font-size: var(--t-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transicion), border-color var(--transicion);
+}
+
+.confirm-btn:hover {
+  background: var(--marca-600);
+  border-color: var(--marca-600);
+}
+
+.cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem var(--sp-4);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: var(--t-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transicion), border-color var(--transicion);
+}
+
+.cancel-btn:hover {
+  background: var(--superficie-2);
+  border-color: var(--texto-suave);
+}
+
+/* =========================================================================
+   Carga y estados vacíos
+   =========================================================================
+   Los spinners giratorios se reemplazaron por esqueletos estáticos: cumplen
+   el requisito de "sin animaciones" y además anticipan la forma real del
+   contenido, así la página no salta cuando terminan de llegar los datos. */
+
+.skeleton {
+  background: var(--marca-100);
+  border-radius: var(--r-sm);
+}
+
+.skeleton--texto {
+  height: 0.75rem;
+  margin-bottom: var(--sp-2);
+}
+
+.skeleton--titulo {
+  height: 1.125rem;
+  width: 60%;
+  margin-bottom: var(--sp-3);
+}
+
+.skeleton--imagen {
+  height: 180px;
+  border-radius: 0;
+}
+
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-16) var(--sp-6);
+  background: var(--superficie);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+
+/* Cuando el estado vacío ya está dentro de un panel, no debe dibujar otro. */
+.estado-vacio--plano {
+  background: transparent;
+  box-shadow: none;
+  padding: var(--sp-12) var(--sp-4);
+}
+
+.estado-vacio__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--r-full);
+  background: var(--marca-100);
+  color: var(--marca-600);
+  margin-bottom: var(--sp-1);
+}
+
+.estado-vacio__titulo {
+  font-size: var(--t-xl);
+  font-weight: 600;
+}
+
+.estado-vacio p {
+  color: var(--texto-medio);
+  max-width: 44ch;
+}
+
+.estado-vacio .btn {
+  margin-top: var(--sp-3);
+}
+
+/* =========================================================================
+   Tarjeta de evento
+   =========================================================================
+   La usan la cartelera y la lista de favoritos. Vive acá y no duplicada en
+   cada componente para que las dos vistas no se puedan desincronizar. */
+
+.eventos-grilla {
+  display: grid;
+  /* `min()` evita que la columna mínima de 320px genere scroll horizontal en
+     pantallas de 360px. */
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: var(--sp-6);
+}
+
+.evento-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--superficie);
+  border: 1px solid var(--marca-100);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  transition: box-shadow var(--transicion), border-color var(--transicion);
+}
+
+.evento-card:hover {
+  border-color: var(--marca-300);
+  box-shadow: var(--sombra-md);
+}
+
+.evento-card--clickeable {
+  cursor: pointer;
+}
+
+.evento-card__medio {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--marca-100);
+}
+
+.evento-card__medio img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.evento-card__sin-imagen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 100%;
+  color: var(--texto-suave);
+  font-size: var(--t-sm);
+}
+
+/* Botón flotante sobre la imagen (marcar o quitar favorito). */
+.evento-card__accion-medio {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  z-index: var(--z-flotante);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--texto-medio);
+  cursor: pointer;
+  box-shadow: var(--sombra-sm);
+  transition: color var(--transicion), background-color var(--transicion);
+}
+
+.evento-card__accion-medio:hover {
+  background: #ffffff;
+  color: var(--peligro);
+}
+
+.evento-card__accion-medio--activo {
+  color: var(--peligro);
+}
+
+.evento-card__cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+}
+
+/* Un badge suelto en la columna flex se estiraría a todo el ancho. */
+.evento-card__cuerpo > .badge {
+  align-self: flex-start;
+}
+
+.evento-card__titulo {
+  font-size: var(--t-lg);
+  font-weight: 600;
+  /* Dos líneas como máximo: sin esto, un título largo desalinea toda la fila. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.evento-card__datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  list-style: none;
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+}
+
+.evento-card__datos li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.evento-card__datos app-icono {
+  color: var(--marca-400);
+}
+
+.evento-card__datos span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* `margin-top: auto` empuja el CTA al fondo: todas las tarjetas de la fila
+   terminan con el botón a la misma altura sin forzar altos iguales. */
+.evento-card__pie {
+  margin-top: auto;
+  padding-top: var(--sp-2);
+}
+
+/* Cuando la tarjeta entera ya es el objetivo clickeable, el CTA es decorativo:
+   anidar dos controles rompería la navegación por teclado. */
+.evento-card__pie .btn--decorativo {
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .eventos-grilla {
+    gap: var(--sp-4);
+  }
+}
+
+/* =========================================================================
+   Pantallas de acceso
+   =========================================================================
+   Login, registro y recuperación comparten estructura. Vive acá y no en cada
+   componente para que las tres se vean idénticas. */
+
+.auth {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-10) var(--sp-4) var(--sp-12);
+}
+
+/* Acá sí entra el logo completo (estrella sobre el nombre): hay espacio
+   vertical, a diferencia de la barra de navegación. */
+.auth__logo {
+  /* Dos medidas combinadas contra el mismo problema: el PNG del logo trae
+     fondo blanco opaco, no transparencia.
+
+     1. Recorte al contenido real, medido sobre logo.png (1152x896): la marca
+        ocupa x 173-980 (808px) e y 112-721 (610px). Los porcentajes derivan de
+        esas medidas, así que el encuadre es exacto a cualquier tamaño.
+     2. `multiply` sobre el resto: el blanco (#fefefe) multiplicado contra el
+        fondo lo deja idéntico al fondo. El recorte solo no alcanza, porque el
+        blanco también está detrás y entre los trazos de la marca. */
+  --ancho: 150px;
+  width: var(--ancho);
+  height: calc(var(--ancho) / 1.3246);
+  margin-bottom: var(--sp-2);
+  background-image: url('/assets/logo.png');
+  background-repeat: no-repeat;
+  background-size: 142.57% 146.89%;
+  background-position: 50.29% 39.16%;
+  mix-blend-mode: multiply;
+}
+
+.auth__panel {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--sp-8);
+  background: var(--superficie);
+  border: 1px solid var(--marca-100);
+  /* Franja de marca arriba de la tarjeta: es el único elemento de la pantalla,
+     y sin esto quedaba como una caja blanca sin identidad. */
+  border-top: 3px solid var(--marca-500);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra-md);
+}
+
+.auth__titulo {
+  font-size: var(--t-xl);
+  font-weight: 600;
+}
+
+.auth__bajada {
+  margin-top: var(--sp-1);
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-top: var(--sp-6);
+}
+
+.auth__pie {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--borde);
+  text-align: center;
+  font-size: var(--t-sm);
+  color: var(--texto-medio);
+}
+
+.auth__pie a,
+.auth__enlace {
+  color: var(--marca-600);
+  font-weight: 500;
+  cursor: pointer;
 }
 
 @media (max-width: 480px) {
-  .alert {
-    min-width: 0;
-    width: 90%;
-    padding: 16px 20px;
-    font-size: 1rem;
+  .auth__panel {
+    padding: var(--sp-6);
   }
+}
+
+/* =========================================================================
+   Utilidades
+   ========================================================================= */
+
+.texto-medio {
+  color: var(--texto-medio);
+}
+
+.texto-suave {
+  color: var(--texto-suave);
+}
+
+.mono {
+  font-family: var(--fuente-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.fila-iconos {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* Respeta la preferencia del sistema aunque ya casi no haya transiciones. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================================
+   Componentes de terceros
+   ========================================================================= */
+
+/* El buscador de direcciones de Google Places declara `color-scheme: light dark`
+   por su cuenta, así que con el sistema en modo oscuro se dibujaba con fondo
+   negro en medio del formulario. Se inserta vía appendChild, sin el atributo de
+   encapsulación de Angular, por eso la regla vive acá y no en el componente. */
+gmp-place-autocomplete {
+  color-scheme: light;
+  display: block;
+  width: 100%;
 }

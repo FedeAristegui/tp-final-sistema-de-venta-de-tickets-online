@@ -1,171 +1,187 @@
-<div class="contenedor-estadisticas">
-  <div class="header">
-    <h1>📊 Estadísticas de Ventas</h1>
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Estadísticas de ventas</h1>
+      <p class="encabezado-pagina__bajada">Ocupación y recaudación por evento.</p>
+    </div>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Cargando estadísticas...</p>
+    <div class="metricas" aria-busy="true" aria-label="Cargando estadísticas">
+      @for (marcador of [1, 2, 3, 4]; track marcador) {
+        <div class="panel">
+          <div class="skeleton skeleton--texto" style="width: 40%"></div>
+          <div class="skeleton skeleton--titulo" style="width: 70%"></div>
+        </div>
+      }
     </div>
   } @else {
-    <div class="resumen-general">
-      <div class="tarjeta-resumen">
-        <div class="contenido">
-          <h3>{{ totalEntradasVendidas() }}</h3>
-          <p>Entradas Vendidas</p>
-        </div>
+    <!-- Fila de métricas: el número domina y la etiqueta lo describe debajo,
+         no al revés. -->
+    <div class="metricas">
+      <div class="metrica panel">
+        <p class="metrica__etiqueta">Entradas vendidas</p>
+        <p class="metrica__valor">{{ totalEntradasVendidas() | number }}</p>
       </div>
 
-      <div class="tarjeta-resumen">
-        <div class="contenido">
-          <h3>${{ totalRecaudadoGeneral() | number:'1.2-2' }}</h3>
-          <p>Total Recaudado</p>
-        </div>
+      <div class="metrica panel">
+        <p class="metrica__etiqueta">Total recaudado</p>
+        <p class="metrica__valor">
+          {{ totalRecaudadoGeneral() | currency: 'ARS' : 'symbol' : '1.2-2' }}
+        </p>
       </div>
 
-      <div class="tarjeta-resumen">
-        <div class="contenido">
-          <h3>{{ promedioOcupacion() | number:'1.0-0' }}%</h3>
-          <p>Ocupación Promedio</p>
-        </div>
+      <div class="metrica panel">
+        <p class="metrica__etiqueta">Ocupación promedio</p>
+        <p class="metrica__valor">{{ promedioOcupacion() | number: '1.0-0' }}%</p>
       </div>
 
-      <div class="tarjeta-resumen">
-        <div class="contenido">
-          <h3>{{ estadisticas().length }}</h3>
-          <p>Eventos Totales</p>
-        </div>
+      <div class="metrica panel">
+        <p class="metrica__etiqueta">Eventos totales</p>
+        <p class="metrica__valor">{{ estadisticas().length }}</p>
       </div>
     </div>
+
     @if (estadisticas().length > 0) {
-      <div class="tabla-container">
-        <div class="tabla-header">
-          <h2>Detalle por Evento</h2>
-          <input
-            type="text"
-            class="buscador-eventos"
-            placeholder="Buscar evento por nombre..."
-            [ngModel]="busqueda()"
-            (ngModelChange)="busqueda.set($event)" />
-        </div>
-        <div class="tabla-scroll">
-        <table class="tabla-estadisticas">
-          <thead>
-            <tr>
-              <th>Evento</th>
-              <th>Entradas Vendidas</th>
-              <th>Capacidad Total</th>
-              <th>Ocupación</th>
-              <th>Recaudado</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (stat of estadisticasTabla(); track stat.eventoId) {
+      <section class="panel bloque">
+        <header class="bloque__encabezado">
+          <h2 class="bloque__titulo">Detalle por evento</h2>
+          <div class="campo-con-icono">
+            <app-icono nombre="buscar" [tamano]="16" />
+            <input
+              type="search"
+              class="buscador"
+              placeholder="Buscar evento por nombre…"
+              aria-label="Buscar evento por nombre"
+              [ngModel]="busqueda()"
+              (ngModelChange)="busqueda.set($event)"
+            />
+          </div>
+        </header>
+
+        <div class="tabla-scroll tabla-scroll--alta">
+          <table class="tabla tabla-estadisticas">
+            <thead>
               <tr>
-                <td class="evento-titulo">
-                  <strong>{{ stat.eventoTitulo }}</strong>
-                </td>
-                <td class="centrado">
-                  <span class="badge badge-vendidas">{{ stat.totalVendidas }}</span>
-                </td>
-                <td class="centrado">{{ stat.capacidadTotal }}</td>
-                <td class="centrado">
-                  <div class="barra-progreso">
-                    <div 
-                      class="barra-relleno" 
-                      [style.width.%]="stat.porcentajeOcupacion"
-                      [style.background-color]="getColorPorcentaje(stat.porcentajeOcupacion)">
-                    </div>
-                    <span class="porcentaje-texto">{{ stat.porcentajeOcupacion | number:'1.0-0' }}%</span>
-                  </div>
-                </td>
-                <td class="recaudado">
-                  ${{ stat.totalRecaudado | number:'1.2-2' }}
-                </td>
-                <td class="centrado">
-                  @if (stat.porcentajeOcupacion >= 80) {
-                    <span class="estado estado-lleno">🔥 Casi Lleno</span>
-                  } @else if (stat.porcentajeOcupacion >= 50) {
-                    <span class="estado estado-medio">✅ Buena Venta</span>
-                  } @else if (stat.porcentajeOcupacion > 0) {
-                    <span class="estado estado-bajo">⚠️ Disponible</span>
-                  } @else {
-                    <span class="estado estado-sin-ventas">❌ Sin Ventas</span>
-                  }
-                </td>
+                <th scope="col">Evento</th>
+                <th scope="col" class="tabla__centrado">Vendidas</th>
+                <th scope="col" class="tabla__centrado">Capacidad</th>
+                <th scope="col">Ocupación</th>
+                <th scope="col" class="tabla__derecha">Recaudado</th>
+                <th scope="col" class="tabla__centrado">Estado</th>
               </tr>
-              @if (stat.detalleVentas && stat.totalVendidas > 0) {
-                <tr class="fila-detalle">
-                  <td colspan="6" class="celda-detalle">
-                    <div class="detalle-ventas">
-                      @if (stat.detalleVentas.butacas && stat.detalleVentas.butacas.length > 0) {
-                        <div class="detalle-seccion">
-                          <h4>🎫 Butacas Vendidas por Fila:</h4>
-                          <div class="detalle-items">
-                            @for (butaca of stat.detalleVentas.butacas; track butaca.fila) {
-                              <div class="detalle-chip">
-                                <span class="detalle-label">Fila {{ butaca.fila }}</span>
-                                <span class="detalle-valor">{{ butaca.cantidad }} butacas</span>
-                              </div>
-                            }
-                          </div>
-                        </div>
-                      }
-                      
-                      @if (stat.detalleVentas.sectores && stat.detalleVentas.sectores.length > 0) {
-                        <div class="detalle-seccion">
-                          <h4>🎪 Entradas Vendidas por Sector:</h4>
-                          <div class="detalle-items">
-                            @for (sector of stat.detalleVentas.sectores; track sector.nombre) {
-                              <div class="detalle-chip">
-                                <span class="detalle-label">{{ sector.nombre }}</span>
-                                <span class="detalle-valor">{{ sector.cantidad }} entradas</span>
-                              </div>
-                            }
-                          </div>
-                        </div>
-                      }
+            </thead>
+            <tbody>
+              @for (stat of estadisticasTabla(); track stat.eventoId) {
+                <tr>
+                  <td class="celda-evento">{{ stat.eventoTitulo }}</td>
+                  <td class="tabla__centrado">{{ stat.totalVendidas | number }}</td>
+                  <td class="tabla__centrado texto-medio">{{ stat.capacidadTotal | number }}</td>
+                  <td class="celda-ocupacion">
+                    <div class="ocupacion">
+                      <div class="barra">
+                        <div
+                          class="barra__relleno"
+                          [style.width.%]="stat.porcentajeOcupacion"
+                          [style.background-color]="getColorPorcentaje(stat.porcentajeOcupacion)"
+                        ></div>
+                      </div>
+                      <span class="barra__valor">
+                        {{ stat.porcentajeOcupacion | number: '1.0-0' }}%
+                      </span>
                     </div>
+                  </td>
+                  <td class="tabla__derecha celda-recaudado">
+                    {{ stat.totalRecaudado | currency: 'ARS' : 'symbol' : '1.2-2' }}
+                  </td>
+                  <td class="tabla__centrado">
+                    @if (stat.porcentajeOcupacion >= 80) {
+                      <span class="badge badge--peligro">Casi lleno</span>
+                    } @else if (stat.porcentajeOcupacion >= 50) {
+                      <span class="badge badge--exito">Buena venta</span>
+                    } @else if (stat.porcentajeOcupacion > 0) {
+                      <span class="badge badge--aviso">Disponible</span>
+                    } @else {
+                      <span class="badge">Sin ventas</span>
+                    }
+                  </td>
+                </tr>
+
+                @if (stat.detalleVentas && stat.totalVendidas > 0) {
+                  <tr class="fila-detalle">
+                    <td colspan="6">
+                      <div class="detalle">
+                        @if (stat.detalleVentas.butacas && stat.detalleVentas.butacas.length > 0) {
+                          <div class="detalle__seccion">
+                            <h3 class="detalle__titulo">Butacas vendidas por fila</h3>
+                            <ul class="detalle__chips">
+                              @for (butaca of stat.detalleVentas.butacas; track butaca.fila) {
+                                <li class="chip">
+                                  <span class="chip__etiqueta">Fila {{ butaca.fila }}</span>
+                                  <span class="chip__valor">{{ butaca.cantidad }}</span>
+                                </li>
+                              }
+                            </ul>
+                          </div>
+                        }
+
+                        @if (stat.detalleVentas.sectores && stat.detalleVentas.sectores.length > 0) {
+                          <div class="detalle__seccion">
+                            <h3 class="detalle__titulo">Entradas vendidas por sector</h3>
+                            <ul class="detalle__chips">
+                              @for (sector of stat.detalleVentas.sectores; track sector.nombre) {
+                                <li class="chip">
+                                  <span class="chip__etiqueta">{{ sector.nombre }}</span>
+                                  <span class="chip__valor">{{ sector.cantidad }}</span>
+                                </li>
+                              }
+                            </ul>
+                          </div>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              } @empty {
+                <tr>
+                  <td colspan="6" class="sin-resultados">
+                    No se encontraron eventos para «{{ busqueda() }}»
                   </td>
                 </tr>
               }
-            }
-            @empty {
-              <tr>
-                <td colspan="6" class="sin-resultados">No se encontraron eventos para "{{ busqueda() }}"</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </div>
-      </div>
+      </section>
 
-      <div class="grafico-barras">
-        <h2>Ranking de Eventos Más Vendidos</h2>
-        <div class="barras-container">
+      <section class="panel bloque">
+        <header class="bloque__encabezado">
+          <h2 class="bloque__titulo">Ranking de eventos más vendidos</h2>
+        </header>
+
+        <ol class="ranking">
           @for (stat of estadisticas().slice(0, 5); track stat.eventoId) {
-            <div class="barra-item">
-              <div class="barra-label">{{ stat.eventoTitulo }}</div>
-              <div class="barra-visual">
-                <div 
-                  class="barra-fill" 
-                  [style.width.%]="(stat.totalVendidas / estadisticas()[0].totalVendidas) * 100">
-                  <span class="barra-valor">{{ stat.totalVendidas }}</span>
-                </div>
+            <li class="ranking__item">
+              <span class="ranking__nombre">{{ stat.eventoTitulo }}</span>
+              <div class="ranking__barra">
+                <div
+                  class="ranking__relleno"
+                  [style.width.%]="(stat.totalVendidas / estadisticas()[0].totalVendidas) * 100"
+                ></div>
               </div>
-            </div>
+              <span class="ranking__valor">{{ stat.totalVendidas }}</span>
+            </li>
           }
-        </div>
-      </div>
-
+        </ol>
+      </section>
     } @else {
-      <div class="sin-datos">
-        <p>📋 No hay estadísticas disponibles</p>
-        <p>Aún no se han registrado ventas de entradas</p>
+      <div class="estado-vacio">
+        <span class="estado-vacio__icono">
+          <app-icono nombre="grafico" [tamano]="32" />
+        </span>
+        <h2 class="estado-vacio__titulo">Todavía no hay estadísticas</h2>
+        <p>Cuando se registre la primera venta de entradas vas a ver los números acá.</p>
       </div>
     }
-
   }
 </div>

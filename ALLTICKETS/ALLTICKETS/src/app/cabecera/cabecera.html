@@ -1,56 +1,165 @@
-<div class="menu-container">
-  <div class="header-top">
-    <img class="logo" routerLink="/menu-principal" src="/assets/logo.png" alt="AllTickets Logo">
-  
-  @if (usuario) {
-    @if (usuario.rol === 'admin') {
-      <nav class="menu-admin">
-        <h2>Panel de Administración</h2>
-        <ul>
-          <li><a routerLink="/eventos">Agregar Eventos</a></li>
-          <li><a routerLink="/lista-eventos">Ver lista de Eventos</a></li>
-          <li><a routerLink="/formulario-descuento">Agregar Descuento</a></li>
-          <li><a routerLink="/lista-descuento">Ver lista Descuentos</a></li>
-          <li><a routerLink="/estadisticas">Ver Estadísticas de Ventas</a></li>
-          <li><a (click)="cerrarSesion()">Cerrar Sesión</a></li>
-        </ul>
-      </nav>
-    }
+<header class="cabecera">
+  <div class="cabecera__barra">
+    <a class="marca" routerLink="/menu-principal" (click)="cerrarMenu()">
+      <!-- La estrella se recorta del logo con background-position; el nombre va
+           tipografiado al lado para armar un lockup horizontal que entre en la
+           barra (el original es vertical y obligaría a una cabecera de 90px). -->
+      <span class="marca__estrella" aria-hidden="true"></span>
+      <span class="marca__texto">ALLTICKETS</span>
+    </a>
 
-    @if (usuario.rol === 'usuario') {
-      <nav class="menu-usuario">
-        
-        <ul>
-          <li><a routerLink="/perfil/:id">🧍🏻‍♂️ Mi Perfil</a></li>
-          <li><a routerLink="/favoritos">❤️ Mis Favoritos</a></li>
-          <li><a routerLink="/mis-tarjetas">💳 Mis Tarjetas</a></li>
-          <li><a routerLink="/carrito">🛒 Carrito</a></li>
-          <li><a routerLink="/historial-compras">🛍️ Mis compras</a></li>
-          <li><a class="btn-cerrar" (click)="cerrarSesion()">Cerrar Sesión</a></li>
+    <button
+      type="button"
+      class="cabecera__toggle"
+      (click)="alternarMenu()"
+      [attr.aria-expanded]="menuAbierto()"
+      aria-controls="nav-principal"
+      [attr.aria-label]="menuAbierto() ? 'Cerrar menú' : 'Abrir menú'"
+    >
+      <app-icono [nombre]="menuAbierto() ? 'cerrar' : 'menu'" [tamano]="20" />
+    </button>
+
+    <nav
+      id="nav-principal"
+      class="nav"
+      [class.nav--abierto]="menuAbierto()"
+      aria-label="Navegación principal"
+      (click)="cerrarMenu()"
+    >
+      @if (usuario) {
+        @if (usuario.rol === 'admin') {
+          <ul class="nav__lista">
+            <li>
+              <a class="nav__link" routerLink="/menu-principal" routerLinkActive="nav__link--activo">
+                Cartelera
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/lista-eventos" routerLinkActive="nav__link--activo">
+                Eventos
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/eventos" routerLinkActive="nav__link--activo">
+                Nuevo evento
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/lista-descuento" routerLinkActive="nav__link--activo">
+                Descuentos
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav__link"
+                routerLink="/formulario-descuento"
+                routerLinkActive="nav__link--activo"
+              >
+                Nuevo descuento
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/estadisticas" routerLinkActive="nav__link--activo">
+                Estadísticas
+              </a>
+            </li>
+          </ul>
+
+          <div class="nav__acciones">
+            <span class="nav__rol">Administración</span>
+            <button type="button" class="btn btn--secundario btn--sm" (click)="cerrarSesion()">
+              <app-icono nombre="salir" [tamano]="16" />
+              Salir
+            </button>
+          </div>
+        }
+
+        @if (usuario.rol === 'usuario') {
+          <ul class="nav__lista">
+            <li>
+              <a class="nav__link" routerLink="/menu-principal" routerLinkActive="nav__link--activo">
+                Cartelera
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/favoritos" routerLinkActive="nav__link--activo">
+                Favoritos
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" routerLink="/mis-tarjetas" routerLinkActive="nav__link--activo">
+                Tarjetas
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav__link"
+                routerLink="/historial-compras"
+                routerLinkActive="nav__link--activo"
+              >
+                Mis compras
+              </a>
+            </li>
+          </ul>
+
+          <div class="nav__acciones">
+            <a
+              class="btn btn--secundario btn--sm"
+              routerLink="/carrito"
+              routerLinkActive="btn--activo"
+            >
+              <app-icono nombre="carrito" [tamano]="16" />
+              Carrito
+            </a>
+            <a
+              class="btn btn--fantasma btn--sm"
+              [routerLink]="['/perfil', usuario.id]"
+              routerLinkActive="btn--activo"
+            >
+              <app-icono nombre="usuario" [tamano]="16" />
+              {{ usuario.nombre }}
+            </a>
+            <button
+              type="button"
+              class="btn-icono"
+              (click)="cerrarSesion()"
+              aria-label="Cerrar sesión"
+              title="Cerrar sesión"
+            >
+              <app-icono nombre="salir" [tamano]="18" />
+            </button>
+          </div>
+        }
+      } @else {
+        <ul class="nav__lista">
+          <li>
+            <a class="nav__link" routerLink="/menu-principal" routerLinkActive="nav__link--activo">
+              Cartelera
+            </a>
+          </li>
         </ul>
-      </nav>
-    }
-  } @else {
-    <nav class="menu-visitante">
-      <h1>🎫 ALLTICKETS</h1>
-      <ul>
-        <li><a routerLink="/login">Iniciar Sesión</a></li>
-        <li><a routerLink="/registro">Registrarse</a></li>
-      </ul>
+
+        <div class="nav__acciones">
+          <a class="btn btn--fantasma btn--sm" routerLink="/login">Iniciar sesión</a>
+          <a class="btn btn--primario btn--sm" routerLink="/registro">Crear cuenta</a>
+        </div>
+      }
     </nav>
-  }
-    <a class="btn-volver" routerLink="/menu-principal">← Volver al menú</a>
-    </div>
-</div>
+  </div>
+</header>
 
 <!-- Modal de confirmación global -->
 @if (modalService.showConfirmModal()) {
-  <div class="modal-backdrop">
-    <div class="modal">
+  <div class="modal-backdrop" (click)="modalService.descartar()">
+    <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
       <p>{{ modalService.confirmMessage() }}</p>
       <div class="modal-actions">
-        <button type="button" (click)="modalService.confirmAction()" class="confirm-btn">Confirmar</button>
-        <button type="button" (click)="modalService.cancelAction()" class="cancel-btn">Cancelar</button>
+        <button type="button" (click)="modalService.cancelAction()" class="cancel-btn">
+          Cancelar
+        </button>
+        <button type="button" (click)="modalService.confirmAction()" class="confirm-btn">
+          Confirmar
+        </button>
       </div>
     </div>
   </div>
@@ -58,11 +167,21 @@
 
 <!-- Modal de error/aviso global -->
 @if (modalService.showErrorModal()) {
-  <div class="modal-backdrop">
-    <div class="modal modal-error">
-      <p>{{ modalService.errorMessage() }}</p>
+  <div class="modal-backdrop" (click)="modalService.descartar()">
+    <div
+      class="modal modal--error"
+      role="alertdialog"
+      aria-modal="true"
+      (click)="$event.stopPropagation()"
+    >
+      <p class="modal__encabezado">
+        <app-icono nombre="alerta" [tamano]="18" />
+        <span>{{ modalService.errorMessage() }}</span>
+      </p>
       <div class="modal-actions">
-        <button type="button" (click)="modalService.closeErrorModal()" class="confirm-btn">Aceptar</button>
+        <button type="button" (click)="modalService.closeErrorModal()" class="confirm-btn">
+          Aceptar
+        </button>
       </div>
     </div>
   </div>

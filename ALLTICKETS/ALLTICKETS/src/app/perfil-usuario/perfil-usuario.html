@@ -1,112 +1,184 @@
-<div class="perfil-container">
-  
-  <div class="header">
-    <h1>🧍🏻‍♂️ Mi Perfil</h1>
-    <p>Bienvenido a tu perfil personal. Aquí puedes ver y editar tu información</p>
-  </div>  
+<div class="pagina pagina--angosta">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Mi perfil</h1>
+      <p class="encabezado-pagina__bajada">Consultá y actualizá tus datos de cuenta.</p>
+    </div>
+  </div>
 
   @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">{{ mensaje }}</div>
+    <div
+      class="alert"
+      [class.alert-error]="tipoMensaje === 'error'"
+      [class.alert-success]="tipoMensaje === 'success'"
+      role="status"
+    >
+      {{ mensaje }}
+    </div>
   }
 
-
   @if (usuario) {
-    
-    <div class="perfil-card">
-      
-    @if (!editando) {
+    <section class="panel">
+      @if (!editando) {
+        <dl class="datos">
+          <div class="datos__fila">
+            <dt>Nombre</dt>
+            <dd>{{ usuario.nombre }} {{ usuario.apellido }}</dd>
+          </div>
+          <div class="datos__fila">
+            <dt>Email</dt>
+            <dd>{{ usuario.email }}</dd>
+          </div>
+          <div class="datos__fila">
+            <dt>Fecha de registro</dt>
+            <dd>{{ usuario.fechaRegistro | date: 'dd/MM/yyyy' }}</dd>
+          </div>
+          <div class="datos__fila">
+            <dt>Última actividad</dt>
+            <dd>{{ usuario.ultimaActividad | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </div>
+        </dl>
 
-      <div class="campo">
-        <strong>Nombre:</strong> {{ usuario.nombre }} {{ usuario.apellido }}
-      </div>
-      <div class="campo">
-        <strong>Email:</strong> {{ usuario.email }}
-      </div>
-      <div class="campo">
-        <strong>Fecha de Registro:</strong> {{ usuario.fechaRegistro | date: 'dd/MM/yyyy' }}
-      </div>
-      <div class="campo">
-        <strong>Última Actividad:</strong> {{ usuario.ultimaActividad | date: 'dd/MM/yyyy HH:mm' }}
-      </div>
-      
-      <button (click)="activarEdicion()" class="btn-editar">Editar Perfil</button>
-    }
-
-    @if (editando) {
-      <div class="formulario-edicion">
-      <form [formGroup]="perfilForm">
-        <div class="form-group">
-          <label>Nombre:</label>
-          <input type="text" formControlName="nombre" class="form-control">
-          @if (perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched) {
-            <small class="error">Mínimo 3 caracteres</small>
-          }
+        <div class="acciones">
+          <button type="button" (click)="activarEdicion()" class="btn btn--primario">
+            <app-icono nombre="lapiz" [tamano]="16" />
+            Editar perfil
+          </button>
         </div>
-        <div class="form-group">
-          <label>Apellido:</label>
-          <input type="text" formControlName="apellido" class="form-control">
-          @if (perfilForm.get('apellido')?.invalid && perfilForm.get('apellido')?.touched) {
-            <small class="error">Mínimo 3 caracteres</small>
-          }
-        </div>
-
-        <button type="button" (click)="toggleCambiarContrasena()" class="btn-cambiar-contrasena">
-          🔒 {{ cambiandoContrasena ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
-        </button>
-
-        @if (cambiandoContrasena) {
-          <div class="seccion-contrasena" [formGroup]="contrasenaForm">
-            <div class="form-group">
-              <label>Contraseña actual:</label>
-              <div class="input-contrasena">
-                <input [type]="mostrarContrasenaActual ? 'text' : 'password'" formControlName="contrasenaActual" class="form-control">
-                <button type="button" class="btn-ver-contrasena" (click)="mostrarContrasenaActual = !mostrarContrasenaActual">
-                  {{ mostrarContrasenaActual ? 'Ocultar' : 'Ver' }}
-                </button>
-              </div>
-              @if (contrasenaForm.get('contrasenaActual')?.invalid && contrasenaForm.get('contrasenaActual')?.touched) {
-                <small class="error">La contraseña actual es requerida</small>
+      } @else {
+        <form [formGroup]="perfilForm" class="formulario">
+          <div class="formulario__fila">
+            <div class="campo">
+              <label class="campo__label" for="perfilNombre">Nombre</label>
+              <input type="text" id="perfilNombre" formControlName="nombre" />
+              @if (perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched) {
+                <span class="campo__error">Mínimo 3 caracteres</span>
               }
             </div>
-            <div class="form-group">
-              <label>Nueva contraseña:</label>
-              <div class="input-contrasena">
-                <input [type]="mostrarNuevaContrasena ? 'text' : 'password'" formControlName="nuevaContrasena" class="form-control">
-                <button type="button" class="btn-ver-contrasena" (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena">
-                  {{ mostrarNuevaContrasena ? 'Ocultar' : 'Ver' }}
-                </button>
-              </div>
-              @if (contrasenaForm.get('nuevaContrasena')?.invalid && contrasenaForm.get('nuevaContrasena')?.touched) {
-                <small class="error">Mínimo 6 caracteres</small>
-              }
-              @if (contrasenaForm.errors?.['mismaContrasena'] && contrasenaForm.get('nuevaContrasena')?.touched) {
-                <small class="error">La nueva contraseña no puede ser igual a la actual</small>
-              }
-            </div>
-            <div class="form-group">
-              <label>Confirmar nueva contraseña:</label>
-              <div class="input-contrasena">
-                <input [type]="mostrarConfirmarContrasena ? 'text' : 'password'" formControlName="confirmarContrasena" class="form-control">
-                <button type="button" class="btn-ver-contrasena" (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena">
-                  {{ mostrarConfirmarContrasena ? 'Ocultar' : 'Ver' }}
-                </button>
-              </div>
-              @if (contrasenaForm.errors?.['contrasenasDistintas'] && contrasenaForm.get('confirmarContrasena')?.touched) {
-                <small class="error">Las contraseñas no coinciden</small>
+
+            <div class="campo">
+              <label class="campo__label" for="perfilApellido">Apellido</label>
+              <input type="text" id="perfilApellido" formControlName="apellido" />
+              @if (perfilForm.get('apellido')?.invalid && perfilForm.get('apellido')?.touched) {
+                <span class="campo__error">Mínimo 3 caracteres</span>
               }
             </div>
           </div>
-        }
-        
-        <div class="botones">
-          <button type="button" (click)="guardarCambios()" class="btn-guardar" [disabled]="guardando">
-            {{ guardando ? 'Verificando...' : 'Guardar Cambios' }}
+
+          <button
+            type="button"
+            (click)="toggleCambiarContrasena()"
+            class="btn btn--secundario"
+            [attr.aria-expanded]="cambiandoContrasena"
+          >
+            <app-icono nombre="candado" [tamano]="16" />
+            {{ cambiandoContrasena ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
           </button>
-          <button type="button" (click)="cancelarEdicion()" class="btn-cancelar">Cancelar</button>
-        </div>
-      </form>
-      </div>
-    }
-    </div>
+
+          @if (cambiandoContrasena) {
+            <fieldset class="seccion-contrasena" [formGroup]="contrasenaForm">
+              <legend class="seccion-contrasena__titulo">Cambiar contraseña</legend>
+
+              <div class="campo">
+                <label class="campo__label" for="contrasenaActual">Contraseña actual</label>
+                <div class="input-contrasena">
+                  <input
+                    [type]="mostrarContrasenaActual ? 'text' : 'password'"
+                    id="contrasenaActual"
+                    formControlName="contrasenaActual"
+                    autocomplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    class="btn-ver-contrasena"
+                    (click)="mostrarContrasenaActual = !mostrarContrasenaActual"
+                    [attr.aria-label]="
+                      mostrarContrasenaActual ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                    "
+                  >
+                    <app-icono [nombre]="mostrarContrasenaActual ? 'ojo-off' : 'ojo'" [tamano]="18" />
+                  </button>
+                </div>
+                @if (contrasenaForm.get('contrasenaActual')?.invalid && contrasenaForm.get('contrasenaActual')?.touched) {
+                  <span class="campo__error">La contraseña actual es requerida</span>
+                }
+              </div>
+
+              <div class="campo">
+                <label class="campo__label" for="perfilNuevaContrasena">Nueva contraseña</label>
+                <div class="input-contrasena">
+                  <input
+                    [type]="mostrarNuevaContrasena ? 'text' : 'password'"
+                    id="perfilNuevaContrasena"
+                    formControlName="nuevaContrasena"
+                    autocomplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    class="btn-ver-contrasena"
+                    (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena"
+                    [attr.aria-label]="
+                      mostrarNuevaContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                    "
+                  >
+                    <app-icono [nombre]="mostrarNuevaContrasena ? 'ojo-off' : 'ojo'" [tamano]="18" />
+                  </button>
+                </div>
+                @if (contrasenaForm.get('nuevaContrasena')?.invalid && contrasenaForm.get('nuevaContrasena')?.touched) {
+                  <span class="campo__error">Mínimo 6 caracteres</span>
+                }
+                @if (contrasenaForm.errors?.['mismaContrasena'] && contrasenaForm.get('nuevaContrasena')?.touched) {
+                  <span class="campo__error">La nueva contraseña no puede ser igual a la actual</span>
+                }
+              </div>
+
+              <div class="campo">
+                <label class="campo__label" for="perfilConfirmarContrasena">
+                  Confirmar nueva contraseña
+                </label>
+                <div class="input-contrasena">
+                  <input
+                    [type]="mostrarConfirmarContrasena ? 'text' : 'password'"
+                    id="perfilConfirmarContrasena"
+                    formControlName="confirmarContrasena"
+                    autocomplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    class="btn-ver-contrasena"
+                    (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena"
+                    [attr.aria-label]="
+                      mostrarConfirmarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                    "
+                  >
+                    <app-icono
+                      [nombre]="mostrarConfirmarContrasena ? 'ojo-off' : 'ojo'"
+                      [tamano]="18"
+                    />
+                  </button>
+                </div>
+                @if (contrasenaForm.errors?.['contrasenasDistintas'] && contrasenaForm.get('confirmarContrasena')?.touched) {
+                  <span class="campo__error">Las contraseñas no coinciden</span>
+                }
+              </div>
+            </fieldset>
+          }
+
+          <div class="acciones">
+            <button
+              type="button"
+              (click)="guardarCambios()"
+              class="btn btn--primario"
+              [disabled]="guardando"
+            >
+              {{ guardando ? 'Verificando…' : 'Guardar cambios' }}
+            </button>
+            <button type="button" (click)="cancelarEdicion()" class="btn btn--secundario">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      }
+    </section>
   }
 </div>

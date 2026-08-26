@@ -7,11 +7,12 @@ import { FavoritoServicio } from '../servicios/favorito.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Evento } from '../modelos/evento';
 import { Favorito } from '../modelos/favorito';
+import { Icono } from '../ui/icono';
 
 @Component({
   selector: 'app-pagina-principal',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, Icono],
   templateUrl: './pagina-principal.html',
   styleUrls: ['./pagina-principal.css']
 })

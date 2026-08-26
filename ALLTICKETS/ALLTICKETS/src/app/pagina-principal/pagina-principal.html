@@ -1,115 +1,161 @@
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Próximos eventos</h1>
+      <p class="encabezado-pagina__bajada">
+        Música, teatro, comedia y deportes. Elegí sector o butaca y recibí las entradas por email.
+      </p>
+    </div>
+  </div>
 
-<div class="eventos-container">
-  <h2 class="titulo-seccion">Próximos Eventos</h2>
-  
- 
-  <div class="filtros-container">
-    <form [formGroup]="filtrosForm">
-      <div class="filtros-grid">
-       
-        <div class="filtro-item">
-          <label for="filtroNombre">🔍 Buscar por nombre o lugar</label>
-          <input 
-            type="text" 
+  <section class="filtros panel" aria-label="Filtros de búsqueda">
+    <form [formGroup]="filtrosForm" class="filtros__grilla">
+      <div class="campo">
+        <label class="campo__label" for="filtroNombre">Buscar por nombre o lugar</label>
+        <div class="campo-con-icono">
+          <app-icono nombre="buscar" [tamano]="16" />
+          <input
+            type="search"
             id="filtroNombre"
             formControlName="nombre"
-            placeholder="Ej: Concierto, Teatro..."
-            class="filtro-input"
+            placeholder="Concierto, teatro, Luna Park…"
           />
         </div>
+      </div>
 
-        
-        <div class="filtro-item">
-          <label for="filtroFecha">📅 Filtrar por fecha</label>
-          <input 
-            type="date" 
-            id="filtroFecha"
-            formControlName="fecha"
-            class="filtro-input"
-          />
-        </div>
+      <div class="campo">
+        <label class="campo__label" for="filtroFecha">Fecha</label>
+        <input type="date" id="filtroFecha" formControlName="fecha" />
+      </div>
 
-        
-        <div class="filtro-item">
-          <label for="filtroCategoria">🎭 Categoría</label>
-          <select 
-            id="filtroCategoria"
-            formControlName="categoria"
-            class="filtro-input"
-          >
-            <option value="">Todas las categorías</option>
-            @for (categoria of categorias; track categoria) {
-              <option [value]="categoria">{{ categoria }}</option>
-            }
-          </select>
-        </div>
+      <div class="campo">
+        <label class="campo__label" for="filtroCategoria">Categoría</label>
+        <select id="filtroCategoria" formControlName="categoria">
+          <option value="">Todas las categorías</option>
+          @for (categoria of categorias; track categoria) {
+            <option [value]="categoria">{{ categoria }}</option>
+          }
+        </select>
       </div>
     </form>
 
-    
-    <div class="filtros-acciones">
-      <button (click)="limpiarFiltros()" class="btn-limpiar">
-        🗑️ Limpiar Filtros
+    <div class="filtros__pie">
+      <p class="filtros__contador" aria-live="polite">
+        {{ eventosFiltrados().length }}
+        {{ eventosFiltrados().length === 1 ? 'evento' : 'eventos' }}
+      </p>
+      <button type="button" (click)="limpiarFiltros()" class="btn btn--fantasma btn--sm">
+        <app-icono nombre="cerrar" [tamano]="14" />
+        Limpiar filtros
       </button>
-      <span class="resultados-contador">
-        {{ eventosFiltrados().length }} evento(s) encontrado(s)
-      </span>
     </div>
-  </div>
-  
+  </section>
+
   @if (isLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Cargando eventos...</p>
+    <!-- Esqueletos con la forma real de la tarjeta: al llegar los datos el
+         layout no salta, y no hace falta un spinner girando. -->
+    <div class="eventos-grilla" aria-busy="true" aria-label="Cargando eventos">
+      @for (marcador of [1, 2, 3, 4, 5, 6]; track marcador) {
+        <article class="evento-card evento-card--esqueleto">
+          <div class="skeleton skeleton--imagen"></div>
+          <div class="evento-card__cuerpo">
+            <div class="skeleton skeleton--texto" style="width: 30%"></div>
+            <div class="skeleton skeleton--titulo"></div>
+            <div class="skeleton skeleton--texto" style="width: 70%"></div>
+            <div class="skeleton skeleton--texto" style="width: 55%"></div>
+          </div>
+        </article>
+      }
     </div>
   } @else if (eventosFiltrados().length > 0) {
-    <div class="eventos-grid">
+    <div class="eventos-grilla">
       @for (evento of eventosFiltrados(); track evento.id) {
-
-        <div class="evento-card" (click)="verDetalleEvento(evento.id)">
-          
-          @if (usuario() && usuario().rol === 'usuario') {
-            <button 
-              class="btn-favorito" 
-              [class.activo]="esFavorito(evento.id)"
-              (click)="toggleFavorito(evento, $event)"
-              [title]="esFavorito(evento.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'">
-              {{ esFavorito(evento.id) ? '❤️' : '🤍' }}
-            </button>
-          }
-          
-          <div class="evento-imagen">
+        <article
+          class="evento-card evento-card--clickeable"
+          role="button"
+          tabindex="0"
+          (click)="verDetalleEvento(evento.id)"
+          (keydown.enter)="verDetalleEvento(evento.id)"
+        >
+          <div class="evento-card__medio">
             @if (evento.imagen) {
-              <img [src]="evento.imagen" [alt]="evento.titulo">
+              <img [src]="evento.imagen" [alt]="'Imagen del evento ' + evento.titulo" />
             } @else {
-              <div class="sin-imagen">Sin imagen</div>
+              <div class="evento-card__sin-imagen">
+                <app-icono nombre="imagen" [tamano]="24" />
+                <span>Sin imagen</span>
+              </div>
             }
+
+            @if (usuario() && usuario().rol === 'usuario') {
+              <button
+                type="button"
+                class="evento-card__accion-medio"
+                [class.evento-card__accion-medio--activo]="esFavorito(evento.id)"
+                (click)="toggleFavorito(evento, $event)"
+                [attr.aria-pressed]="esFavorito(evento.id)"
+                [attr.aria-label]="
+                  esFavorito(evento.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'
+                "
+              >
+                <app-icono
+                  [nombre]="esFavorito(evento.id) ? 'corazon-lleno' : 'corazon'"
+                  [tamano]="18"
+                />
+              </button>
+            }
+          </div>
+
+          <div class="evento-card__cuerpo">
             @if (evento.categoria) {
-              <span class="categoria-badge">{{ evento.categoria }}</span>
+              <span class="badge badge--marca">{{ evento.categoria }}</span>
             }
-          </div>
-          <div class="evento-info">
-            <h3>{{ evento.titulo }}</h3>
-            <div class="evento-detalles">
-              <p><span class="icono">📅</span> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
-              <p><span class="icono">🕐</span> {{ evento.hora }}</p>
-              <p><span class="icono">📍</span> {{ evento.lugar }}</p>
+
+            <h2 class="evento-card__titulo">{{ evento.titulo }}</h2>
+
+            <ul class="evento-card__datos">
+              <li>
+                <app-icono nombre="calendario" [tamano]="16" />
+                <span>{{ evento.fecha | date: 'dd MMM yyyy' }}</span>
+              </li>
+              <li>
+                <app-icono nombre="reloj" [tamano]="16" />
+                <span>{{ evento.hora }}</span>
+              </li>
+              <li>
+                <app-icono nombre="pin" [tamano]="16" />
+                <span>{{ evento.lugar }}</span>
+              </li>
+            </ul>
+
+            <!-- El botón queda pegado abajo para que todas las tarjetas de la
+                 fila alineen su CTA aunque los títulos tengan distinto largo. -->
+            <div class="evento-card__pie">
+              @if (usuario() && usuario().rol === 'usuario') {
+                <span class="btn btn--primario btn--bloque btn--decorativo" aria-hidden="true">
+                  Comprar
+                  <app-icono nombre="flecha-der" [tamano]="16" />
+                </span>
+              } @else {
+                <span class="btn btn--secundario btn--bloque btn--decorativo" aria-hidden="true">
+                  Ver detalles
+                  <app-icono nombre="flecha-der" [tamano]="16" />
+                </span>
+              }
             </div>
-            @if(usuario() && usuario().rol === 'usuario') {
-               <button class="btn-ver-mas">Comprar →</button>
-            }@else if (usuario() && usuario().rol === 'admin' || !usuario()) {
-            <button class="btn-ver-mas">Ver Detalles →</button>
-            }
           </div>
-        </div>
+        </article>
       }
     </div>
   } @else {
-    <div class="sin-eventos">
-      <p>📭 No se encontraron eventos con los filtros aplicados</p>
-      <p>Intenta ajustar los criterios de búsqueda</p>
-      <button (click)="limpiarFiltros()" class="btn-limpiar-inline">
-        Limpiar Filtros
+    <div class="estado-vacio">
+      <span class="estado-vacio__icono">
+        <app-icono nombre="buscar" [tamano]="32" />
+      </span>
+      <h2 class="estado-vacio__titulo">No encontramos eventos</h2>
+      <p>Ningún evento coincide con los filtros aplicados. Probá con otros criterios.</p>
+      <button type="button" (click)="limpiarFiltros()" class="btn btn--secundario">
+        Limpiar filtros
       </button>
     </div>
   }

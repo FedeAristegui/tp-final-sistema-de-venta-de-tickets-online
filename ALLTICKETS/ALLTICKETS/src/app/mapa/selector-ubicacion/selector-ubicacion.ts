@@ -12,6 +12,7 @@ import {
 import { DecimalPipe } from '@angular/common';
 import { GoogleMapsLoader } from '../../servicios/google-maps.loader';
 import { CENTRO_POR_DEFECTO } from '../../config/google-maps.config';
+import { Icono } from '../../ui/icono';
 import { Ubicacion } from '../../modelos/evento';
 
 /**
@@ -25,7 +26,7 @@ import { Ubicacion } from '../../modelos/evento';
 @Component({
   selector: 'app-selector-ubicacion',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, Icono],
   templateUrl: './selector-ubicacion.html',
   styleUrl: './selector-ubicacion.css',
 })

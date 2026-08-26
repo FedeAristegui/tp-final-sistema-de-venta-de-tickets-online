@@ -9,6 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { GoogleMapsLoader } from '../../servicios/google-maps.loader';
+import { Icono } from '../../ui/icono';
 
 /**
  * Muestra la ubicación de un evento en un mapa de Google, en modo sólo lectura.
@@ -22,6 +23,7 @@ import { GoogleMapsLoader } from '../../servicios/google-maps.loader';
 @Component({
   selector: 'app-mapa-ubicacion',
   standalone: true,
+  imports: [Icono],
   templateUrl: './mapa-ubicacion.html',
   styleUrl: './mapa-ubicacion.css',
 })

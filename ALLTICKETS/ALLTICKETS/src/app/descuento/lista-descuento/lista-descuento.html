@@ -1,39 +1,77 @@
-<h1>Lista de Descuentos</h1>
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Descuentos</h1>
+      <p class="encabezado-pagina__bajada">Cupones disponibles y su período de vigencia.</p>
+    </div>
 
-@let descuento = this.descuentos();
-
-@if (isLoading()) {
-  <p>Cargando descuentos...</p>
-} @else if (descuento && descuentos()!.length > 0) {
-  <div class="tabla-scroll-x">
-  <table>
-    <thead>
-      <tr>
-        <th>Código</th>
-        <th>Porcentaje</th>
-        <th>Fecha de inicio</th>
-        <th>Fecha de fin</th>
-        <th>Activo</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (descuento of descuentos(); track $index) {
-        <tr>
-          <td>{{ descuento.codigo }}</td>
-          <td>{{ descuento.porcentaje }}%</td>
-          <td>{{ descuento.fechaInicio | date: 'dd/MM/yyyy' }}</td>
-          <td>{{ descuento.fechaFin | date: 'dd/MM/yyyy' }}</td>
-          <td>{{ descuento.activo ? 'Sí' : 'No' }}</td>
-          <td>
-            <button (click)="navegarDetalles(descuento.id!)">Ver detalles</button>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+    <a routerLink="/formulario-descuento" class="btn btn--primario">
+      <app-icono nombre="mas" [tamano]="16" />
+      Nuevo descuento
+    </a>
   </div>
-} @else {
-  <p>No hay descuentos registrados.</p>
-}
+
+  @let descuento = this.descuentos();
+
+  <section class="panel bloque">
+    @if (isLoading()) {
+      <div class="bloque__cuerpo" aria-busy="true">
+        <div class="skeleton skeleton--texto"></div>
+        <div class="skeleton skeleton--texto"></div>
+        <div class="skeleton skeleton--texto" style="width: 70%"></div>
+      </div>
+    } @else if (descuento && descuento.length > 0) {
+      <div class="tabla-scroll">
+        <table class="tabla tabla-descuentos">
+          <thead>
+            <tr>
+              <th scope="col">Código</th>
+              <th scope="col" class="tabla__centrado">Descuento</th>
+              <th scope="col">Desde</th>
+              <th scope="col">Hasta</th>
+              <th scope="col" class="tabla__centrado">Estado</th>
+              <th scope="col" class="tabla__derecha">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of descuento; track d.id) {
+              <tr>
+                <td class="celda-codigo mono">{{ d.codigo }}</td>
+                <td class="tabla__centrado celda-porcentaje">{{ d.porcentaje }}%</td>
+                <td>{{ d.fechaInicio | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ d.fechaFin | date: 'dd/MM/yyyy' }}</td>
+                <td class="tabla__centrado">
+                  @if (d.activo) {
+                    <span class="badge badge--exito">Activo</span>
+                  } @else {
+                    <span class="badge">Inactivo</span>
+                  }
+                </td>
+                <td class="tabla__derecha">
+                  <button
+                    type="button"
+                    class="btn btn--secundario btn--sm"
+                    (click)="navegarDetalles(d.id!)"
+                  >
+                    Ver detalles
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="bloque__cuerpo">
+        <div class="estado-vacio estado-vacio--plano">
+          <span class="estado-vacio__icono">
+            <app-icono nombre="etiqueta" [tamano]="32" />
+          </span>
+          <h2 class="estado-vacio__titulo">No hay descuentos registrados</h2>
+          <p>Creá un cupón para que los clientes puedan aplicarlo en el carrito.</p>
+          <a routerLink="/formulario-descuento" class="btn btn--primario">Crear descuento</a>
+        </div>
+      </div>
+    }
+  </section>
+</div>

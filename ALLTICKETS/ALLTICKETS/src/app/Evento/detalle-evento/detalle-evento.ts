@@ -8,6 +8,7 @@ import { Autenticador } from '../../servicios/autenticador';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
 import { AdminEventos } from '../crear-evento/admin-eventos';
 import { MapaUbicacion } from '../../mapa/mapa-ubicacion/mapa-ubicacion';
+import { Icono } from '../../ui/icono';
 import { of, Subscription, timer } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 
@@ -19,7 +20,7 @@ const DURACION_MENSAJE_MS = 4000;
 
 @Component({
   selector: 'app-evento-ficha',
-  imports: [DatePipe, CommonModule, AdminEventos, MapaUbicacion],
+  imports: [DatePipe, CommonModule, AdminEventos, MapaUbicacion, Icono],
   templateUrl: './detalle-evento.html',
   styleUrls: ['./detalle-evento.css']
 })
@@ -108,7 +109,7 @@ export class detalleEvento implements OnInit, OnDestroy {
   // MÉTODOS DE BUTACAS
   seleccionarButaca(fila: string, numero: number, disponible: boolean): void {
     if (!disponible) {
-      this.mostrarMensaje('⚠️ Esta butaca no está disponible', 'error');
+      this.mostrarMensaje('Esta butaca no está disponible', 'error');
       return;
     }
 
@@ -366,7 +367,7 @@ export class detalleEvento implements OnInit, OnDestroy {
               .map(b => `Fila ${b.fila} - Butaca ${b.numero}`)
               .join('\n');
 
-            this.mostrarMensaje(`⚠️ Las siguientes butacas seleccionadas ya no están disponibles:\n${detalles}`, 'error');
+            this.mostrarMensaje(`Las siguientes butacas seleccionadas ya no están disponibles: ${detalles}`, 'error');
           }
         }
       });

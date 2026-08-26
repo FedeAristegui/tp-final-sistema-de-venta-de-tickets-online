@@ -1,99 +1,114 @@
-<div class="contenedor">
-  <div class="formulario-container">
+<!-- En edición este componente se embebe dentro de la ficha del descuento: ahí
+     no debe aportar su propio padding de página ni un segundo <h1>. -->
+<div class="pagina pagina--angosta" [class.pagina--embebida]="isEditing()">
+  <section class="panel">
+    <header class="formulario__encabezado">
+      @if (isEditing()) {
+        <h2 class="formulario__titulo">Modificar descuento</h2>
+      } @else {
+        <h1 class="formulario__titulo">Registrar descuento</h1>
+      }
+      <p class="formulario__bajada">
+        Los clientes aplican el código en el carrito antes de confirmar la compra.
+      </p>
+    </header>
 
     @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
-    </div>
-  }
-
-    @if (isEditing()) {
-      <h3>Modificar Descuento</h3>
-    } @else {
-      <h3>Registrar Descuento</h3>
+      <div
+        class="alert"
+        [class.alert-error]="tipoMensaje === 'error'"
+        [class.alert-success]="tipoMensaje === 'success'"
+        role="status"
+      >
+        {{ mensaje }}
+      </div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
-      <label for="codigo">Código:</label>
-      <input id="codigo" type="text" formControlName="codigo" />
-      @if (codigo.invalid && (codigo.dirty || codigo.touched)) {
-        <div class="error">
-          @if (codigo.errors?.['required']) {
-            <span>El código es requerido</span>
-          }
-        </div>
-      }
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario">
+      <div class="campo">
+        <label class="campo__label" for="codigo">Código</label>
+        <input id="codigo" type="text" formControlName="codigo" placeholder="VERANO25" class="mono" />
+        @if (codigo.invalid && (codigo.dirty || codigo.touched)) {
+          <span class="campo__error">El código es requerido</span>
+        }
+      </div>
 
-      <label for="porcentaje">Porcentaje:</label>
-      <input id="porcentaje" type="number" formControlName="porcentaje" min="1" max="100" />
-      @if (porcentaje.invalid && (porcentaje.dirty || porcentaje.touched)) {
-        <div class="error">
-          @if (porcentaje.errors?.['required']) {
-            <span>El porcentaje es requerido</span>
-          }
-          @if (porcentaje.errors?.['min']) {
-            <span>El porcentaje debe ser mayor que 0</span>
-          }
-          @if (porcentaje.errors?.['max']) {
-            <span>El porcentaje no puede exceder 100</span>
-          }
-        </div>
-      }
+      <div class="campo">
+        <label class="campo__label" for="porcentaje">Porcentaje de descuento</label>
+        <input id="porcentaje" type="number" formControlName="porcentaje" min="1" max="100" />
+        @if (porcentaje.invalid && (porcentaje.dirty || porcentaje.touched)) {
+          <span class="campo__error">
+            @if (porcentaje.errors?.['required']) {
+              El porcentaje es requerido
+            } @else if (porcentaje.errors?.['min']) {
+              El porcentaje debe ser mayor que 0
+            } @else if (porcentaje.errors?.['max']) {
+              El porcentaje no puede exceder 100
+            }
+          </span>
+        } @else {
+          <span class="campo__ayuda">Un número entre 1 y 100.</span>
+        }
+      </div>
 
-      <label for="fechaInicio">Fecha de inicio:</label>
-      <input id="fechaInicio" type="date" formControlName="fechaInicio" />
-      @if (fechaInicio.invalid && (fechaInicio.dirty || fechaInicio.touched)) {
-        <div class="error">
-          @if (fechaInicio.errors?.['required']) {
-            <span>La fecha de inicio es requerida</span>
-          }
-          @if (fechaInicio.errors?.['minDateToday']) {
-            <span>La fecha debe ser hoy o posterior</span>
+      <div class="formulario__fila">
+        <div class="campo">
+          <label class="campo__label" for="fechaInicio">Fecha de inicio</label>
+          <input id="fechaInicio" type="date" formControlName="fechaInicio" />
+          @if (fechaInicio.invalid && (fechaInicio.dirty || fechaInicio.touched)) {
+            <span class="campo__error">
+              @if (fechaInicio.errors?.['required']) {
+                La fecha de inicio es requerida
+              } @else if (fechaInicio.errors?.['minDateToday']) {
+                La fecha debe ser hoy o posterior
+              }
+            </span>
           }
         </div>
-      }
 
-      <label for="fechaFin">Fecha de fin:</label>
-      <input id="fechaFin" type="date" formControlName="fechaFin" />
-      @if (fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)) {
-        <div class="error">
-          @if (fechaFin.errors?.['required']) {
-            <span>La fecha de fin es requerida</span>
+        <div class="campo">
+          <label class="campo__label" for="fechaFin">Fecha de fin</label>
+          <input id="fechaFin" type="date" formControlName="fechaFin" />
+          @if (fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)) {
+            <span class="campo__error">La fecha de fin es requerida</span>
           }
         </div>
-      }
+      </div>
+
       @if (form.errors?.['dateFinInvalid'] && (fechaFin.dirty || fechaFin.touched)) {
-        <div class="error">
-          <span>La fecha de fin debe ser al menos 1 día después de la fecha de inicio</span>
-        </div>
+        <span class="campo__error">
+          La fecha de fin debe ser al menos 1 día después de la fecha de inicio
+        </span>
       }
 
-      <label for="activo">
+      <label class="casilla">
         <input id="activo" type="checkbox" formControlName="activo" />
-        Activo
+        <span>Descuento activo</span>
       </label>
-      <button type="submit">
-        {{ isEditing() ? 'Actualizar' : 'Crear' }} descuento
-      </button>
 
-      @if (isEditing()) {
-        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">
-          Cancelar
+      <div class="formulario__acciones">
+        <button type="submit" class="btn btn--primario">
+          {{ isEditing() ? 'Actualizar descuento' : 'Crear descuento' }}
         </button>
-      }
 
+        @if (isEditing()) {
+          <button type="button" (click)="cancelarEdicion()" class="btn btn--secundario">
+            Cancelar
+          </button>
+        }
+      </div>
     </form>
-  </div>
+  </section>
 </div>
 
-<!-- Modal de confirmación simple -->
+<!-- Modal de confirmación -->
 @if (showConfirmModal) {
-  <div class="modal-backdrop">
-    <div class="modal">
-      <p>¿Desea confirmar los datos del descuento?</p>
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <p>¿Confirmás los datos del descuento?</p>
       <div class="modal-actions">
-        <button type="button" (click)="confirmSave()" class="confirm-btn">Confirmar</button>
         <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+        <button type="button" (click)="confirmSave()" class="confirm-btn">Confirmar</button>
       </div>
     </div>
   </div>

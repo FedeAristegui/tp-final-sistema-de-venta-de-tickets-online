@@ -1,326 +1,413 @@
-<div class="contenedor">
-  <div class="formulario-container">
-    <h3>
-      @if(isEditing) {
-        Editar Evento
+<!-- En edición este componente se embebe dentro de la ficha del evento: ahí no
+     debe aportar su propio padding de página ni un segundo <h1>. -->
+<div class="pagina" [class.pagina--embebida]="isEditing">
+  <section class="panel">
+    <header class="formulario__encabezado">
+      @if (isEditing) {
+        <h2 class="formulario__titulo">Editar evento</h2>
       } @else {
-        Crear Nuevo Evento
+        <h1 class="formulario__titulo">Crear nuevo evento</h1>
       }
-    </h3>
+      <p class="formulario__bajada">
+        Definí los datos del evento y cómo se venden las entradas: por sector o por butaca.
+      </p>
+    </header>
 
     @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
-    </div>
-  }
-
-    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario-evento">
-      <label for="titulo">Título:</label>
-      <input id="titulo" formControlName="titulo" placeholder="Título del evento" />
-      @if (titulo.dirty || titulo.touched) {
-        @if (titulo.hasError('required')) {
-          <span>El titulo es requerido</span>
-        }
-        @else if (titulo.hasError('minlength')) {
-          <span>El campo "Titulo" debe tener como minimo 3 caracteres</span>
-        }
-      }
-
-      <label for="fecha">Fecha:</label>
-      <input id="fecha" formControlName="fecha" type="date" />
-      @if (fecha.dirty || fecha.touched) {
-        @if (fecha.hasError('required')) {
-          <span>La fecha es requerida</span>
-        }
-        @else if (fecha.hasError('minDate')) {
-          <span>La fecha debe ser un día futuro (no hoy ni fechas pasadas)</span>
-        }
-      }
-
-      <label for="hora">Hora:</label>
-      <input id="hora" formControlName="hora" type="time" />
-      @if (hora.dirty || hora.touched) {
-        @if (hora.hasError('required')) {
-          <span>La hora es requerida</span>
-        }
-      }
-
-      <label for="lugar">Lugar:</label>
-      <input id="lugar" formControlName="lugar" placeholder="Lugar del evento" />
-      @if (lugar.dirty || lugar.touched) {
-        @if (lugar.hasError('required')) {
-          <span>El lugar es requerido</span>
-        }
-        @else if (lugar.hasError('minlength')) {
-          <span>El campo "Lugar" debe tener como minimo 3 caracteres</span>
-        }
-        @else if (lugar.hasError('hasNumbers')) {
-          <span>El lugar no puede contener números</span>
-        }
-      }
-
-      <label>Ubicación en el mapa:</label>
-      <app-selector-ubicacion
-        [valorInicial]="ubicacionActual()"
-        (ubicacionCambiada)="onUbicacionCambiada($event)" />
-
-      <label for="categoria">Categoría: </label>
-      <select id = "categoria" formControlName = "categoria">
-      <option value="" disabled selected>Seleccione una categoria</option>
-      @for (categoria of categorias; track $index) {
-        <option [value] = "categoria">{{ categoria }}</option>
-      }
-    </select>
-    @if (categoria.dirty || categoria.touched) {
-      @if (categoria.hasError('required')) {
-        <span>La categoria es requerida</span>
-      }
+      <div
+        class="alert"
+        [class.alert-error]="tipoMensaje === 'error'"
+        [class.alert-success]="tipoMensaje === 'success'"
+        role="status"
+      >
+        {{ mensaje }}
+      </div>
     }
 
-      <label for="imagen">Imagen (PNG o JPG):</label>
-      <input 
-        id="imagen" 
-        type="file" 
-        accept=".png,.jpg,.jpeg,image/png,image/jpeg"
-        (change)="onImageSelected($event)"
-        placeholder="Selecciona una imagen PNG o JPG"
-      />
-      @if (archivoSeleccionado()) {
-        <div class="archivo-info">
-          ✅ Archivo seleccionado: <strong>{{ archivoSeleccionado() }}</strong>
-        </div>
-      }
-      @if (imagen.dirty || imagen.touched) {
-        @if (imagen.hasError('required')) {
-          <span>La foto es requerida</span>
-        }
-        @else if (imagen.hasError('invalidImage')) {
-          <span>La imagen debe ser una foto PNG o JPG válida</span>
-        }
-      }
-  
-      <label for="modoVenta">Modo de Venta:</label>
-      <select id="modoVenta" formControlName="modoVenta" (change)="cambiarModoVenta()">
-        <option value="sector">Venta por Sector</option>
-        <option value="butaca">Venta por Butaca</option>
-      </select>
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="formulario">
+      <fieldset class="seccion">
+        <legend class="seccion__titulo">Datos del evento</legend>
 
-      @if (form.get('modoVenta')?.value === 'sector') {
-        <div class="sectores-block">
-          <h4>Sectores</h4>
-          <button type="button" (click)="agregarSector()">+ Agregar Sector</button>
-          <div formArrayName="sectores">
-            @for (s of sectores.controls; track $index; let i = $index) {
-              <div [formGroupName]="i" class="sector-item">
-                <div>
-                  <label for="nombre">Nombre:</label>
-                  <input id="nombre" formControlName="nombre" placeholder="Ej: VIP" />
-                  @if (s.get('nombre')?.dirty || s.get('nombre')?.touched) {
-                    @if (s.get('nombre')?.hasError('required')) {
-                      <span class="error-inline">El nombre es requerido</span>
-                    }
-                    @else if (s.get('nombre')?.hasError('onlyLetters')) {
-                      <span class="error-inline">El nombre solo puede contener letras</span>
-                    }
-                  } @else {
-                    <span class="error-inline"></span>
-                  }
-                </div>
-                <div>
-                  <label for="capacidad">Capacidad:</label>
-                  <input id="capacidad" formControlName="capacidad" type="number" />
-                  @if (s.get('capacidad')?.dirty || s.get('capacidad')?.touched) {
-                    @if (s.get('capacidad')?.hasError('required')) {
-                      <span class="error-inline">La capacidad es requerida</span>
-                    }
-                    @else if (s.get('capacidad')?.hasError('positiveNumber')) {
-                      <span class="error-inline">La capacidad debe ser mayor a 0</span>
-                    }
-                  } @else {
-                    <span class="error-inline"></span>
-                  }
-                </div>
-                <div>
-                  <label for="precio">Precio:</label>
-                  <input id="precio" formControlName="precio" type="number" />
-                  @if (s.get('precio')?.dirty || s.get('precio')?.touched) {
-                    @if (s.get('precio')?.hasError('required')) {
-                      <span class="error-inline">El precio es requerido</span>
-                    }
-                    @else if (s.get('precio')?.hasError('positiveNumber')) {
-                      <span class="error-inline">El precio debe ser mayor a 0</span>
-                    }
-                  } @else {
-                    <span class="error-inline"></span>
-                  }
-                </div>
-                <button type="button" (click)="eliminarSector(i)" class="btn-eliminar-item">🗑️ Eliminar</button>
-              </div>
+        <div class="campo">
+          <label class="campo__label" for="titulo">Título</label>
+          <input id="titulo" formControlName="titulo" placeholder="Nombre del evento" />
+          @if (titulo.dirty || titulo.touched) {
+            @if (titulo.hasError('required')) {
+              <span class="campo__error">El título es requerido</span>
+            } @else if (titulo.hasError('minlength')) {
+              <span class="campo__error">El título debe tener al menos 3 caracteres</span>
+            }
+          }
+        </div>
+
+        <div class="seccion__fila">
+          <div class="campo">
+            <label class="campo__label" for="fecha">Fecha</label>
+            <input id="fecha" formControlName="fecha" type="date" />
+            @if (fecha.dirty || fecha.touched) {
+              @if (fecha.hasError('required')) {
+                <span class="campo__error">La fecha es requerida</span>
+              } @else if (fecha.hasError('minDate')) {
+                <span class="campo__error">La fecha debe ser un día futuro</span>
+              }
+            }
+          </div>
+
+          <div class="campo">
+            <label class="campo__label" for="hora">Hora</label>
+            <input id="hora" formControlName="hora" type="time" />
+            @if ((hora.dirty || hora.touched) && hora.hasError('required')) {
+              <span class="campo__error">La hora es requerida</span>
             }
           </div>
         </div>
-      } @else {
-        <div class="butacas-block">
-          <h4>Configuración de Butacas</h4>
-          
-          <div class="generador-butacas" [formGroup]="generadorButacas">
-            <h5>🎫 Generador Automático de Butacas</h5>
-            <p class="info-ayuda">
-              Genera automáticamente todas las butacas del evento especificando las filas y cantidad.
-            </p>
-            <div class="generador-campos">
-              <div>
-                <label for="filas">Filas <small>(A,B,C o A-E)</small>:</label>
-                <input id="filas" formControlName="filas" placeholder="Ejemplo: A-E" />
-                <small class="hint">💡 Usa comas (A,B,C) o guión (A-E)</small>
-                @if (generadorButacas.get('filas')?.dirty || generadorButacas.get('filas')?.touched) {
-                  @if (generadorButacas.get('filas')?.hasError('required')) {
-                    <span class="error-inline">Las filas son requeridas</span>
-                  }
-                  @else if (generadorButacas.get('filas')?.hasError('invalidFilas')) {
-                    <span class="error-inline">Formato de filas inválido. Usa A-E o A,B,C</span>
-                  }
-                }
-              </div>
-              <div>
-                <label for="butacasPorFila">Butacas por fila:</label>
-                <input id="butacasPorFila" formControlName="butacasPorFila" type="number" placeholder="Ej: 10" min="1" />
-                <small class="hint">💡 Cantidad de asientos por fila</small>
-                @if (generadorButacas.get('butacasPorFila')?.dirty || generadorButacas.get('butacasPorFila')?.touched) {
-                  @if (generadorButacas.get('butacasPorFila')?.hasError('required')) {
-                    <span class="error-inline">Las butacas por fila son requeridas</span>
-                  }
-                  @else if (generadorButacas.get('butacasPorFila')?.hasError('positiveNumber')) {
-                    <span class="error-inline">Las butacas por fila deben ser mayor a 0</span>
-                  }
-                   @else if (generadorButacas.get('butacasPorFila')?.hasError('max')) {
-                    <span class="error-inline">Las butacas por fila no pueden ser mayor a 30</span>}
-                }
-              </div>
-              <div>
-                <label for="precioBase">Precio por butaca ($):</label>
-                <input id="precioBase" formControlName="precioBase" type="number" placeholder="Ej: 1000" min="0" />
-                <small class="hint">💡 Precio base para todas las butacas</small>
-                @if (generadorButacas.get('precioBase')?.dirty || generadorButacas.get('precioBase')?.touched) {
-                  @if (generadorButacas.get('precioBase')?.hasError('required')) {
-                    <span class="error-inline">El precio es requerido</span>
-                  }
-                  @else if (generadorButacas.get('precioBase')?.hasError('positiveNumber')) {
-                    <span class="error-inline">El precio debe ser mayor a 0</span>
-                  }
-                }
-              </div>
+
+        <div class="seccion__fila">
+          <div class="campo">
+            <label class="campo__label" for="lugar">Lugar</label>
+            <input id="lugar" formControlName="lugar" placeholder="Estadio, teatro, club…" />
+            @if (lugar.dirty || lugar.touched) {
+              @if (lugar.hasError('required')) {
+                <span class="campo__error">El lugar es requerido</span>
+              } @else if (lugar.hasError('minlength')) {
+                <span class="campo__error">El lugar debe tener al menos 3 caracteres</span>
+              } @else if (lugar.hasError('hasNumbers')) {
+                <span class="campo__error">El lugar no puede contener números</span>
+              }
+            }
+          </div>
+
+          <div class="campo">
+            <label class="campo__label" for="categoria">Categoría</label>
+            <select id="categoria" formControlName="categoria">
+              <option value="" disabled selected>Seleccioná una categoría</option>
+              @for (categoria of categorias; track $index) {
+                <option [value]="categoria">{{ categoria }}</option>
+              }
+            </select>
+            @if ((categoria.dirty || categoria.touched) && categoria.hasError('required')) {
+              <span class="campo__error">La categoría es requerida</span>
+            }
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="campo__label" for="imagen">Imagen (PNG o JPG)</label>
+          <input
+            id="imagen"
+            type="file"
+            accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+            (change)="onImageSelected($event)"
+          />
+          @if (archivoSeleccionado()) {
+            <span class="archivo-info">
+              <app-icono nombre="check" [tamano]="15" />
+              <span>{{ archivoSeleccionado() }}</span>
+            </span>
+          }
+          @if (imagen.dirty || imagen.touched) {
+            @if (imagen.hasError('required')) {
+              <span class="campo__error">La imagen es requerida</span>
+            } @else if (imagen.hasError('invalidImage')) {
+              <span class="campo__error">La imagen debe ser un PNG o JPG válido</span>
+            }
+          }
+        </div>
+
+        <div class="campo">
+          <span class="campo__label">Ubicación en el mapa</span>
+          <app-selector-ubicacion
+            [valorInicial]="ubicacionActual()"
+            (ubicacionCambiada)="onUbicacionCambiada($event)"
+          />
+        </div>
+      </fieldset>
+
+      <fieldset class="seccion">
+        <legend class="seccion__titulo">Venta de entradas</legend>
+
+        <div class="campo">
+          <label class="campo__label" for="modoVenta">Modo de venta</label>
+          <select id="modoVenta" formControlName="modoVenta" (change)="cambiarModoVenta()">
+            <option value="sector">Venta por sector</option>
+            <option value="butaca">Venta por butaca</option>
+          </select>
+        </div>
+
+        @if (form.get('modoVenta')?.value === 'sector') {
+          <div class="sub-seccion">
+            <div class="sub-seccion__encabezado">
+              <h3 class="sub-seccion__titulo">Sectores</h3>
+              <button type="button" (click)="agregarSector()" class="btn btn--secundario btn--sm">
+                <app-icono nombre="mas" [tamano]="15" />
+                Agregar sector
+              </button>
             </div>
-            
-            @if (butacas.length > 0) {
-              <div class="advertencia-reemplazo">
-                ⚠️ Al generar se reemplazarán las {{ butacas.length }} butacas actuales
-              </div>
+
+            @if (sectores.length === 0) {
+              <p class="sub-seccion__ayuda">
+                Todavía no agregaste ningún sector. Cada sector define un nombre, una capacidad y
+                un precio.
+              </p>
             }
-            
-            <button type="button" (click)="generarButacas()" class="btn-generar">
-              🎫 Generar Butacas Automáticamente
-            </button>
+
+            <div formArrayName="sectores" class="sectores">
+              @for (s of sectores.controls; track $index; let i = $index) {
+                <div [formGroupName]="i" class="sector-item">
+                  <div class="campo">
+                    <label class="campo__label" [for]="'sector-nombre-' + i">Nombre</label>
+                    <input [id]="'sector-nombre-' + i" formControlName="nombre" placeholder="VIP" />
+                    @if (s.get('nombre')?.dirty || s.get('nombre')?.touched) {
+                      @if (s.get('nombre')?.hasError('required')) {
+                        <span class="campo__error">El nombre es requerido</span>
+                      } @else if (s.get('nombre')?.hasError('onlyLetters')) {
+                        <span class="campo__error">Sólo puede contener letras</span>
+                      }
+                    }
+                  </div>
+
+                  <div class="campo">
+                    <label class="campo__label" [for]="'sector-capacidad-' + i">Capacidad</label>
+                    <input
+                      [id]="'sector-capacidad-' + i"
+                      formControlName="capacidad"
+                      type="number"
+                      min="1"
+                    />
+                    @if (s.get('capacidad')?.dirty || s.get('capacidad')?.touched) {
+                      @if (s.get('capacidad')?.hasError('required')) {
+                        <span class="campo__error">La capacidad es requerida</span>
+                      } @else if (s.get('capacidad')?.hasError('positiveNumber')) {
+                        <span class="campo__error">Debe ser mayor a 0</span>
+                      }
+                    }
+                  </div>
+
+                  <div class="campo">
+                    <label class="campo__label" [for]="'sector-precio-' + i">Precio</label>
+                    <input
+                      [id]="'sector-precio-' + i"
+                      formControlName="precio"
+                      type="number"
+                      min="0"
+                    />
+                    @if (s.get('precio')?.dirty || s.get('precio')?.touched) {
+                      @if (s.get('precio')?.hasError('required')) {
+                        <span class="campo__error">El precio es requerido</span>
+                      } @else if (s.get('precio')?.hasError('positiveNumber')) {
+                        <span class="campo__error">Debe ser mayor a 0</span>
+                      }
+                    }
+                  </div>
+
+                  <button
+                    type="button"
+                    (click)="eliminarSector(i)"
+                    class="btn-icono btn-icono--peligro sector-item__eliminar"
+                    [attr.aria-label]="'Eliminar el sector ' + (i + 1)"
+                  >
+                    <app-icono nombre="basura" [tamano]="16" />
+                  </button>
+                </div>
+              }
+            </div>
           </div>
+        } @else {
+          <div class="sub-seccion">
+            <div class="sub-seccion__encabezado">
+              <h3 class="sub-seccion__titulo">Generador automático de butacas</h3>
+            </div>
 
-          <hr />
+            <p class="sub-seccion__ayuda">
+              Genera todas las butacas del evento a partir de las filas y la cantidad por fila.
+            </p>
 
-          <div formArrayName="butacas">
-            @if (butacas.length > 0) {
-              <div class="butacas-header">
-                <h5>Butacas Creadas</h5>
-                <div class="info-butacas">Total: {{ butacas.length }} butacas</div>
-              </div>
-              
-              <div class="opciones-butacas">
-                <button type="button" (click)="agregarButaca()" class="btn-agregar">+ Agregar Butaca Manual</button>
-                <button type="button" (click)="limpiarButacas()" class="btn-limpiar">🗑️ Limpiar Todas</button>
-              </div>
-              
-              <div class="lista-butacas">
-                @for (b of butacas.controls; track $index; let i = $index) {
-                  @if (i < 20 || mostrarTodasButacas()) {
-                    <div [formGroupName]="i" class="butaca-item">
-                      <div class="butaca-info">
-                        <span class="butaca-label">Fila {{ b.get('fila')?.value }} - #{{ b.get('numero')?.value }}</span>
-                        <div class="campo-precio">
-                          <label>Precio:</label>
-                          <input formControlName="precio" type="number" min="0" step="0.01" />
-                        </div>
-                      </div>
-                      <div class="butaca-errores">
-                        @if (b.get('precio')?.dirty || b.get('precio')?.touched) {
-                          @if (b.get('precio')?.hasError('required')) {
-                            <span class="error-inline">Precio requerido</span>
-                          }
-                          @else if (b.get('precio')?.hasError('positiveNumber')) {
-                            <span class="error-inline">Precio debe ser > 0</span>
-                          }
-                        }
-                      </div>
-                      <div class="butaca-controles">
-                        <label class="checkbox-disponible">
-                          <input formControlName="disponible" type="checkbox" />
-                          Disponible
-                        </label>
-                        <button type="button" (click)="eliminarButaca(i)" class="btn-eliminar-item">🗑️</button>
-                      </div>
-                    </div>
+            <div class="generador" [formGroup]="generadorButacas">
+              <div class="generador__campos">
+                <div class="campo">
+                  <label class="campo__label" for="filas">Filas</label>
+                  <input id="filas" formControlName="filas" placeholder="A-E" />
+                  <span class="campo__ayuda">Usá comas (A,B,C) o guión (A-E).</span>
+                  @if (generadorButacas.get('filas')?.dirty || generadorButacas.get('filas')?.touched) {
+                    @if (generadorButacas.get('filas')?.hasError('required')) {
+                      <span class="campo__error">Las filas son requeridas</span>
+                    } @else if (generadorButacas.get('filas')?.hasError('invalidFilas')) {
+                      <span class="campo__error">Formato inválido. Usá A-E o A,B,C</span>
+                    }
                   }
-                }
-                
-                @if (butacas.length > 20 && !mostrarTodasButacas()) {
-                  <div class="ver-mas">
-                    <p>Mostrando 20 de {{ butacas.length }} butacas</p>
-                    <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
-                      Ver todas las butacas
+                </div>
+
+                <div class="campo">
+                  <label class="campo__label" for="butacasPorFila">Butacas por fila</label>
+                  <input
+                    id="butacasPorFila"
+                    formControlName="butacasPorFila"
+                    type="number"
+                    placeholder="10"
+                    min="1"
+                  />
+                  <span class="campo__ayuda">Máximo 30 por fila.</span>
+                  @if (generadorButacas.get('butacasPorFila')?.dirty || generadorButacas.get('butacasPorFila')?.touched) {
+                    @if (generadorButacas.get('butacasPorFila')?.hasError('required')) {
+                      <span class="campo__error">Este campo es requerido</span>
+                    } @else if (generadorButacas.get('butacasPorFila')?.hasError('positiveNumber')) {
+                      <span class="campo__error">Debe ser mayor a 0</span>
+                    } @else if (generadorButacas.get('butacasPorFila')?.hasError('max')) {
+                      <span class="campo__error">No puede ser mayor a 30</span>
+                    }
+                  }
+                </div>
+
+                <div class="campo">
+                  <label class="campo__label" for="precioBase">Precio por butaca</label>
+                  <input
+                    id="precioBase"
+                    formControlName="precioBase"
+                    type="number"
+                    placeholder="1000"
+                    min="0"
+                  />
+                  <span class="campo__ayuda">Precio base para todas.</span>
+                  @if (generadorButacas.get('precioBase')?.dirty || generadorButacas.get('precioBase')?.touched) {
+                    @if (generadorButacas.get('precioBase')?.hasError('required')) {
+                      <span class="campo__error">El precio es requerido</span>
+                    } @else if (generadorButacas.get('precioBase')?.hasError('positiveNumber')) {
+                      <span class="campo__error">Debe ser mayor a 0</span>
+                    }
+                  }
+                </div>
+              </div>
+
+              @if (butacas.length > 0) {
+                <p class="alert alert-aviso">
+                  <app-icono nombre="alerta" [tamano]="16" />
+                  <span>Al generar se reemplazan las {{ butacas.length }} butacas actuales.</span>
+                </p>
+              }
+
+              <button type="button" (click)="generarButacas()" class="btn btn--secundario btn--bloque">
+                Generar butacas
+              </button>
+            </div>
+
+            <div formArrayName="butacas" class="butacas">
+              @if (butacas.length > 0) {
+                <div class="sub-seccion__encabezado">
+                  <h3 class="sub-seccion__titulo">
+                    Butacas creadas
+                    <span class="texto-suave">({{ butacas.length }})</span>
+                  </h3>
+                  <div class="fila-iconos">
+                    <button type="button" (click)="agregarButaca()" class="btn btn--secundario btn--sm">
+                      <app-icono nombre="mas" [tamano]="15" />
+                      Agregar
+                    </button>
+                    <button type="button" (click)="limpiarButacas()" class="btn btn--peligro btn--sm">
+                      <app-icono nombre="basura" [tamano]="15" />
+                      Limpiar todas
                     </button>
                   </div>
-                } @else if (butacas.length > 20 && mostrarTodasButacas()) {
-                  <button type="button" (click)="toggleMostrarTodas()" class="btn-ver-mas">
-                    Ver menos
+                </div>
+
+                <div class="lista-butacas">
+                  @for (b of butacas.controls; track $index; let i = $index) {
+                    @if (i < 20 || mostrarTodasButacas()) {
+                      <div [formGroupName]="i" class="butaca-item">
+                        <span class="butaca-item__etiqueta">
+                          Fila {{ b.get('fila')?.value }} · #{{ b.get('numero')?.value }}
+                        </span>
+
+                        <div class="campo butaca-item__precio">
+                          <label class="campo__label" [for]="'butaca-precio-' + i">Precio</label>
+                          <input
+                            [id]="'butaca-precio-' + i"
+                            formControlName="precio"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                          />
+                          @if (b.get('precio')?.dirty || b.get('precio')?.touched) {
+                            @if (b.get('precio')?.hasError('required')) {
+                              <span class="campo__error">Requerido</span>
+                            } @else if (b.get('precio')?.hasError('positiveNumber')) {
+                              <span class="campo__error">Debe ser mayor a 0</span>
+                            }
+                          }
+                        </div>
+
+                        <label class="casilla">
+                          <input formControlName="disponible" type="checkbox" />
+                          <span>Disponible</span>
+                        </label>
+
+                        <button
+                          type="button"
+                          (click)="eliminarButaca(i)"
+                          class="btn-icono btn-icono--peligro"
+                          [attr.aria-label]="
+                            'Eliminar la butaca ' +
+                            b.get('fila')?.value +
+                            b.get('numero')?.value
+                          "
+                        >
+                          <app-icono nombre="basura" [tamano]="16" />
+                        </button>
+                      </div>
+                    }
+                  }
+
+                  @if (butacas.length > 20) {
+                    <div class="ver-mas">
+                      @if (!mostrarTodasButacas()) {
+                        <p class="texto-suave">Mostrando 20 de {{ butacas.length }} butacas</p>
+                      }
+                      <button type="button" (click)="toggleMostrarTodas()" class="btn btn--fantasma btn--sm">
+                        {{ mostrarTodasButacas() ? 'Ver menos' : 'Ver todas las butacas' }}
+                      </button>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="estado-vacio estado-vacio--plano">
+                  <span class="estado-vacio__icono">
+                    <app-icono nombre="butaca" [tamano]="28" />
+                  </span>
+                  <h3 class="estado-vacio__titulo">Todavía no hay butacas</h3>
+                  <p>Usá el generador automático o agregá butacas una por una.</p>
+                  <button type="button" (click)="agregarButaca()" class="btn btn--secundario">
+                    Agregar la primera butaca
                   </button>
-                }
-              </div>
-            } @else {
-              <div class="sin-butacas">
-                <p>📋 No hay butacas creadas aún</p>
-                <p>Usa el generador automático o agrega butacas manualmente</p>
-                <button type="button" (click)="agregarButaca()" class="btn-agregar">+ Agregar Primera Butaca</button>
-              </div>
-            }
+                </div>
+              }
+            </div>
           </div>
-        </div>
-      }
-    
-        <button type="submit">
-        @if(isEditing) {
-          Actualizar Evento
-        } @else {
-          Guardar Evento
         }
-      </button>
+      </fieldset>
 
-      @if(isEditing) {
-        <button type="button" (click)="cancelarEdicion()" class="cancelar-btn">
-          Cancelar
+      <div class="formulario__acciones">
+        <button type="submit" class="btn btn--primario">
+          {{ isEditing ? 'Actualizar evento' : 'Guardar evento' }}
         </button>
-      }
-    </form>
-  </div>
 
-  <!-- Modal de confirmación -->
-  @if (showConfirmModal()) {
-    <div class="modal-backdrop">
-      <div class="modal">
-        <p>{{ confirmMessage() }}</p>
-        <div class="modal-actions">
-          <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
-          <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
-        </div>
+        @if (isEditing) {
+          <button type="button" (click)="cancelarEdicion()" class="btn btn--secundario">
+            Cancelar
+          </button>
+        }
       </div>
-    </div>
-  }
+    </form>
+  </section>
 </div>
 
-
+<!-- Modal de confirmación -->
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <p>{{ confirmMessage() }}</p>
+      <div class="modal-actions">
+        <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+        <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+}

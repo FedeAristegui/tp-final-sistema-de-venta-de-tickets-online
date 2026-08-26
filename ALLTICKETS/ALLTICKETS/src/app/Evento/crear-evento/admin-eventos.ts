@@ -105,11 +105,12 @@ import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.ser
 import { Evento, Ubicacion } from '../../modelos/evento';
 import { CommonModule } from '@angular/common';
 import { SelectorUbicacion } from '../../mapa/selector-ubicacion/selector-ubicacion';
+import { Icono } from '../../ui/icono';
 
 @Component({
   selector: 'app-admin-eventos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SelectorUbicacion],
+  imports: [CommonModule, ReactiveFormsModule, SelectorUbicacion, Icono],
   templateUrl: './admin-eventos.html',
   styleUrls: ['./admin-eventos.css']
 })
@@ -155,7 +156,7 @@ export class AdminEventos implements OnInit {
     if (file) {
       // Validar que sea un archivo PNG o JPG
       if (!['image/png', 'image/jpeg'].includes(file.type)) {
-        this.mensaje = '⚠️ Solo se aceptan archivos PNG o JPG';
+        this.mensaje = 'Solo se aceptan archivos PNG o JPG';
         this.tipoMensaje = 'error';
         input.value = '';
         this.archivoSeleccionado.set('');
@@ -166,7 +167,7 @@ export class AdminEventos implements OnInit {
       // Validar tamaño máximo (5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        this.mensaje = '⚠️ El archivo es demasiado grande. Máximo 5MB';
+        this.mensaje = 'El archivo es demasiado grande. Máximo 5 MB';
         this.tipoMensaje = 'error';
         input.value = '';
         this.archivoSeleccionado.set('');
@@ -498,15 +499,16 @@ export class AdminEventos implements OnInit {
     const filas = this.parsearFilas(filasInput);
     
     if (filas.length === 0) {
-      this.mensaje = '⚠️ Formato de filas inválido. Ejemplo: A-E o A,B,C';
+      this.mensaje = 'Formato de filas inválido. Ejemplo: A-E o A,B,C';
       this.tipoMensaje = 'error';
       return;
     }
 
     const totalButacas = filas.length * cantidad;
+    const configuracion = `${filas.length} filas (${filas.join(', ')}), ${cantidad} butacas por fila, $${precio} cada una.`;
     const mensajeConfirm = this.butacas.length > 0
-      ? `¿Generar ${totalButacas} butacas nuevas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca\n\n⚠️ Esto reemplazará las ${this.butacas.length} butacas actuales`
-      : `¿Generar ${totalButacas} butacas?\n\n📊 Configuración:\n• ${filas.length} filas (${filas.join(', ')})\n• ${cantidad} butacas por fila\n• $${precio} por butaca`;
+      ? `¿Generar ${totalButacas} butacas nuevas? ${configuracion} Esto reemplaza las ${this.butacas.length} butacas actuales.`
+      : `¿Generar ${totalButacas} butacas? ${configuracion}`;
 
     this.pendingAction = 'generarButacas';
     this.pendingData = { filas, cantidad, precio, totalButacas };
@@ -663,7 +665,7 @@ export class AdminEventos implements OnInit {
       delete (evento as any).id;
       this.eventoService.crearEvento(evento).subscribe({
         next: (creado: Evento) => {
-          this.mensaje = '🎉 Evento creado con éxito';
+          this.mensaje = 'Evento creado con éxito';
           this.tipoMensaje = 'success';
           this.irAlDetalle(creado?.id);
         },

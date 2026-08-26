@@ -1,448 +1,175 @@
-
-/* El alto libre lo reparte el armazón de la app (ver styles.css): el host recibe
-   lo que queda bajo la cabecera y el contenedor lo llena. Antes esto era
-   `min-height: 100vh` y sumaba scroll de más. */
 :host {
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
-.tarjetas-container {
-  flex: 1 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 20px;
-}
-
-.header {
-  text-align: center;
-  color: white;
-  margin-bottom: 40px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.header p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  margin-bottom: 25px;
-}
-
-.btn-agregar {
-  padding: 14px 32px;
-  background: white;
-  color: #667eea;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-agregar:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
+/* --- Formulario --------------------------------------------------------- */
 
 .formulario-tarjeta {
-  background: white;
-  border-radius: 20px;
-  padding: 35px;
-  max-width: 800px;
-  margin: 0 auto 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: var(--sp-8);
 }
 
-.formulario-tarjeta h2 {
-  color: #2d3748;
-  font-size: 1.8rem;
-  margin-bottom: 25px;
-  font-weight: 800;
+.formulario-tarjeta__titulo {
+  font-size: var(--t-lg);
+  font-weight: 600;
+  margin-bottom: var(--sp-5);
 }
 
-.form-grid {
+/* Grilla de 4 columnas: número y titular ocupan la fila entera, y vencimiento,
+   CVV y tipo entran los tres en la siguiente. Así el formulario reproduce la
+   forma física de la tarjeta. */
+.formulario-tarjeta__grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 25px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
 }
 
-.form-group {
+.campo--ancho {
+  grid-column: 1 / -1;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  font-size: var(--t-base);
+  color: var(--texto-medio);
+}
+
+.casilla input {
+  width: auto;
+}
+
+.formulario-tarjeta__acciones {
+  display: flex;
+  gap: var(--sp-3);
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--borde);
+}
+
+/* --- Listado ------------------------------------------------------------ */
+
+.tarjetas-grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: var(--sp-4);
+}
+
+/* La tarjeta ya no simula plástico negro con degradé: es una superficie más
+   del sistema, y la principal se distingue por el borde violeta. */
+.tarjeta {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  background: var(--superficie);
+  border: 1px solid var(--marca-100);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra);
 }
 
-.form-group label {
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 0.95rem;
+.tarjeta--principal {
+  border-color: var(--marca-300);
 }
 
-.form-input {
-  padding: 12px 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.checkbox-group label {
+.tarjeta__encabezado {
   display: flex;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.error {
-  color: #e53e3e;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.form-acciones {
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-}
-
-.btn-guardar {
-  padding: 14px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.btn-guardar:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
-}
-
-.btn-guardar:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
-.loading {
-  text-align: center;
-  padding: 100px 20px;
-  color: white;
-}
-
-.spinner {
-  width: 70px;
-  height: 70px;
-  border: 8px solid rgba(255, 255, 255, 0.2);
-  border-top-color: white;
-  border-radius: 50%;
-  margin: 0 auto 30px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.tarjetas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.tarjeta-card {
-  background: linear-gradient(135deg, #434343 0%, #000000 100%);
-  border-radius: 20px;
-  padding: 30px;
-  color: white;
-  position: relative;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  min-height: 250px;
-}
-
-.tarjeta-card.principal {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 3px solid #ffd700;
-}
-
-.tarjeta-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-}
-
-.badge-principal {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #ffd700;
-  color: #000;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.tarjeta-header {
-  display: flex;
   justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.tarjeta__tipo {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: 30px;
-}
-
-.tarjeta-icono {
-  font-size: 2.5rem;
-}
-
-.tarjeta-tipo {
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.tarjeta-numero {
-  font-size: 1.5rem;
+  gap: var(--sp-2);
   font-weight: 600;
-  letter-spacing: 2px;
-  margin-bottom: 25px;
-  font-family: 'Courier New', monospace;
 }
 
-.tarjeta-info {
+.tarjeta__tipo app-icono {
+  color: var(--marca-500);
+}
+
+.tarjeta__numero {
+  font-size: var(--t-lg);
+  letter-spacing: 0.08em;
+  color: var(--texto);
+}
+
+.tarjeta__datos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.info-item .label {
-  font-size: 0.75rem;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.info-item .valor {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-
-.tarjeta-detalles-completos {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: expandirDetalle 0.3s ease-out;
-}
-
-@keyframes expandirDetalle {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.detalle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.detalle-row:last-child {
-  border-bottom: none;
-}
-
-.detalle-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 600;
-}
-
-.detalle-valor {
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-align: right;
-  font-family: 'Courier New', monospace;
-}
-
-.tarjeta-acciones {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.btn-accion {
-  flex: 1;
-  min-width: 110px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-detalles {
-  background: rgba(102, 126, 234, 0.8);
-  color: white;
-}
-
-.btn-detalles:hover {
-  background: rgba(102, 126, 234, 1);
-  transform: translateY(-2px);
-}
-
-.btn-principal {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-}
-
-.btn-principal:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.btn-eliminar {
-  background: rgba(229, 62, 62, 0.9);
-  color: white;
-}
-
-.btn-eliminar:hover {
-  background: rgba(229, 62, 62, 1);
-}
-
-
-.sin-tarjetas {
-  text-align: center;
-  padding: 100px 40px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.icono-grande {
-  font-size: 6rem;
-  margin-bottom: 20px;
-}
-
-.sin-tarjetas h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #2d3748;
-  margin-bottom: 15px;
-}
-
-.sin-tarjetas p {
-  font-size: 1.2rem;
-  color: #718096;
-  margin-bottom: 30px;
-}
-
-.btn-agregar-inline {
-  padding: 14px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.btn-agregar-inline:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
-}
-
-.nota-seguridad {
-  max-width: 800px;
-  margin: 40px auto 0;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.icono-seguridad {
-  font-size: 2rem;
-}
-
-.nota-seguridad p {
-  color: #4a5568;
-  font-size: 0.95rem;
+  gap: var(--sp-4);
   margin: 0;
 }
 
-@media (max-width: 768px) {
-  .tarjetas-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 2.2rem;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .formulario-tarjeta {
-    padding: 25px;
-  }
+.tarjeta__datos dt,
+.tarjeta__detalles dt {
+  color: var(--marca-600);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--sp-1);
 }
 
+.tarjeta__datos dd,
+.tarjeta__detalles dd {
+  margin: 0;
+  font-size: var(--t-sm);
+  overflow-wrap: anywhere;
+}
+
+.tarjeta__detalles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: var(--sp-4);
+  background: var(--marca-50);
+  border-radius: var(--r-sm);
+}
+
+.tarjeta__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--borde);
+}
+
+/* El botón destructivo se separa del resto para que no se toque por error. */
+.tarjeta__eliminar {
+  margin-left: auto;
+}
+
+.nota-seguridad {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-8);
+  color: var(--texto-suave);
+  font-size: var(--t-sm);
+}
+
+.nota-seguridad app-icono {
+  flex: none;
+  color: var(--marca-400);
+}
+
+@media (max-width: 640px) {
+  .formulario-tarjeta__grilla {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .formulario-tarjeta__acciones {
+    flex-direction: column;
+  }
+
+  .formulario-tarjeta__acciones .btn {
+    width: 100%;
+  }
+}

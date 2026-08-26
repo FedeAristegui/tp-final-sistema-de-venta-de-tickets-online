@@ -1,225 +1,221 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* La cabecera queda fija en el flujo de la página: antes era `sticky`, así que
-   el menú (con "Iniciar Sesión", "Mis Tarjetas", etc.) acompañaba al usuario al
-   scrollear. `relative` mantiene el z-index para que la sombra siga cayendo
-   sobre el contenido, sin que el bloque se mueva. */
-.menu-container {
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+/* La cabecera queda fija en el flujo de la página (no `sticky`): así el menú no
+   acompaña al usuario al scrollear ni se superpone al contenido. */
+.cabecera {
   position: relative;
-  z-index: 100;
+  z-index: var(--z-cabecera);
+  background: var(--superficie);
+  /* Hairline de marca en vez de gris: cierra la barra y engancha con el
+     lavado violeta que arranca justo debajo. */
+  border-bottom: 1px solid var(--marca-200);
 }
 
-.header-top {
+.cabecera__barra {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
-  background: linear-gradient(135deg, white);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  gap: var(--sp-6);
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin-inline: auto;
+  padding: var(--sp-3) var(--sp-6);
+  min-height: 60px;
 }
 
-.logo {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
-  transition: transform 0.3s ease;
-}
-.logo:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background: #f8f9fa;
-  cursor: pointer;
-}
-
-
-.btn-volver {
-  text-decoration: none;
-  padding: 10px 20px;
-  background: white;
-  color: #667eea;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
+/* --- Lockup de marca ----------------------------------------------------
+   El logo original es vertical (estrella sobre el nombre) y a la altura de una
+   barra de app el nombre quedaría ilegible. Se recorta sólo la estrella del PNG
+   y el nombre se compone en Geist al lado. */
+.marca {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-volver:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background: #f8f9fa;
-}
-
-.menu-visitante,
-.menu-usuario,
-.menu-admin {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 25px 40px;
-}
-
-.menu-visitante h1,
-.menu-usuario h2,
-.menu-admin h2 {
-  margin-bottom: 20px;
-  color: #667eea;
-  font-weight: 700;
-}
-
-.menu-visitante h1 {
-  font-size: 2.2rem;
-  text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.menu-usuario h2,
-.menu-admin h2 {
-  font-size: 1.8rem;
-}
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0;
-}
-
-nav ul li {
-  margin: 0;
-}
-
-nav ul li a {
+  gap: var(--sp-2);
+  flex: none;
   text-decoration: none;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 10px;
+  color: var(--texto);
+}
+
+.marca:hover {
+  text-decoration: none;
+}
+
+.marca__estrella {
+  /* Recorte medido sobre logo.png (1152x896): la estrella ocupa
+     x 303-846 (544px) e y 112-627 (516px). Los porcentajes derivan de ahí,
+     así el recorte se mantiene exacto a cualquier tamaño. */
+  --lado: 28px;
+  width: calc(var(--lado) * 1.054);
+  height: var(--lado);
+  background-image: url('/assets/logo.png');
+  background-repeat: no-repeat;
+  background-size: 211.76% 173.64%;
+  background-position: 49.84% 29.48%;
+}
+
+.marca__texto {
+  font-size: var(--t-md);
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-  cursor: pointer;
+  letter-spacing: -0.01em;
 }
 
-nav ul li a:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
+/* --- Navegación --------------------------------------------------------- */
 
-nav ul li a:active {
-  transform: translateY(-1px);
-}
-
-/* Estilos para el modal de confirmación global */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+.nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1100;
+  justify-content: space-between;
+  flex: 1;
+  gap: var(--sp-6);
 }
 
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  max-width: 380px;
-  width: 90%;
-  text-align: center;
-}
-
-.modal-actions {
+.nav__lista {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: var(--sp-1);
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+/* Links de texto, no botones-pastilla: en una barra con seis destinos, seis
+   bloques de color sólido compiten entre sí y con la acción principal. */
+.nav__link {
+  display: inline-block;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-sm);
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--transicion), color var(--transicion);
+}
+
+.nav__link:hover {
+  background: var(--marca-50);
+  color: var(--marca-700);
+  text-decoration: none;
+}
+
+/* Página actual: antes no había ninguna señal de dónde estaba parado el usuario. */
+.nav__link--activo {
+  background: var(--marca-50);
+  color: var(--marca-700);
+}
+
+.nav__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: none;
+}
+
+.nav__rol {
+  padding-right: var(--sp-2);
+  color: var(--texto-suave);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Un botón de la barra de acciones que además es la ruta actual. */
+.btn--activo {
+  background: var(--marca-50);
+  border-color: var(--marca-200);
+  color: var(--marca-700);
+}
+
+/* --- Botón de menú (sólo móvil) ----------------------------------------- */
+
+.cabecera__toggle {
+  display: none;
+  align-items: center;
   justify-content: center;
-  margin-top: 14px;
-}
-
-.confirm-btn {
-  background: linear-gradient(135deg, #10b981, #34d399);
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 700;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--superficie);
+  color: var(--texto);
   cursor: pointer;
+  transition: background-color var(--transicion);
 }
 
-.cancel-btn {
-  background: #e2e8f0;
-  color: #1a202c;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+.cabecera__toggle:hover {
+  background: var(--marca-50);
+  border-color: var(--marca-300);
 }
 
-/* Estilos para el modal de error/aviso global */
-.modal-error {
-  border-top: 5px solid #f44336;
+/* --- Modal de error ----------------------------------------------------- */
+
+.modal--error .modal__encabezado {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  color: var(--texto);
 }
 
-.modal-error .confirm-btn {
-  background: linear-gradient(135deg, #f44336, #ff7961);
+.modal--error .modal__encabezado app-icono {
+  flex: none;
+  margin-top: 0.1875rem;
+  color: var(--peligro);
 }
 
-@media (max-width: 768px) {
-  .header-top {
+/* --- Responsive ---------------------------------------------------------
+   A 960px la nav de administrador (seis destinos) ya no entra junto al lockup,
+   así que toda la navegación pasa a un panel desplegable. */
+@media (max-width: 960px) {
+  .cabecera__barra {
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+  }
+
+  .cabecera__toggle {
+    display: inline-flex;
+  }
+
+  .nav {
+    display: none;
     flex-direction: column;
     align-items: stretch;
-    padding: 15px 20px;
-    gap: 12px;
+    gap: var(--sp-4);
+    /* `flex: 1` del layout de escritorio deja el basis en 0 y el panel no
+       bajaba de línea: se quedaba al lado del logo. */
+    flex: 0 0 100%;
+    width: 100%;
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--borde);
   }
 
-  .logo {
-    width: 90px;
-    align-self: center;
+  .nav--abierto {
+    display: flex;
   }
 
-  .menu-visitante,
-  .menu-usuario,
-  .menu-admin {
-    padding: 15px 20px;
+  .nav__lista {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
   }
 
-  .menu-visitante h1 {
-    font-size: 1.6rem;
+  .nav__link {
+    padding: var(--sp-3);
+    font-size: var(--t-base);
   }
 
-  .menu-usuario h2,
-  .menu-admin h2 {
-    font-size: 1.3rem;
-    text-align: center;
+  .nav__acciones {
+    flex-wrap: wrap;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--borde);
   }
 
-  nav ul {
-    gap: 10px;
+  .nav__acciones .btn {
+    flex: 1;
+    min-width: 8rem;
   }
 
-  nav ul li a {
-    padding: 10px 18px;
-    font-size: 0.85rem;
-  }
-
-  .btn-volver {
-    align-self: center;
+  .nav__rol {
+    width: 100%;
+    padding: 0 0 var(--sp-1);
   }
 }

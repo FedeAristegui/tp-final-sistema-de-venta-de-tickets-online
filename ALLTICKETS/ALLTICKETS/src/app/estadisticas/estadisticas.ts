@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { VentaServicio } from '../servicios/venta.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { EstadisticaEvento } from '../modelos/venta';
+import { Icono } from '../ui/icono';
 
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Icono],
   templateUrl: './estadisticas.html',
   styleUrls: ['./estadisticas.css']
 })
@@ -72,10 +73,15 @@ export class Estadisticas implements OnInit {
     }
   }
 
+  /**
+   * Color de la barra de ocupación. Devuelve variables del sistema en vez de
+   * hexadecimales sueltos: antes eran cuatro colores saturados (#4caf50,
+   * #ffc107, #ff9800, #f44336) que no existían en ninguna otra pantalla.
+   */
   getColorPorcentaje(porcentaje: number): string {
-    if (porcentaje >= 80) return '#4caf50'; // Verde
-    if (porcentaje >= 50) return '#ffc107'; // Amarillo
-    if (porcentaje >= 25) return '#ff9800'; // Naranja
-    return '#f44336'; // Rojo
+    if (porcentaje >= 80) return 'var(--exito)';
+    if (porcentaje >= 50) return 'var(--marca-500)';
+    if (porcentaje >= 25) return 'var(--aviso)';
+    return 'var(--peligro)';
   }
 }

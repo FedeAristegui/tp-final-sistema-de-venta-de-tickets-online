@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { VentaServicio } from '../servicios/venta.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Venta } from '../modelos/venta';
+import { Icono } from '../ui/icono';
 
 @Component({
   selector: 'app-historial-compras',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Icono],
   templateUrl: './historial-compras.html',
   styleUrls: ['./historial-compras.css']
 })

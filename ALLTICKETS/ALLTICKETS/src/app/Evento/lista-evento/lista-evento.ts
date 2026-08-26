@@ -5,10 +5,12 @@ import { DatePipe } from '@angular/common';
 import { Evento } from '../../modelos/evento';
 import { FormsModule } from '@angular/forms';
 import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.service';
+import { RouterLink } from '@angular/router';
+import { Icono } from '../../ui/icono';
 
 @Component({
   selector: 'app-lista-evento',
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, RouterLink, Icono],
   templateUrl: './lista-evento.html',
   styleUrl: './lista-evento.css',
 })
@@ -25,6 +27,21 @@ export class ListaEvento {
   filtroTitulo: string = '';
   ordenActual: string | null = null;
   direccion: 'asc' | 'desc' = 'asc';
+
+  /** Columnas ordenables. Recorrerlas evita repetir cinco `<th>` idénticos. */
+  protected readonly columnas = [
+    { campo: 'titulo', etiqueta: 'Título' },
+    { campo: 'fecha', etiqueta: 'Fecha' },
+    { campo: 'hora', etiqueta: 'Hora' },
+    { campo: 'lugar', etiqueta: 'Lugar' },
+    { campo: 'modoVenta', etiqueta: 'Modo de venta' },
+  ];
+
+  /** Valor de `aria-sort` que anuncian los lectores de pantalla. */
+  protected estadoOrden(campo: string): 'ascending' | 'descending' | 'none' {
+    if (this.ordenActual !== campo) return 'none';
+    return this.direccion === 'asc' ? 'ascending' : 'descending';
+  }
 
   constructor() {
     this.client.obtenerEventos().subscribe({

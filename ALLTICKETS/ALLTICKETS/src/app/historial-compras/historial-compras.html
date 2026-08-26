@@ -1,30 +1,62 @@
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Mis compras</h1>
+      <p class="encabezado-pagina__bajada">Todas tus entradas compradas, de la más reciente a la más vieja.</p>
+    </div>
+  </div>
 
-    <div class="historial-container">
-      <h2>Historial de Compras</h2>
-      
-      @if (cargando()) {
-        <p>Cargando...</p>
-      } @else if (compras().length === 0) {
-        <div class="sin-compras">
-          <p>No tienes compras registradas</p>
-          <a routerLink="/menu-principal">Ver eventos</a>
-        </div>
-      } @else {
-        <div class="lista-compras">
-          @for (compra of compras(); track compra.id) {
-            <div class="compra-card">
-              <div class="compra-header">
-                <h3>{{ compra.eventoTitulo }}</h3>
-                <span class="fecha">{{ compra.fecha | date:'short' }}</span>
-              </div>
-              <div class="compra-info">
-                <p><strong>Tipo:</strong> {{ compra.tipo === 'sector' ? 'Sector' : 'Butaca' }}</p>
-                <p><strong>Detalle:</strong> {{ compra.detalle }}</p>
-                <p><strong>Cantidad:</strong> {{ compra.cantidad }}</p>
-                <p class="total"><strong>Total:</strong> ${{ compra.total }}</p>
-              </div>
-            </div>
-          }
+  @if (cargando()) {
+    <div class="lista-compras" aria-busy="true" aria-label="Cargando compras">
+      @for (marcador of [1, 2, 3]; track marcador) {
+        <div class="panel">
+          <div class="skeleton skeleton--titulo"></div>
+          <div class="skeleton skeleton--texto" style="width: 45%"></div>
+          <div class="skeleton skeleton--texto" style="width: 60%"></div>
         </div>
       }
     </div>
+  } @else if (compras().length === 0) {
+    <div class="estado-vacio">
+      <span class="estado-vacio__icono">
+        <app-icono nombre="bolsa" [tamano]="32" />
+      </span>
+      <h2 class="estado-vacio__titulo">Todavía no compraste entradas</h2>
+      <p>Cuando compres, vas a encontrar acá el detalle de cada operación.</p>
+      <a routerLink="/menu-principal" class="btn btn--primario">Ver eventos</a>
+    </div>
+  } @else {
+    <div class="lista-compras">
+      @for (compra of compras(); track compra.id) {
+        <article class="compra panel">
+          <header class="compra__encabezado">
+            <h2 class="compra__titulo">{{ compra.eventoTitulo }}</h2>
+            <span class="badge">
+              <app-icono nombre="calendario" [tamano]="13" />
+              {{ compra.fecha | date: 'dd/MM/yyyy HH:mm' }}
+            </span>
+          </header>
+
+          <dl class="compra__datos">
+            <div>
+              <dt>Tipo</dt>
+              <dd>{{ compra.tipo === 'sector' ? 'Sector' : 'Butaca' }}</dd>
+            </div>
+            <div>
+              <dt>Detalle</dt>
+              <dd>{{ compra.detalle }}</dd>
+            </div>
+            <div>
+              <dt>Cantidad</dt>
+              <dd>{{ compra.cantidad }}</dd>
+            </div>
+            <div>
+              <dt>Total</dt>
+              <dd class="compra__total">{{ compra.total | currency: 'ARS' : 'symbol' : '1.2-2' }}</dd>
+            </div>
+          </dl>
+        </article>
+      }
+    </div>
+  }
+</div>

@@ -1,49 +1,113 @@
-<h1>Lista de Eventos</h1>
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Eventos</h1>
+      <p class="encabezado-pagina__bajada">Todos los eventos publicados en la plataforma.</p>
+    </div>
 
-
-<input
-  type="text"
-  placeholder="Buscar por título..."
-  [(ngModel)]="filtroTitulo"
-/>
-
-@let evento = eventosFiltrados;
-
-@if (isLoading()) {
-  <p>Cargando eventos...</p>
-}
-@else if (evento && evento.length > 0) {
-  <div class="tabla-scroll-x">
-  <table class="tabla-eventos">
-    <thead>
-      <tr>
-        <th class="sortable" (click)="ordenarPor('titulo')">Título</th>
-        <th class="sortable" (click)="ordenarPor('fecha')">Fecha</th>
-        <th class="sortable" (click)="ordenarPor('hora')">Hora</th>
-        <th class="sortable" (click)="ordenarPor('lugar')">Lugar</th>
-        <th class="sortable" (click)="ordenarPor('modoVenta')">Modo Venta</th>
-        <th class="no-sort">Acciones</th>  
-      </tr>
-    </thead>
-    <tbody>
-      @for (ev of evento; track ev.id) {
-        <tr>
-          <td>{{ ev.titulo  }}</td>
-          <td>{{ ev.fecha ? (ev.fecha | date:'dd/MM/yyyy') : '-' }}</td>
-          <td>{{ ev.hora  }}</td>
-          <td>{{ ev.lugar  }}</td>
-          <td>{{ ev.modoVenta  }}</td>
-          <td class="acciones">
-            <button class="btn-ver" (click)="navegarAdetalles(ev.id!)">Ver detalles</button>
-            <button class="btn-borrar" (click)="eliminarEvento(ev.id!)">Eliminar</button>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+    <a routerLink="/eventos" class="btn btn--primario">
+      <app-icono nombre="mas" [tamano]="16" />
+      Nuevo evento
+    </a>
   </div>
-}
-@else {
-  <p>No hay eventos disponibles.</p>
-}
 
+  <section class="panel bloque">
+    <header class="bloque__encabezado">
+      <div class="campo-con-icono">
+        <app-icono nombre="buscar" [tamano]="16" />
+        <input
+          type="search"
+          class="buscador"
+          placeholder="Buscar por título…"
+          aria-label="Buscar evento por título"
+          [(ngModel)]="filtroTitulo"
+        />
+      </div>
+    </header>
+
+    @let evento = eventosFiltrados;
+
+    @if (isLoading()) {
+      <div class="bloque__cuerpo" aria-busy="true">
+        <div class="skeleton skeleton--texto"></div>
+        <div class="skeleton skeleton--texto"></div>
+        <div class="skeleton skeleton--texto" style="width: 70%"></div>
+      </div>
+    } @else if (evento && evento.length > 0) {
+      <div class="tabla-scroll">
+        <table class="tabla tabla-eventos">
+          <thead>
+            <tr>
+              @for (columna of columnas; track columna.campo) {
+                <th scope="col" [attr.aria-sort]="estadoOrden(columna.campo)">
+                  <button type="button" class="th-orden" (click)="ordenarPor(columna.campo)">
+                    {{ columna.etiqueta }}
+                    <span
+                      class="th-orden__flecha"
+                      [class.th-orden__flecha--activa]="ordenActual === columna.campo"
+                      aria-hidden="true"
+                    >
+                      {{ estadoOrden(columna.campo) === 'descending' ? '↓' : '↑' }}
+                    </span>
+                  </button>
+                </th>
+              }
+              <th scope="col" class="tabla__derecha">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ev of evento; track ev.id) {
+              <tr>
+                <td class="celda-titulo">{{ ev.titulo }}</td>
+                <td>{{ ev.fecha ? (ev.fecha | date: 'dd/MM/yyyy') : '—' }}</td>
+                <td>{{ ev.hora || '—' }}</td>
+                <td>{{ ev.lugar || '—' }}</td>
+                <td>
+                  <span class="badge">
+                    {{ ev.modoVenta === 'sector' ? 'Sectores' : 'Butacas' }}
+                  </span>
+                </td>
+                <td class="tabla__derecha">
+                  <div class="acciones-fila">
+                    <button
+                      type="button"
+                      class="btn btn--secundario btn--sm"
+                      (click)="navegarAdetalles(ev.id!)"
+                    >
+                      Ver detalles
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-icono btn-icono--peligro"
+                      (click)="eliminarEvento(ev.id!)"
+                      [attr.aria-label]="'Eliminar el evento ' + ev.titulo"
+                    >
+                      <app-icono nombre="basura" [tamano]="16" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="bloque__cuerpo">
+        <div class="estado-vacio estado-vacio--plano">
+          <span class="estado-vacio__icono">
+            <app-icono nombre="ticket" [tamano]="32" />
+          </span>
+          <h2 class="estado-vacio__titulo">No hay eventos para mostrar</h2>
+          <p>
+            @if (filtroTitulo) {
+              Ningún evento coincide con «{{ filtroTitulo }}».
+            } @else {
+              Todavía no se publicó ningún evento.
+            }
+          </p>
+          <a routerLink="/eventos" class="btn btn--primario">Crear el primero</a>
+        </div>
+      </div>
+    }
+  </section>
+</div>

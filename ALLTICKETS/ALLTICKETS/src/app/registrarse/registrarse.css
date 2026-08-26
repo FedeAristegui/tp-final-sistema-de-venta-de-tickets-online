@@ -1,84 +1,21 @@
-/* El alto lo aporta el armazón de la app (ver styles.css). */
+/* La estructura de la pantalla (.auth*) es compartida con login y recuperación
+   y vive en styles.css. */
 :host {
+  /* Estira para que .auth pueda centrar la tarjeta en el alto libre. */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #667eea;
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
-  box-sizing: border-box;
+  flex-direction: column;
 }
-span {
-  color: red;
-}
-.register-container {
-  width: 100%;
-  max-width: 420px;
-  padding: 40px;
-  background: #fff;
-  border-radius: 15px;
-  box-sizing: border-box;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.25),
-    0 0 40px rgba(0, 0, 0, 0.15);
+
+/* Nombre y apellido son campos cortos: en una sola columna el formulario queda
+   innecesariamente largo. */
+.registro__fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
 }
 
 @media (max-width: 480px) {
-  .register-container {
-    padding: 25px;
+  .registro__fila {
+    grid-template-columns: 1fr;
   }
 }
-
-.register-container h2 {
-  text-align: center;
-  color: #4b41c4;
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 25px;
-}
-
-.register-container input {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-form{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.error-message {
-  color: #d9534f;
-  font-size: 13px;
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
-.registrarse {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.2s;
-}
-
-button:disabled {
-  background:#e3dbf7;
-  cursor: not-allowed;
-}
-
-button {
-  background:#4b41c4;
-}
-

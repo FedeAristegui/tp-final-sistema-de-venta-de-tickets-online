@@ -16,6 +16,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Evento } from '../modelos/evento';
 import { tarjetaNoVencidaValidator, titularValidoValidator } from '../mis-tarjetas/mis-tarjetas';
+import { Icono } from '../ui/icono';
 
 /** El stock cambió entre que se armó el carrito y se confirmó la compra. */
 class SinDisponibilidad {
@@ -24,7 +25,7 @@ class SinDisponibilidad {
 
 @Component({
   selector: 'app-carrito',
-  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, Icono],
   templateUrl: './carrito.html',
   styleUrl: './carrito.css',
 })
@@ -176,11 +177,6 @@ export class Carrito implements OnInit {
     return `•••• •••• •••• ${numero}`;
   }
 
-  obtenerIconoTarjeta(tipo: string){
-    switch (tipo) {
-      default: return '💳';
-    }
-  }
 
   eliminarItem(index: number){
     this.pendingItemIndex = index;
@@ -340,7 +336,10 @@ export class Carrito implements OnInit {
   }
 
   continuarComprando(){
-    this.router.navigate(['/lista-eventos']);
+    // `/lista-eventos` es una ruta de administración: un cliente que venía de
+    // comprar era rebotado por `adminGuard` hasta la cartelera. Se va derecho al
+    // destino correcto en lugar de pasar por el rebote.
+    this.router.navigate(['/menu-principal']);
   }
 
   cerrarAvisoExpiracion(): void {

@@ -1,507 +1,225 @@
-* {
-  box-sizing: border-box;
+:host {
+  display: block;
 }
 
-/* El alto libre lo reparte el armazón de la app (ver styles.css). */
-:host {
+/* --- Métricas ----------------------------------------------------------- */
+
+.metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+
+.metrica {
   display: flex;
   flex-direction: column;
+  gap: var(--sp-1);
 }
 
-.contenedor-estadisticas {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  flex: 1 0 auto;
-}
-
-.header {
-  text-align: center;
-  color: white;
-  margin-bottom: 40px;
-}
-
-.header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.subtitulo {
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
-.loading {
-  text-align: center;
-  padding: 60px;
-  color: white;
-}
-
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.resumen-general {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.tarjeta-resumen {
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-}
-
-.tarjeta-resumen:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-.tarjeta-resumen .icono {
-  font-size: 3rem;
-  line-height: 1;
-}
-
-.tarjeta-resumen .contenido h3 {
-  font-size: 2rem;
-  margin: 0;
-  color: #667eea;
-  font-weight: 700;
-}
-
-.tarjeta-resumen .contenido p {
-  margin: 5px 0 0 0;
-  color: #666;
-  font-size: 0.9rem;
+/* La etiqueta va arriba y chica, el número abajo y grande: al escanear la fila
+   se leen primero los valores, que es lo que importa. */
+.metrica__etiqueta {
+  color: var(--marca-600);
+  font-size: var(--t-xs);
+  font-weight: 500;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.metrica__valor {
+  color: var(--marca-700);
+  font-size: var(--t-2xl);
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.tabla-container {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
+/* --- Tabla --------------------------------------------------------------
+   El panel con encabezado (.bloque*), el buscador con icono y la tabla base
+   vienen del sistema (styles.css). */
 
-.tabla-container h2 {
-  margin: 0;
-  color: #667eea;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.tabla-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 3px solid #667eea;
-}
-
-.buscador-eventos {
-  flex: 1;
-  min-width: 220px;
-  max-width: 320px;
-  padding: 10px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.buscador-eventos:focus {
-  border-color: #667eea;
-}
-
-.tabla-scroll {
-  max-height: 520px;
+.tabla-scroll--alta {
+  max-height: 32rem;
   overflow-y: auto;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.tabla-scroll table {
-  min-width: 640px;
-}
-
-.tabla-scroll thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.sin-resultados {
-  text-align: center;
-  padding: 24px 16px;
-  color: #888;
 }
 
 .tabla-estadisticas {
-  width: 100%;
-  border-collapse: collapse;
+  min-width: 46rem;
 }
 
-.tabla-estadisticas thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+/* El encabezado se queda visible al scrollear la lista de eventos. */
+.tabla-estadisticas thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-base);
+  /* Opaco al scrollear; hereda el teñido de .tabla th del sistema. */
+  background: var(--marca-50);
 }
 
-.tabla-estadisticas th {
-  padding: 16px;
-  text-align: left;
+.celda-evento {
+  font-weight: 500;
+  min-width: 14rem;
+}
+
+.celda-recaudado {
   font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-.tabla-estadisticas td {
-  padding: 18px 16px;
-  border-bottom: 1px solid #f0f0f0;
+/* El <td> se deja como celda de tabla: darle display flex lo saca del
+   algoritmo de tabla y la columna dejaba de alinearse con el resto de la fila.
+   El flex va en un envoltorio interno. */
+.celda-ocupacion {
+  min-width: 11rem;
 }
 
-.tabla-estadisticas tbody tr:hover {
-  background-color: #f8f9fa;
+.ocupacion {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
 }
 
-.evento-titulo strong {
-  color: #333;
-  font-size: 1rem;
-}
-
-.centrado {
-  text-align: center;
-}
-
-.badge {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.badge-vendidas {
-  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-  color: white;
-}
-
-.recaudado {
-  font-weight: 700;
-  color: #4caf50;
-  font-size: 1.05rem;
-}
-
-.barra-progreso {
-  position: relative;
-  width: 100%;
-  height: 30px;
-  background-color: #e0e0e0;
-  border-radius: 15px;
+/* Barra fina en vez del bloque de 30px con el número encima: se lee mejor y no
+   compite con el resto de la fila. */
+.barra {
+  flex: 1;
+  height: 6px;
+  background: var(--marca-100);
+  border-radius: var(--r-full);
   overflow: hidden;
 }
 
-.barra-relleno {
+.barra__relleno {
   height: 100%;
-  transition: width 0.6s ease;
-  border-radius: 15px;
+  border-radius: var(--r-full);
 }
 
-.porcentaje-texto {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-weight: 700;
-  color: #333;
-  font-size: 0.85rem;
-  text-shadow: 0 0 3px white;
+.barra__valor {
+  min-width: 2.75rem;
+  text-align: right;
+  font-size: var(--t-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--texto-medio);
 }
 
-.estado {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
+.sin-resultados {
+  padding: var(--sp-10) var(--sp-4);
+  text-align: center;
+  color: var(--texto-suave);
 }
 
-.estado-lleno {
-  background-color: #ffebee;
-  color: #c62828;
+/* --- Detalle desplegado por evento -------------------------------------- */
+
+.fila-detalle td {
+  padding: 0;
+  background: var(--superficie-2);
 }
 
-.estado-medio {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+.fila-detalle:hover td {
+  background: var(--superficie-2);
 }
 
-.estado-bajo {
-  background-color: #fff3e0;
-  color: #ef6c00;
-}
-
-.estado-sin-ventas {
-  background-color: #f5f5f5;
-  color: #757575;
-}
-
-.fila-detalle {
-  background-color: #f8f9fa;
-}
-
-.celda-detalle {
-  padding: 0 !important;
-}
-
-.detalle-ventas {
-  padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-left: 4px solid #667eea;
-}
-
-.detalle-seccion {
-  margin-bottom: 15px;
-}
-
-.detalle-seccion:last-child {
-  margin-bottom: 0;
-}
-
-.detalle-seccion h4 {
-  margin: 0 0 12px 0;
-  color: #667eea;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.detalle-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.detalle-chip {
-  background: white;
-  border-radius: 20px;
-  padding: 8px 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.detalle-chip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.detalle-label {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.detalle-valor {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
-.grafico-barras {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.grafico-barras h2 {
-  margin: 0 0 25px 0;
-  color: #667eea;
-  font-size: 1.5rem;
-  font-weight: 700;
-  padding-bottom: 15px;
-  border-bottom: 3px solid #667eea;
-}
-
-.barras-container {
+.detalle {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+  border-left: 2px solid var(--marca-300);
 }
 
-.barra-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.barra-label {
-  min-width: 200px;
+.detalle__titulo {
+  color: var(--marca-600);
+  font-size: var(--t-xs);
   font-weight: 600;
-  color: #333;
-  font-size: 0.95rem;
-}
-
-.barra-visual {
-  flex: 1;
-  height: 40px;
-  background-color: #e0e0e0;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-}
-
-.barra-fill {
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 15px;
-  transition: width 0.8s ease;
-  border-radius: 20px;
-}
-
-.barra-valor {
-  color: white;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.sin-datos {
-  background: white;
-  border-radius: 16px;
-  padding: 60px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.sin-datos p {
-  font-size: 1.2rem;
-  color: #666;
-  margin: 10px 0;
-}
-
-.sin-datos p:first-child {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.acciones {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
-
-.btn-volver,
-.btn-actualizar {
-  padding: 14px 28px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--sp-3);
 }
 
-.btn-volver {
-  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+.detalle__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  list-style: none;
 }
 
-.btn-volver:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.5);
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
 }
 
-.btn-actualizar {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+.chip__etiqueta {
+  color: var(--texto-medio);
 }
 
-.btn-actualizar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+.chip__valor {
+  color: var(--marca-700);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Ranking ------------------------------------------------------------ */
+
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+  list-style: none;
+}
+
+.ranking__item {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) 1fr 3rem;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.ranking__nombre {
+  font-size: var(--t-sm);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking__barra {
+  height: 10px;
+  background: var(--marca-100);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.ranking__relleno {
+  height: 100%;
+  background: var(--marca-500);
+  border-radius: var(--r-full);
+}
+
+.ranking__valor {
+  text-align: right;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 768px) {
-  .contenedor-estadisticas {
-    padding: 15px 12px;
+  .ranking {
+    padding: var(--sp-4);
   }
 
-  .header h1 {
-    font-size: 1.8rem;
+  .ranking__item {
+    grid-template-columns: 1fr 3rem;
+    row-gap: var(--sp-2);
   }
 
-  .tabla-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .buscador-eventos {
-    max-width: 100%;
-  }
-
-  .resumen-general {
-    grid-template-columns: 1fr;
-  }
-
-  .barra-item {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .barra-label {
-    min-width: auto;
-  }
-
-  .tabla-estadisticas {
-    font-size: 0.85rem;
-  }
-
-  .tabla-estadisticas th,
-  .tabla-estadisticas td {
-    padding: 10px 8px;
+  .ranking__nombre {
+    grid-column: 1 / -1;
   }
 }

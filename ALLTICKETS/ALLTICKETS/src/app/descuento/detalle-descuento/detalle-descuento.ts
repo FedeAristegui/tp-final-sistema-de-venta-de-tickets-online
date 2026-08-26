@@ -6,10 +6,11 @@ import { ModalConfirmacionService } from '../../servicios/modal-confirmacion.ser
 import { Descuento } from '../../modelos/descuento';
 import { DatePipe } from '@angular/common';
 import { FormularioDescuento } from "../formulario-descuento/formulario-descuento";
+import { Icono } from '../../ui/icono';
 
 @Component({
   selector: 'app-detalle-descuento',
-  imports: [DatePipe, FormularioDescuento, RouterLink],
+  imports: [DatePipe, FormularioDescuento, RouterLink, Icono],
   templateUrl: './detalle-descuento.html',
   styleUrl: './detalle-descuento.css',
 })

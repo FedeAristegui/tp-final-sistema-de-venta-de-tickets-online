@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { TarjetaServicio } from '../servicios/tarjeta.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Tarjeta } from '../modelos/tarjeta';
+import { Icono } from '../ui/icono';
 
 export const tarjetaNoVencidaValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   if (!control.value) return null;
@@ -44,7 +45,7 @@ export const titularValidoValidator: ValidatorFn = (control: AbstractControl): V
 @Component({
   selector: 'app-mis-tarjetas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, Icono],
   templateUrl: './mis-tarjetas.html',
   styleUrls: ['./mis-tarjetas.css']
 })
@@ -203,12 +204,6 @@ export class MisTarjetas implements OnInit {
         });
       }
     });
-  }
-
-  obtenerIconoTarjeta(tipo: string): string {
-    switch (tipo) {
-      default: return '💳';
-    }
   }
 
   formatearNumeroTarjeta(numero: string): string {

@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
 import { EmailService } from '../servicios/email.service';
 import { usuario } from '../modelos/usuario';
+import { Icono } from '../ui/icono';
 
 // Validador: confirma que "nuevaContrasena" y "confirmarContrasena" coincidan
 function contrasenasIgualesValidator(control: AbstractControl): ValidationErrors | null {
@@ -16,7 +17,7 @@ function contrasenasIgualesValidator(control: AbstractControl): ValidationErrors
 @Component({
   selector: 'app-recuperar-contrasena',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Icono],
   templateUrl: './recuperar-contrasena.html',
   styleUrls: ['./recuperar-contrasena.css']
 })

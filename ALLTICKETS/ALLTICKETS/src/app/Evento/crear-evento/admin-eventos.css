@@ -1,344 +1,244 @@
-
-.contenedor {
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
+/* Los controles, el panel, los botones y el modal vienen del sistema
+   (styles.css): este componente ya no repite su propia copia del modal. */
+:host {
+  display: block;
 }
 
-.formulario-container {
-  width: 100%;
-  max-width: 900px;
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 18px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+/* Embebido en la ficha del evento: el contenedor de página ya lo puso el
+   componente padre. */
+.pagina--embebida {
+  padding: 0;
 }
 
-h3 {
-  font-size: 1.8rem;
-  text-align: center;
-  margin-bottom: 25px;
-  padding: 10px;
-  color: white;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  box-shadow: 0 5px 15px rgba(102,126,234,0.35);
+.formulario__encabezado {
+  margin-bottom: var(--sp-6);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--borde);
 }
 
-form {
+.formulario__titulo {
+  font-size: var(--t-xl);
+  font-weight: 600;
+}
+
+.formulario__bajada {
+  margin-top: var(--sp-1);
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+  max-width: 60ch;
+}
+
+.formulario {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--sp-8);
 }
 
-label {
+/* --- Secciones ----------------------------------------------------------
+   El formulario es largo (datos + venta + sectores/butacas). Agruparlo en
+   fieldsets con leyenda da estructura y le da al lector puntos de descanso. */
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.seccion__titulo {
+  padding: 0;
+  margin-bottom: var(--sp-1);
+  color: var(--marca-600);
+  font-size: var(--t-xs);
   font-weight: 600;
-  margin-bottom: 4px;
-  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-input,
-select {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  font-size: 1rem;
-  background: #f8fafc;
-  transition: 0.2s;
+.seccion__fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
 }
 
-input:focus,
-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 6px rgba(102,126,234,0.4);
+.sub-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  background: var(--marca-50);
+  border: 1px solid var(--marca-100);
+  border-radius: var(--r-sm);
 }
 
-
-.sectores-block,
-.butacas-block,
-.generador-butacas {
-  margin-top: 25px;
-  background: #f9fafb;
-  padding: 20px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+.sub-seccion__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
 }
 
-h4, h5 {
-  margin-bottom: 15px;
-  color: #764ba2;
+.sub-seccion__titulo {
+  font-size: var(--t-base);
+  font-weight: 600;
 }
 
+.sub-seccion__ayuda {
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+  margin-top: calc(var(--sp-2) * -1);
+}
+
+/* --- Sectores ----------------------------------------------------------- */
+
+.sectores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* Tres campos más el botón de borrar. `align-items: start` mantiene los
+   inputs alineados aunque uno muestre un mensaje de error debajo. */
 .sector-item {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 120px;
-  gap: 15px;
-  padding: 15px;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 12px;
+  grid-template-columns: repeat(3, 1fr) auto;
   align-items: start;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--superficie);
+  border-radius: var(--r-sm);
 }
 
-.sector-item > div {
+/* El botón se alinea con la caja del input, no con la etiqueta de arriba. */
+.sector-item__eliminar {
+  margin-top: 1.6rem;
+}
+
+/* --- Generador de butacas ----------------------------------------------- */
+
+.generador {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--superficie);
+  border-radius: var(--r-sm);
 }
 
-.sector-item label {
-  margin-bottom: 0;
-}
-
-.sector-item input {
-  margin-bottom: 0;
-}
-
-.error-inline {
-  color: #e53e3e;
-  font-size: 0.75rem;
-  min-height: 16px;
-  display: block;
-  margin-top: 2px;
-}
-
-span.error-inline {
-  color: #e53e3e;
-  font-size: 0.75rem;
-  min-height: 16px;
-  display: block;
-  margin-top: 2px;
-}
-
-.btn-eliminar-item {
-  background: #f56565;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-  align-self: flex-end;
-  padding: 10px 15px;
-  height: fit-content;
-}
-
-.btn-eliminar-item:hover {
-  background: #c53030;
-}
-
-.generador-butacas {
-  border-left: 6px solid #764ba2;
-}
-
-.generador-campos {
+.generador__campos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 10px;
+  gap: var(--sp-4);
 }
 
-.info-ayuda {
-  font-size: 0.9rem;
-  color: #6b7280;
-}
+/* --- Butacas ------------------------------------------------------------ */
 
-.hint {
-  color: #9ca3af;
-  font-size: 0.75rem;
-}
-
-.advertencia-reemplazo {
-  background: rgba(255,193,7,0.25);
-  padding: 10px;
-  border-radius: 8px;
-  color: #805400;
-  margin: 10px 0;
-}
-
-.btn-generar {
-  width: 100%;
-  padding: 14px;
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-generar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.3);
-}
-
-.butacas-header {
+.butacas {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: var(--sp-4);
 }
 
 .lista-butacas {
-  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-height: 32rem;
   overflow-y: auto;
-  padding-right: 10px;
 }
 
 .butaca-item {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 8rem auto auto;
   align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--superficie);
+  border-radius: var(--r-sm);
 }
 
-.butaca-info {
-  display: flex;
-  flex-direction: column;
+.butaca-item__etiqueta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
-.butaca-label {
-  font-weight: 700;
-  color: #4a5568;
+.butaca-item__precio .campo__label {
+  font-size: var(--t-xs);
 }
 
-.butaca-precio {
-  font-size: 0.9rem;
-  color: #6b7280;
-}
-
-.checkbox-disponible {
+.casilla {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.btn-agregar,
-.btn-limpiar,
-.btn-ver-mas {
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 600;
+  gap: var(--sp-2);
   cursor: pointer;
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+  white-space: nowrap;
 }
 
-.btn-agregar {
-  background: #667eea;
-  color: white;
-}
-
-.btn-agregar:hover {
-  background: #564cd9;
-}
-
-.btn-limpiar {
-  background: #f56565;
-  color: white;
-}
-
-.btn-limpiar:hover {
-  background: #c53030;
+.casilla input {
+  width: auto;
 }
 
 .ver-mas {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.sin-butacas {
-  text-align: center;
-  padding: 20px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-}
-
-button[type="submit"] {
-  padding: 14px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg,#667eea,#764ba2);
-  color: white;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 700;
-  transition: 0.3s;
-}
-
-button[type="submit"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.3);
-}
-
-.cancelar-btn {
-  margin-top: 10px;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  background: #f56565;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.cancelar-btn:hover {
-  background: #c53030;
-}
-
-.volver-btn {
-  margin-top: 20px;
-  padding: 14px;
-  width: 100%;
-  border-radius: 12px;
-  background: #a0aec0;
-  color: white;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-.volver-btn:hover {
-  background: #718096;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding-top: var(--sp-2);
+  font-size: var(--t-sm);
 }
 
 .archivo-info {
-  padding: 12px 14px;
-  background: #dcfce7;
-  border: 1px solid #86efac;
-  border-radius: 10px;
-  color: #166534;
-  font-size: 0.95rem;
-  margin-top: 8px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-2);
+  color: var(--exito);
+  font-size: var(--t-sm);
+}
+
+/* --- Acciones ----------------------------------------------------------- */
+
+.formulario__acciones {
+  display: flex;
+  gap: var(--sp-3);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--borde);
 }
 
 @media (max-width: 768px) {
-
-  .formulario-container {
-    padding: 20px;
+  .seccion__fila,
+  .generador__campos {
+    grid-template-columns: 1fr;
   }
 
   .sector-item {
     grid-template-columns: 1fr 1fr;
   }
 
-  .generador-campos {
-    grid-template-columns: 1fr;
+  .sector-item__eliminar {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 0;
   }
 
   .butaca-item {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--sp-3);
+  }
+
+  .butaca-item__etiqueta {
+    grid-column: 1 / -1;
+  }
+
+  .formulario__acciones {
     flex-direction: column;
-    gap: 10px;
+  }
+
+  .formulario__acciones .btn {
+    width: 100%;
   }
 }
 
@@ -347,54 +247,7 @@ button[type="submit"]:hover {
     grid-template-columns: 1fr;
   }
 
-  .btn-eliminar-item {
-    align-self: stretch;
+  .sub-seccion {
+    padding: var(--sp-4);
   }
-}
-
-/* Estilos para el modal de confirmación */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1100;
-}
-
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  max-width: 380px;
-  width: 90%;
-  text-align: center;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 14px;
-}
-
-.confirm-btn {
-  background: linear-gradient(135deg, #10b981, #34d399);
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  background: #e2e8f0;
-  color: #1a202c;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
 }

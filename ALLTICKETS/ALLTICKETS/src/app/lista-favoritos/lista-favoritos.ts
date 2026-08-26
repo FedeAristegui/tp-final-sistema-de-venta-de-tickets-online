@@ -5,13 +5,14 @@ import { FavoritoServicio } from '../servicios/favorito.servicio';
 import { EventoServicio } from '../servicios/evento.servicio';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { Evento } from '../modelos/evento';
+import { Icono } from '../ui/icono';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lista-favoritos',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, Icono],
   templateUrl: './lista-favoritos.html',
   styleUrls: ['./lista-favoritos.css']
 })

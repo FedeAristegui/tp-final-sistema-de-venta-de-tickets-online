@@ -1,15 +1,16 @@
 <div class="selector-ubicacion">
   <p class="ayuda">
-    Buscá la dirección del lugar, o hacé click directamente sobre el mapa.
-    Después podés arrastrar el pin para ajustarlo.
+    Buscá la dirección del lugar o hacé click directamente sobre el mapa. Después podés arrastrar
+    el pin para ajustarlo.
   </p>
 
   <!-- Google inserta acá su propio buscador de direcciones -->
-  <div #contenedorBuscador class="buscador" [class.oculto]="!buscadorDisponible()"></div>
+  <div #contenedorBuscador class="buscador-google" [class.oculto]="!buscadorDisponible()"></div>
 
   @if (!buscadorDisponible()) {
-    <p class="aviso-buscador">
-      El buscador de direcciones no está disponible; marcá el punto haciendo click en el mapa.
+    <p class="alert alert-aviso">
+      <app-icono nombre="alerta" [tamano]="16" />
+      <span>El buscador de direcciones no está disponible; marcá el punto haciendo click en el mapa.</span>
     </p>
   }
 
@@ -20,18 +21,18 @@
       <div class="mapa-estado">
         @switch (estado()) {
           @case ('cargando') {
-            <div class="spinner-mapa"></div>
-            <p>Cargando mapa...</p>
+            <div class="skeleton mapa-estado__esqueleto"></div>
+            <p>Cargando mapa…</p>
           }
           @case ('sin-key') {
-            <span class="icono-estado">🗺️</span>
+            <app-icono nombre="mapa" [tamano]="28" />
             <p>Falta configurar la API key de Google Maps.</p>
-            <p class="detalle-estado">
+            <p class="mapa-estado__detalle">
               Pegala en <code>src/app/config/google-maps.config.ts</code> para habilitar el mapa.
             </p>
           }
           @default {
-            <span class="icono-estado">⚠️</span>
+            <app-icono nombre="alerta" [tamano]="28" />
             <p>No se pudo cargar el mapa.</p>
           }
         }
@@ -41,16 +42,19 @@
 
   @if (seleccion(); as ubicacion) {
     <div class="resumen-ubicacion">
-      <div class="datos-ubicacion">
-        <strong>📍 Ubicación seleccionada</strong>
+      <div class="resumen-ubicacion__datos">
+        <span class="resumen-ubicacion__titulo">
+          <app-icono nombre="pin" [tamano]="16" />
+          Ubicación seleccionada
+        </span>
         @if (ubicacion.direccion) {
-          <span class="direccion">{{ ubicacion.direccion }}</span>
+          <span class="resumen-ubicacion__direccion">{{ ubicacion.direccion }}</span>
         }
-        <span class="coordenadas">
+        <span class="resumen-ubicacion__coordenadas mono">
           {{ ubicacion.lat | number: '1.5-5' }}, {{ ubicacion.lng | number: '1.5-5' }}
         </span>
       </div>
-      <button type="button" class="btn-limpiar-ubicacion" (click)="limpiar()">
+      <button type="button" class="btn btn--secundario btn--sm" (click)="limpiar()">
         Quitar ubicación
       </button>
     </div>

@@ -1,237 +1,329 @@
-<div class="carrito-container">
-  <h1>Mi Carrito de Compras</h1>
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Mi carrito</h1>
+      <p class="encabezado-pagina__bajada">Revisá tus entradas antes de confirmar la compra.</p>
+    </div>
+  </div>
 
   @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
+    <div
+      class="alert"
+      [class.alert-error]="tipoMensaje === 'error'"
+      [class.alert-success]="tipoMensaje === 'success'"
+      role="status"
+    >
       {{ mensaje }}
     </div>
   }
 
   @if (carritoExpirado()) {
-    <div class="alert alert-error aviso-expiracion">
-      <span>Tu carrito se vació porque no confirmaste la compra dentro de los 10 minutos. Las entradas volvieron a estar disponibles.</span>
-      <button type="button" class="btn-cerrar-aviso" (click)="cerrarAvisoExpiracion()">✕</button>
+    <div class="alert alert-error aviso-expiracion" role="status">
+      <app-icono nombre="alerta" [tamano]="16" />
+      <span>
+        Tu carrito se vació porque no confirmaste la compra dentro de los 10 minutos. Las entradas
+        volvieron a estar disponibles.
+      </span>
+      <button
+        type="button"
+        class="btn-icono aviso-expiracion__cerrar"
+        (click)="cerrarAvisoExpiracion()"
+        aria-label="Cerrar aviso"
+      >
+        <app-icono nombre="cerrar" [tamano]="16" />
+      </button>
     </div>
   }
 
   @if (compraExitosa()) {
-    <div class="mensaje-compra-exitosa">
-      <div class="icono-exito">✓</div>
-      <h2>{{ mensajeCompra() }}</h2>
-      
+    <section class="compra-exitosa panel">
+      <span class="compra-exitosa__icono">
+        <app-icono nombre="check" [tamano]="24" />
+      </span>
+
+      <h2 class="compra-exitosa__titulo">{{ mensajeCompra() }}</h2>
+      <p class="compra-exitosa__bajada">Vas a recibir las entradas por correo electrónico.</p>
+
       @if (detalleCompra(); as detalle) {
-        <div class="detalle-compra-exitosa">
+        <dl class="compra-exitosa__detalle">
           @if (detalle.descuentoAplicado > 0) {
-            <p><strong>Descuento aplicado:</strong> {{ detalle.descuentoAplicado }}%</p>
+            <div>
+              <dt>Descuento aplicado</dt>
+              <dd>{{ detalle.descuentoAplicado }}%</dd>
+            </div>
           }
           @if (detalle.tarjetaUsada) {
-            <p><strong>Tarjeta:</strong> {{ detalle.tarjetaUsada }}</p>
+            <div>
+              <dt>Tarjeta</dt>
+              <dd>{{ detalle.tarjetaUsada }}</dd>
+            </div>
           }
-          <p class="total-pagado"><strong>Total pagado:</strong> ${{ detalle.totalPagado.toFixed(2) }}</p>
-        </div>
+          <div class="compra-exitosa__total">
+            <dt>Total pagado</dt>
+            <dd>{{ detalle.totalPagado | currency: 'ARS' : 'symbol' : '1.2-2' }}</dd>
+          </div>
+        </dl>
       }
 
-      <div class="acciones-compra-exitosa">
-        <button class="btn-continuar-comprando" (click)="continuarComprando()">
-          Ver Más Eventos
-        </button>
-      </div>
-    </div>
-    <h2 class="mensaje-compra-exitosa">Recibirá sus entradas por correo electrónico</h2>
+      <button class="btn btn--primario" (click)="continuarComprando()">Ver más eventos</button>
+    </section>
   }
 
   @if (items().length === 0 && !compraExitosa()) {
-    <div class="carrito-vacio">
-      <p>Tu carrito está vacío</p>
-      <a routerLink="/" class="btn-seguir-comprando">Explorar Eventos</a>
+    <div class="estado-vacio">
+      <span class="estado-vacio__icono">
+        <app-icono nombre="carrito" [tamano]="32" />
+      </span>
+      <h2 class="estado-vacio__titulo">Tu carrito está vacío</h2>
+      <p>Agregá entradas desde la cartelera para verlas acá.</p>
+      <a routerLink="/" class="btn btn--primario">Explorar eventos</a>
     </div>
   } @else if (items().length > 0) {
-    <div class="temporizador-carrito" [class.critico]="tiempoRestanteCritico()">
-      ⏱ Tienes reservadas tus entradas por <strong>{{ tiempoRestanteFormateado() }}</strong> minutos. Si no confirmas la compra en ese tiempo, el carrito se vaciará automáticamente.
-    </div>
+    <p class="temporizador" [class.temporizador--critico]="tiempoRestanteCritico()" role="status">
+      <app-icono nombre="reloj" [tamano]="16" />
+      <span>
+        Tenés las entradas reservadas por <strong>{{ tiempoRestanteFormateado() }}</strong>. Si no
+        confirmás la compra en ese tiempo, el carrito se vacía.
+      </span>
+    </p>
+
     <div class="carrito-contenido">
-      <div class="items-carrito">
+      <section class="items" aria-label="Entradas en el carrito">
         @for (item of items(); track $index) {
-          <div class="item-carrito">
-            <div class="item-imagen">
-              <img [src]="item.evento.imagen" [alt]="item.evento.titulo">
-            </div>
-            
-            <div class="item-info">
-              <h3>{{ item.evento.titulo }}</h3>
-              <p class="item-fecha">{{ item.evento.fecha }} - {{ item.evento.hora }}</p>
-              <p class="item-lugar">{{ item.evento.lugar }}</p>
-              <p class="item-detalle">{{ item.detalleEntrada }}</p>
+          <article class="item panel">
+            <div class="item__imagen">
+              <img [src]="item.evento.imagen" [alt]="'Imagen del evento ' + item.evento.titulo" />
             </div>
 
-            <div class="item-cantidad">
-              <label>Cantidad:</label>
-              <div>
-                {{ item.cantidad }}
-              </div>
+            <div class="item__info">
+              <h2 class="item__titulo">{{ item.evento.titulo }}</h2>
+              <ul class="item__datos">
+                <li>
+                  <app-icono nombre="calendario" [tamano]="15" />
+                  <span>{{ item.evento.fecha | date: 'dd/MM/yyyy' }} · {{ item.evento.hora }}</span>
+                </li>
+                <li>
+                  <app-icono nombre="pin" [tamano]="15" />
+                  <span>{{ item.evento.lugar }}</span>
+                </li>
+                <li>
+                  <app-icono nombre="ticket" [tamano]="15" />
+                  <span>{{ item.detalleEntrada }}</span>
+                </li>
+              </ul>
             </div>
 
-            <div class="item-precio">
-              <p class="precio-unitario">${{ item.precioUnitario.toFixed(2) }} c/u</p>
-              <p class="precio-total">${{ (item.precioUnitario * item.cantidad).toFixed(2) }}</p>
+            <div class="item__cantidad">
+              <span class="item__etiqueta">Cantidad</span>
+              <span class="item__valor">{{ item.cantidad }}</span>
             </div>
 
-            <button class="btn-eliminar" (click)="eliminarItem($index)" title="Eliminar">
-              <span>🗑️</span>
+            <div class="item__precio">
+              <span class="item__unitario">
+                {{ item.precioUnitario | currency: 'ARS' : 'symbol' : '1.2-2' }} c/u
+              </span>
+              <span class="item__total">
+                {{ item.precioUnitario * item.cantidad | currency: 'ARS' : 'symbol' : '1.2-2' }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="btn-icono btn-icono--peligro item__eliminar"
+              (click)="eliminarItem($index)"
+              [attr.aria-label]="'Eliminar ' + item.evento.titulo + ' del carrito'"
+            >
+              <app-icono nombre="basura" [tamano]="16" />
             </button>
-          </div>
+          </article>
         }
-      </div>
+      </section>
 
-      <div class="carrito-resumen">
-        <h2>Resumen de Compra</h2>
-        
-        <div class="resumen-linea">
-          <span>Total de items:</span>
-          <span>{{ cantidadTotal() }}</span>
+      <aside class="resumen panel" aria-label="Resumen de compra">
+        <h2 class="resumen__titulo">Resumen</h2>
+
+        <dl class="resumen__lineas">
+          <div class="resumen__linea">
+            <dt>Entradas</dt>
+            <dd>{{ cantidadTotal() }}</dd>
+          </div>
+          <div class="resumen__linea">
+            <dt>Subtotal</dt>
+            <dd>{{ subtotal() | currency: 'ARS' : 'symbol' : '1.2-2' }}</dd>
+          </div>
+          @if (cuponAplicado()) {
+            <div class="resumen__linea resumen__linea--descuento">
+              <dt>Descuento ({{ descuentoPorcentaje() }}%)</dt>
+              <dd>−{{ montoDescuento() | currency: 'ARS' : 'symbol' : '1.2-2' }}</dd>
+            </div>
+          }
+        </dl>
+
+        <div class="resumen__total">
+          <span>Total a pagar</span>
+          <strong>{{ total() | currency: 'ARS' : 'symbol' : '1.2-2' }}</strong>
         </div>
 
-        <div class="resumen-linea">
-          <span>Subtotal:</span>
-          <span>${{ subtotal().toFixed(2) }}</span>
-        </div>
+        <!-- Cupón -->
+        <section class="seccion-resumen">
+          <h3 class="seccion-resumen__titulo">Cupón de descuento</h3>
 
-        <div class="cupon-seccion">
-          <h3>¿Tienes un cupón?</h3>
-          
           @if (!cuponAplicado()) {
-            <div class="cupon-input-group">
-              <input 
-                type="text" 
+            <div class="cupon-input">
+              <label class="sr-solo" for="codigoCupon">Código de cupón</label>
+              <input
+                type="text"
+                id="codigoCupon"
                 [(ngModel)]="codigoCupon"
-                placeholder="Ingresa tu código"
-                class="input-cupon"
-                (keyup.enter)="aplicarCupon()">
-              <button 
-                class="btn-aplicar-cupon" 
-                (click)="aplicarCupon()">
+                placeholder="Ingresá tu código"
+                class="mono cupon-input__campo"
+                (keyup.enter)="aplicarCupon()"
+              />
+              <button type="button" class="btn btn--secundario" (click)="aplicarCupon()">
                 Aplicar
               </button>
             </div>
           } @else {
             <div class="cupon-aplicado">
-              <span class="cupon-codigo">{{ cuponAplicado()!.codigo }}</span>
-              <span class="cupon-descuento">-{{ descuentoPorcentaje() }}%</span>
-              <button class="btn-remover-cupon" (click)="borrarCupon()">✕</button>
+              <span class="cupon-aplicado__codigo mono">{{ cuponAplicado()!.codigo }}</span>
+              <span class="badge badge--exito">−{{ descuentoPorcentaje() }}%</span>
+              <button
+                type="button"
+                class="btn-icono"
+                (click)="borrarCupon()"
+                aria-label="Quitar el cupón"
+              >
+                <app-icono nombre="cerrar" [tamano]="15" />
+              </button>
             </div>
           }
-          
+
           @if (mensajeCupon()) {
-            <p class="mensaje-cupon" [class.error]="cuponEsError()">
+            <p class="cupon-mensaje" [class.cupon-mensaje--error]="cuponEsError()">
               {{ mensajeCupon() }}
             </p>
           }
-        </div>
+        </section>
 
-        @if (cuponAplicado()) {
-          <div class="resumen-linea descuento">
-            <span>Descuento ({{ descuentoPorcentaje() }}%):</span>
-            <span class="texto-descuento">-${{ montoDescuento().toFixed(2) }}</span>
-          </div>
-        }
+        <!-- Método de pago -->
+        <section class="seccion-resumen">
+          <h3 class="seccion-resumen__titulo">Método de pago</h3>
 
-        <div class="resumen-linea total">
-          <span>Total a pagar:</span>
-          <span class="precio-total">${{ total().toFixed(2) }}</span>
-        </div>
-
-        <div class="metodo-pago-seccion">
-          <h3>Método de Pago</h3>
-          
           @if (usuario) {
             @if (tarjetasUsuario().length > 0 && !mostrarFormularioTarjeta()) {
               <div class="tarjetas-lista">
                 @for (tarjeta of tarjetasUsuario(); track tarjeta.id) {
-                  <div 
-                    class="tarjeta-item"
-                    [class.seleccionada]="tarjetaSeleccionada()?.id === tarjeta.id"
-                    (click)="seleccionarTarjeta(tarjeta)">
-                    <div class="tarjeta-icono">{{ obtenerIconoTarjeta(tarjeta.tipo) }}</div>
-                    <div class="tarjeta-info">
-                      <span class="tarjeta-tipo">{{ tarjeta.tipo }}</span>
-                      <span class="tarjeta-numero">{{ formatearNumeroTarjeta(tarjeta.numeroTarjeta) }}</span>
-                    </div>
+                  <button
+                    type="button"
+                    class="tarjeta-opcion"
+                    [class.tarjeta-opcion--seleccionada]="tarjetaSeleccionada()?.id === tarjeta.id"
+                    [attr.aria-pressed]="tarjetaSeleccionada()?.id === tarjeta.id"
+                    (click)="seleccionarTarjeta(tarjeta)"
+                  >
+                    <app-icono nombre="tarjeta" [tamano]="18" />
+                    <span class="tarjeta-opcion__datos">
+                      <span class="tarjeta-opcion__tipo">{{ tarjeta.tipo }}</span>
+                      <span class="tarjeta-opcion__numero mono">
+                        {{ formatearNumeroTarjeta(tarjeta.numeroTarjeta) }}
+                      </span>
+                    </span>
                     @if (tarjetaSeleccionada()?.id === tarjeta.id) {
-                      <span class="check-seleccion">✓</span>
+                      <app-icono nombre="check" [tamano]="16" />
                     }
-                  </div>
+                  </button>
                 }
-                
-                <button class="btn-agregar-tarjeta" (click)="toggleFormularioTarjeta()">
-                  + Agregar nueva tarjeta
+
+                <button
+                  type="button"
+                  class="btn btn--fantasma btn--sm"
+                  (click)="toggleFormularioTarjeta()"
+                >
+                  <app-icono nombre="mas" [tamano]="15" />
+                  Agregar nueva tarjeta
                 </button>
               </div>
             } @else if (mostrarFormularioTarjeta() || tarjetasUsuario().length === 0) {
               <form [formGroup]="tarjetaForm" class="formulario-tarjeta">
-                <div class="form-group">
-                  <label>Número de Tarjeta</label>
-                  <input 
-                    type="text" 
+                <div class="campo">
+                  <label class="campo__label" for="carritoNumeroTarjeta">Número de tarjeta</label>
+                  <input
+                    type="text"
+                    id="carritoNumeroTarjeta"
                     formControlName="numeroTarjeta"
                     placeholder="1234 5678 9012 3456"
                     maxlength="16"
-                    class="input-tarjeta">
+                    inputmode="numeric"
+                    autocomplete="cc-number"
+                    class="mono"
+                  />
                   @if (tarjetaForm.get('numeroTarjeta')?.invalid && tarjetaForm.get('numeroTarjeta')?.touched) {
-                    <span class="error-msg">Ingresa 16 dígitos</span>
+                    <span class="campo__error">Ingresá los 16 dígitos</span>
                   }
                 </div>
 
-                <div class="form-group">
-                  <label>Titular</label>
-                  <input 
-                    type="text" 
+                <div class="campo">
+                  <label class="campo__label" for="carritoTitular">Titular</label>
+                  <input
+                    type="text"
+                    id="carritoTitular"
                     formControlName="titular"
-                    placeholder="Nombre como aparece en la tarjeta"
-                    class="input-tarjeta">
+                    placeholder="Como figura en la tarjeta"
+                    autocomplete="cc-name"
+                  />
                   @if (tarjetaForm.get('titular')?.invalid && tarjetaForm.get('titular')?.touched) {
-                    @if (tarjetaForm.get('titular')?.errors?.['espaciosEnLosBordes']) {
-                      <span class="error-msg">No puede empezar ni terminar con espacios</span>
-                    } @else {
-                      <span class="error-msg">Nombre requerido</span>
-                    }
+                    <span class="campo__error">
+                      @if (tarjetaForm.get('titular')?.errors?.['espaciosEnLosBordes']) {
+                        No puede empezar ni terminar con espacios
+                      } @else {
+                        El titular es requerido
+                      }
+                    </span>
                   }
                 </div>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Vencimiento</label>
-                    <input 
-                      type="text" 
+                <div class="formulario-tarjeta__fila">
+                  <div class="campo">
+                    <label class="campo__label" for="carritoVencimiento">Vencimiento</label>
+                    <input
+                      type="text"
+                      id="carritoVencimiento"
                       formControlName="vencimiento"
-                      placeholder="MM/YY"
+                      placeholder="MM/AA"
                       maxlength="5"
-                      class="input-tarjeta">
+                      inputmode="numeric"
+                      autocomplete="cc-exp"
+                      class="mono"
+                    />
                     @if (tarjetaForm.get('vencimiento')?.touched) {
                       @if (tarjetaForm.get('vencimiento')?.errors?.['tarjetaVencida']) {
-                        <span class="error-msg">La tarjeta está vencida</span>
+                        <span class="campo__error">La tarjeta está vencida</span>
                       } @else if (tarjetaForm.get('vencimiento')?.invalid) {
-                        <span class="error-msg">Formato MM/YY</span>
+                        <span class="campo__error">Formato MM/AA</span>
                       }
                     }
                   </div>
 
-                  <div class="form-group">
-                    <label>CVV</label>
-                    <input 
-                      type="text" 
+                  <div class="campo">
+                    <label class="campo__label" for="carritoCvv">CVV</label>
+                    <input
+                      type="text"
+                      id="carritoCvv"
                       formControlName="cvv"
                       placeholder="123"
                       maxlength="3"
-                      class="input-tarjeta">
+                      inputmode="numeric"
+                      autocomplete="cc-csc"
+                      class="mono"
+                    />
                     @if (tarjetaForm.get('cvv')?.invalid && tarjetaForm.get('cvv')?.touched) {
-                      <span class="error-msg">CVV inválido</span>
+                      <span class="campo__error">CVV inválido</span>
                     }
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label>Tipo de Tarjeta</label>
-                  <select formControlName="tipo" class="select-tarjeta">
+                <div class="campo">
+                  <label class="campo__label" for="carritoTipo">Tipo de tarjeta</label>
+                  <select id="carritoTipo" formControlName="tipo">
                     <option value="Visa">Visa</option>
                     <option value="Mastercard">Mastercard</option>
                     <option value="American Express">American Express</option>
@@ -240,18 +332,20 @@
                   </select>
                 </div>
 
-                <div class="form-actions">
-                  <button 
+                <div class="formulario-tarjeta__acciones">
+                  <button
                     type="button"
-                    class="btn-guardar-tarjeta" 
-                    (click)="agregarNuevaTarjeta()">
-                    Guardar Tarjeta
+                    class="btn btn--secundario btn--bloque"
+                    (click)="agregarNuevaTarjeta()"
+                  >
+                    Guardar tarjeta
                   </button>
                   @if (tarjetasUsuario().length > 0) {
-                    <button 
+                    <button
                       type="button"
-                      class="btn-cancelar" 
-                      (click)="toggleFormularioTarjeta()">
+                      class="btn btn--fantasma btn--bloque"
+                      (click)="toggleFormularioTarjeta()"
+                    >
                       Cancelar
                     </button>
                   }
@@ -259,35 +353,37 @@
               </form>
             }
           }
+        </section>
+
+        <div class="resumen__acciones">
+          <button
+            type="button"
+            class="btn btn--primario btn--bloque btn--lg"
+            (click)="procederAlPago()"
+            [disabled]="procesandoCompra() || !tarjetaSeleccionada()"
+          >
+            {{ procesandoCompra() ? 'Procesando…' : 'Confirmar compra' }}
+          </button>
+
+          <a routerLink="/" class="btn btn--secundario btn--bloque">Seguir comprando</a>
+
+          <button type="button" class="btn btn--peligro btn--bloque" (click)="vaciarCarrito()">
+            Vaciar carrito
+          </button>
         </div>
-
-        <button 
-          class="btn-pagar" 
-          (click)="procederAlPago()"
-          [disabled]="procesandoCompra() || !tarjetaSeleccionada()">
-          {{ procesandoCompra() ? 'Procesando...' : 'Confirmar Compra' }}
-        </button>
-
-        <button class="btn-vaciar" (click)="vaciarCarrito()">
-          Vaciar Carrito
-        </button>
-
-        <a routerLink="/" class="btn-seguir-comprando">
-          Seguir Comprando
-        </a>
-      </div>
+      </aside>
     </div>
   }
 </div>
 
 <!-- Modal de confirmación -->
 @if (showConfirmModal()) {
-  <div class="modal-backdrop">
-    <div class="modal">
+  <div class="modal-backdrop" (click)="closeConfirmModal()">
+    <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
       <p>{{ confirmMessage() }}</p>
       <div class="modal-actions">
-        <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
         <button type="button" (click)="closeConfirmModal()" class="cancel-btn">Cancelar</button>
+        <button type="button" (click)="confirmAction()" class="confirm-btn">Confirmar</button>
       </div>
     </div>
   </div>

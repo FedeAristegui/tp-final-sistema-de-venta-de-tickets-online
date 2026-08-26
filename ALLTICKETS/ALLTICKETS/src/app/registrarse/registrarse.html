@@ -1,96 +1,128 @@
-<div class="register-container">
-  <h2>Registrarse</h2>
+<div class="auth">
+  <span class="auth__logo" role="img" aria-label="ALLTICKETS"></span>
 
-  @if (mensaje) {
-    <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-      {{ mensaje }}
-    </div>
-  }
+  <div class="auth__panel">
+    <h1 class="auth__titulo">Crear cuenta</h1>
+    <p class="auth__bajada">Necesitás una cuenta para comprar entradas y guardar favoritos.</p>
 
-  <form [formGroup]="form" (ngSubmit)="registrar()">
-    <input type="text" formControlName="nombre" placeholder="Nombre" />
-    @if (form.get('nombre')?.invalid && (form.get('nombre')?.dirty || form.get('nombre')?.touched)) {
-        <div class="error-message">
-          @if (form.get('nombre')?.errors?.['required']) {
-            <span>El nombre es obligatorio</span>
-          }
-          @if (form.get('nombre')?.errors?.['minlength']) {
-            <span>Debe tener al menos 2 caracteres</span>
-          }
-          @if (form.get('nombre')?.errors?.['pattern']) {
-            <span>El nombre no debe contener números</span>
-          }
-          @if (form.get('nombre')?.errors?.['espacioInicio']) {
-            <span>El nombre no puede empezar con espacios en blanco</span>
-          }
-          @if (form.get('nombre')?.errors?.['espacioFinal']) {
-            <span>El nombre no puede terminar con espacios en blanco</span>
-          }
-        </div>
+    @if (mensaje) {
+      <div
+        class="alert"
+        [class.alert-error]="tipoMensaje === 'error'"
+        [class.alert-success]="tipoMensaje === 'success'"
+        role="status"
+      >
+        {{ mensaje }}
+      </div>
     }
 
-    <input type="text" formControlName="apellido" placeholder="Apellido" />
-    @if (form.get('apellido')?.invalid && (form.get('apellido')?.dirty || form.get('apellido')?.touched)) {
-        <div class="error-message">
-          @if (form.get('apellido')?.errors?.['required']) {
-            <span>El apellido es obligatorio</span>
-          }
-          @if (form.get('apellido')?.errors?.['minlength']) {
-            <span>Debe tener al menos 2 caracteres</span>
-          }
-          @if (form.get('apellido')?.errors?.['pattern']) {
-            <span>El apellido no debe contener números</span>
-          }
-          @if (form.get('apellido')?.errors?.['espacioInicio']) {
-            <span>El apellido no puede empezar con espacios en blanco</span>
-          }
-          @if (form.get('apellido')?.errors?.['espacioFinal']) {
-            <span>El apellido no puede terminar con espacios en blanco</span>
-          }
-        </div>
-    }
-
-    <input type="email" formControlName="email" placeholder="Email" />
-    @if (form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)) {
-        <div class="error-message">
-          @if (form.get('email')?.errors?.['required']) {
-            <span>El email es obligatorio</span>
-          }
-          @if (form.get('email')?.errors?.['emailFormato']) {
-            <span>El formato del email no es válido</span>
-          }
-          @if (form.get('email')?.errors?.['emailDominio']) {
-            <span>El dominio no es válido: debe incluir una extensión (por ejemplo, gmail.com)</span>
+    <form [formGroup]="form" (ngSubmit)="registrar()" class="auth__form">
+      <div class="registro__fila">
+        <div class="campo">
+          <label class="campo__label" for="nombre">Nombre</label>
+          <input type="text" id="nombre" formControlName="nombre" autocomplete="given-name" />
+          @if (form.get('nombre')?.invalid && (form.get('nombre')?.dirty || form.get('nombre')?.touched)) {
+            <span class="campo__error">
+              @if (form.get('nombre')?.errors?.['required']) {
+                El nombre es obligatorio
+              } @else if (form.get('nombre')?.errors?.['minlength']) {
+                Debe tener al menos 2 caracteres
+              } @else if (form.get('nombre')?.errors?.['pattern']) {
+                El nombre no debe contener números
+              } @else if (form.get('nombre')?.errors?.['espacioInicio']) {
+                No puede empezar con espacios en blanco
+              } @else if (form.get('nombre')?.errors?.['espacioFinal']) {
+                No puede terminar con espacios en blanco
+              }
+            </span>
           }
         </div>
-    }
 
-    <div class="input-contrasena">
-      <input [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena" placeholder="Contraseña" />
-      <button type="button" class="btn-ver-contrasena" (click)="mostrarContrasena = !mostrarContrasena">
-        {{ mostrarContrasena ? 'Ocultar' : 'Ver' }}
+        <div class="campo">
+          <label class="campo__label" for="apellido">Apellido</label>
+          <input type="text" id="apellido" formControlName="apellido" autocomplete="family-name" />
+          @if (form.get('apellido')?.invalid && (form.get('apellido')?.dirty || form.get('apellido')?.touched)) {
+            <span class="campo__error">
+              @if (form.get('apellido')?.errors?.['required']) {
+                El apellido es obligatorio
+              } @else if (form.get('apellido')?.errors?.['minlength']) {
+                Debe tener al menos 2 caracteres
+              } @else if (form.get('apellido')?.errors?.['pattern']) {
+                El apellido no debe contener números
+              } @else if (form.get('apellido')?.errors?.['espacioInicio']) {
+                No puede empezar con espacios en blanco
+              } @else if (form.get('apellido')?.errors?.['espacioFinal']) {
+                No puede terminar con espacios en blanco
+              }
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="campo">
+        <label class="campo__label" for="emailRegistro">Email</label>
+        <input
+          type="email"
+          id="emailRegistro"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="nombre@email.com"
+        />
+        @if (form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)) {
+          <span class="campo__error">
+            @if (form.get('email')?.errors?.['required']) {
+              El email es obligatorio
+            } @else if (form.get('email')?.errors?.['emailFormato']) {
+              El formato del email no es válido
+            } @else if (form.get('email')?.errors?.['emailDominio']) {
+              El dominio debe incluir una extensión (por ejemplo, gmail.com)
+            }
+          </span>
+        }
+      </div>
+
+      <div class="campo">
+        <label class="campo__label" for="contrasenaRegistro">Contraseña</label>
+        <div class="input-contrasena">
+          <input
+            [type]="mostrarContrasena ? 'text' : 'password'"
+            id="contrasenaRegistro"
+            formControlName="contrasena"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="btn-ver-contrasena"
+            (click)="mostrarContrasena = !mostrarContrasena"
+            [attr.aria-label]="mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <app-icono [nombre]="mostrarContrasena ? 'ojo-off' : 'ojo'" [tamano]="18" />
+          </button>
+        </div>
+        @if (form.get('contrasena')?.invalid && (form.get('contrasena')?.dirty || form.get('contrasena')?.touched)) {
+          <span class="campo__error">
+            @if (form.get('contrasena')?.errors?.['required']) {
+              La contraseña es obligatoria
+            } @else if (form.get('contrasena')?.errors?.['minlength'] || form.get('contrasena')?.errors?.['maxlength']) {
+              La contraseña debe tener entre 6 y 20 caracteres
+            } @else if (form.get('contrasena')?.errors?.['espacioInicio']) {
+              No puede empezar con espacios en blanco
+            } @else if (form.get('contrasena')?.errors?.['espacioFinal']) {
+              No puede terminar con espacios en blanco
+            }
+          </span>
+        } @else {
+          <span class="campo__ayuda">Entre 6 y 20 caracteres.</span>
+        }
+      </div>
+
+      <button class="btn btn--primario btn--bloque" type="submit" [disabled]="form.invalid">
+        Crear cuenta
       </button>
-    </div>
-    @if (form.get('contrasena')?.invalid && (form.get('contrasena')?.dirty || form.get('contrasena')?.touched)) {
-        <div class="error-message">
-          @if (form.get('contrasena')?.errors?.['required']) {
-            <span>La contraseña es obligatoria</span>
-          }
-          @if (form.get('contrasena')?.errors?.['minlength']) {
-            <span>La contraseña debe tener entre 6 y 20 caracteres</span>
-          }
-          @if (form.get('contrasena')?.errors?.['maxlength']) {
-            <span>La contraseña debe tener entre 6 y 20 caracteres</span>
-          }
-          @if (form.get('contrasena')?.errors?.['espacioInicio']) {
-            <span>La contraseña no puede empezar con espacios en blanco</span>
-          }
-          @if (form.get('contrasena')?.errors?.['espacioFinal']) {
-            <span>La contraseña no puede terminar con espacios en blanco</span>
-          }
-        </div>
-    }
+    </form>
 
-    <button class="registrarse" type="submit" [disabled]="form.invalid">Crear cuenta</button>
-  </form>
+    <div class="auth__pie">
+      <p>¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a></p>
+    </div>
+  </div>
 </div>

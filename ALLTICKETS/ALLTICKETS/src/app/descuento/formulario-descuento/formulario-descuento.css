@@ -1,175 +1,74 @@
-
-.contenedor {
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
+/* Los controles, el panel y el modal vienen del sistema (styles.css): este
+   componente ya no repite la copia local del modal que tenía antes. */
+:host {
+  display: block;
 }
 
-.formulario-container {
-  width: 100%;
-  max-width: 600px;
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 18px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+/* Embebido en la ficha del descuento: el contenedor de página ya lo puso el
+   componente padre. */
+.pagina--embebida {
+  max-width: none;
+  padding: 0;
 }
 
-h3 {
-  font-size: 1.8rem;
-  text-align: center;
-  margin-bottom: 25px;
-  padding: 10px;
-  color: white;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  box-shadow: 0 5px 15px rgba(102,126,234,0.35);
+.formulario__encabezado {
+  margin-bottom: var(--sp-6);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--borde);
 }
 
-form {
+.formulario__titulo {
+  font-size: var(--t-xl);
+  font-weight: 600;
+}
+
+.formulario__bajada {
+  margin-top: var(--sp-1);
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
+}
+
+.formulario {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--sp-5);
 }
 
-label {
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #4a5568;
+.formulario__fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-input[type="checkbox"] {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  font-size: 1rem;
-  background: #f8fafc;
-  transition: 0.2s;
-}
-
-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 6px rgba(102,126,234,0.4);
-}
-
-
-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-}
-
-
-button[type="submit"] {
-  padding: 14px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg,#667eea,#764ba2);
-  color: white;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 700;
-  transition: 0.3s;
-}
-
-button[type="submit"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.3);
-}
-
-
-.cancelar-btn {
-  margin-top: 10px;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  background: #f56565;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.cancelar-btn:hover {
-  background: #c53030;
-}
-
-
-.volver-btn {
-  margin-top: 25px;
-  padding: 14px;
-  width: 100%;
-  border-radius: 12px;
-  background: #a0aec0;
-  color: white;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-.volver-btn:hover {
-  background: #718096;
-}
-
-
-@media (max-width: 768px) {
-  .formulario-container {
-    padding: 25px;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-  }
-
-  
-}
-
-span {
-  color: red;
-}
-
-/* Estilos para el modal de confirmación */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
+.casilla {
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1100;
+  gap: var(--sp-2);
+  cursor: pointer;
+  color: var(--texto-medio);
 }
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  max-width: 380px;
-  width: 90%;
-  text-align: center;
+
+.casilla input {
+  width: auto;
 }
-.modal-actions {
+
+.formulario__acciones {
   display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 14px;
+  gap: var(--sp-3);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--borde);
 }
-.confirm-btn {
-  background: linear-gradient(135deg,#10b981,#34d399);
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.cancel-btn {
-  background: #e2e8f0;
-  color: #1a202c;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+
+@media (max-width: 560px) {
+  .formulario__fila {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario__acciones {
+    flex-direction: column;
+  }
+
+  .formulario__acciones .btn {
+    width: 100%;
+  }
 }

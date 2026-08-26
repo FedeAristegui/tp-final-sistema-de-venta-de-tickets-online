@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class ModalConfirmacionService {
-  
+
   showConfirmModal = signal<boolean>(false);
   confirmMessage = signal<string>('');
 
@@ -18,6 +18,13 @@ export class ModalConfirmacionService {
   constructor() {}
 
   confirm(mensaje: string): Promise<boolean> {
+    // Si ya había una confirmación abierta se resuelve como cancelada antes de
+    // pisarla. Antes su `resolve` se perdía, así que quien la estaba esperando
+    // quedaba colgado para siempre y la navegación que venía después nunca
+    // llegaba a ejecutarse.
+    this.resolveConfirm?.(false);
+    this.resolveConfirm = null;
+
     return new Promise((resolve) => {
       this.confirmMessage.set(mensaje);
       this.showConfirmModal.set(true);
@@ -26,26 +33,30 @@ export class ModalConfirmacionService {
   }
 
   confirmAction(): void {
-    if (this.resolveConfirm) {
-      this.resolveConfirm(true);
-      this.closeModal();
-    }
+    this.cerrarConfirmacion(true);
   }
 
   cancelAction(): void {
-    if (this.resolveConfirm) {
-      this.resolveConfirm(false);
-      this.closeModal();
-    }
+    this.cerrarConfirmacion(false);
   }
 
-  private closeModal(): void {
+  /* El modal se cierra siempre, haya o no alguien esperando la respuesta: si el
+     `resolve` ya no estaba, antes quedaba visible y su fondo seguía tapando la
+     cabecera. */
+  private cerrarConfirmacion(valor: boolean): void {
+    this.resolveConfirm?.(valor);
+    this.resolveConfirm = null;
     this.showConfirmModal.set(false);
     this.confirmMessage.set('');
-    this.resolveConfirm = null;
   }
 
   notify(mensaje: string): Promise<void> {
+    // Mismo cuidado que en `confirm`: dos avisos seguidos (por ejemplo, si
+    // fallan a la vez la carga de eventos y la de favoritos) dejaban la primera
+    // promesa sin resolver.
+    this.resolveError?.();
+    this.resolveError = null;
+
     return new Promise((resolve) => {
       this.errorMessage.set(mensaje);
       this.showErrorModal.set(true);
@@ -54,11 +65,21 @@ export class ModalConfirmacionService {
   }
 
   closeErrorModal(): void {
-    if (this.resolveError) {
-      this.resolveError();
-    }
+    this.resolveError?.();
+    this.resolveError = null;
     this.showErrorModal.set(false);
     this.errorMessage.set('');
-    this.resolveError = null;
+  }
+
+  /**
+   * Cierre por gesto (click fuera del cuadro o tecla Escape). Una confirmación
+   * se descarta como "cancelar", que es la opción segura.
+   */
+  descartar(): void {
+    if (this.showConfirmModal()) {
+      this.cancelAction();
+    } else if (this.showErrorModal()) {
+      this.closeErrorModal();
+    }
   }
 }

@@ -2,8 +2,10 @@ import { Component, inject } from '@angular/core';
 import { usuario } from '../modelos/usuario';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
+import { Icono } from '../ui/icono';
 import { FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 // Validador: rechaza espacios en blanco al inicio o al final del valor
@@ -55,7 +57,7 @@ export const emailValidoValidator: ValidatorFn = (control: AbstractControl): Val
 @Component({
   selector: 'app-registrarse',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Icono],
   templateUrl: './registrarse.html',
   styleUrls: ['./registrarse.css'],
 })

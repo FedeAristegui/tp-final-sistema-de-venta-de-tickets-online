@@ -1,63 +1,100 @@
-<div class="favoritos-container">
-  <div class="header">
-    <h1>❤️ Mis Favoritos</h1>
-    <p>Eventos que has guardado para ver más tarde</p>
+<div class="pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1 class="encabezado-pagina__titulo">Mis favoritos</h1>
+      <p class="encabezado-pagina__bajada">Eventos que guardaste para decidir más tarde.</p>
+    </div>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Cargando favoritos...</p>
+    <div class="eventos-grilla" aria-busy="true" aria-label="Cargando favoritos">
+      @for (marcador of [1, 2, 3]; track marcador) {
+        <article class="evento-card">
+          <div class="skeleton skeleton--imagen"></div>
+          <div class="evento-card__cuerpo">
+            <div class="skeleton skeleton--texto" style="width: 30%"></div>
+            <div class="skeleton skeleton--titulo"></div>
+            <div class="skeleton skeleton--texto" style="width: 70%"></div>
+            <div class="skeleton skeleton--texto" style="width: 55%"></div>
+          </div>
+        </article>
+      }
     </div>
   } @else if (eventosFavoritos().length > 0) {
-    <div class="eventos-grid">
+    <div class="eventos-grilla">
       @for (evento of eventosFavoritos(); track evento.id) {
-        <div class="evento-card">
-          <button 
-            class="btn-quitar-favorito" 
-            (click)="quitarFavorito(evento.id)"
-            title="Quitar de favoritos">
-            ✕
-          </button>
-
-          <div class="evento-imagen" (click)="verDetalleEvento(evento.id)">
+        <article
+          class="evento-card evento-card--clickeable"
+          role="button"
+          tabindex="0"
+          (click)="verDetalleEvento(evento.id)"
+          (keydown.enter)="verDetalleEvento(evento.id)"
+        >
+          <div class="evento-card__medio">
             @if (evento.imagen) {
-              <img [src]="evento.imagen" [alt]="evento.titulo">
+              <img [src]="evento.imagen" [alt]="'Imagen del evento ' + evento.titulo" />
             } @else {
-              <div class="sin-imagen">Sin imagen</div>
+              <div class="evento-card__sin-imagen">
+                <app-icono nombre="imagen" [tamano]="24" />
+                <span>Sin imagen</span>
+              </div>
             }
-            @if (evento.categoria) {
-              <span class="categoria-badge">{{ evento.categoria }}</span>
-            }
+
+            <button
+              type="button"
+              class="evento-card__accion-medio evento-card__accion-medio--activo"
+              (click)="quitarFavorito(evento.id); $event.stopPropagation()"
+              [attr.aria-label]="'Quitar ' + evento.titulo + ' de favoritos'"
+            >
+              <app-icono nombre="corazon-lleno" [tamano]="18" />
+            </button>
           </div>
 
-          <div class="evento-info" (click)="verDetalleEvento(evento.id)">
-            <h3>{{ evento.titulo }}</h3>
-            <div class="evento-detalles">
-              <p><span class="icono">📅</span> {{ evento.fecha | date:'dd/MM/yyyy' }}</p>
-              <p><span class="icono">🕐</span> {{ evento.hora }}</p>
-              <p><span class="icono">📍</span> {{ evento.lugar }}</p>
-            </div>
-            <div class="evento-tipo">
-              @if (evento.modoVenta === 'sector') {
-                <span class="badge badge-sector">Por Sectores</span>
-              } @else {
-                <span class="badge badge-butaca">Por Butacas</span>
+          <div class="evento-card__cuerpo">
+            <div class="evento-card__etiquetas">
+              @if (evento.categoria) {
+                <span class="badge badge--marca">{{ evento.categoria }}</span>
               }
+              <span class="badge">
+                {{ evento.modoVenta === 'sector' ? 'Por sectores' : 'Por butacas' }}
+              </span>
             </div>
-            <button class="btn-ver-mas">Ver Detalles →</button>
+
+            <h2 class="evento-card__titulo">{{ evento.titulo }}</h2>
+
+            <ul class="evento-card__datos">
+              <li>
+                <app-icono nombre="calendario" [tamano]="16" />
+                <span>{{ evento.fecha | date: 'dd MMM yyyy' }}</span>
+              </li>
+              <li>
+                <app-icono nombre="reloj" [tamano]="16" />
+                <span>{{ evento.hora }}</span>
+              </li>
+              <li>
+                <app-icono nombre="pin" [tamano]="16" />
+                <span>{{ evento.lugar }}</span>
+              </li>
+            </ul>
+
+            <div class="evento-card__pie">
+              <span class="btn btn--secundario btn--bloque btn--decorativo" aria-hidden="true">
+                Ver detalles
+                <app-icono nombre="flecha-der" [tamano]="16" />
+              </span>
+            </div>
           </div>
-        </div>
+        </article>
       }
     </div>
   } @else {
-    <div class="sin-favoritos">
-      <div class="icono-grande">💔</div>
-      <h2>No tienes eventos favoritos</h2>
-      <p>Explora eventos y agrega tus favoritos haciendo clic en el corazón</p>
-      <button routerLink="/menu-principal" class="btn-explorar">
-        🔍 Explorar Eventos
-      </button>
+    <div class="estado-vacio">
+      <span class="estado-vacio__icono">
+        <app-icono nombre="corazon" [tamano]="32" />
+      </span>
+      <h2 class="estado-vacio__titulo">Todavía no guardaste favoritos</h2>
+      <p>Tocá el corazón de cualquier evento en la cartelera para tenerlo a mano acá.</p>
+      <a routerLink="/menu-principal" class="btn btn--primario">Explorar eventos</a>
     </div>
   }
 </div>

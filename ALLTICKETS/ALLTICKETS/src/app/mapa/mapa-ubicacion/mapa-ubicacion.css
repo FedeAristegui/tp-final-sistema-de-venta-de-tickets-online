@@ -5,11 +5,10 @@
 .mapa-wrapper {
   position: relative;
   width: 100%;
-  height: 350px;
-  border-radius: 12px;
+  height: 320px;
+  border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #eef0f5;
+  background: var(--superficie-2);
 }
 
 .mapa {
@@ -28,62 +27,47 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 20px;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
   text-align: center;
-  color: #4a5568;
+  color: var(--texto-medio);
+}
+
+.mapa-estado app-icono {
+  color: var(--texto-suave);
 }
 
 .mapa-estado p {
   margin: 0;
-  font-weight: 600;
+  font-size: var(--t-sm);
 }
 
-.icono-estado {
-  font-size: 2.5rem;
+/* Bloque estático en lugar del spinner giratorio: mismo mensaje, sin animación. */
+.mapa-estado__esqueleto {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--r-md);
 }
 
-.direccion-alternativa {
-  font-weight: 500 !important;
-  color: #667eea;
+.mapa-estado__direccion,
+.mapa-pie__direccion {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--texto-medio);
+  font-size: var(--t-sm);
 }
 
-.spinner-mapa {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(102, 126, 234, 0.2);
-  border-top-color: #667eea;
-  border-radius: 50%;
-  animation: girarMapa 0.8s linear infinite;
+.mapa-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
 }
 
-@keyframes girarMapa {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.direccion-mapa {
-  margin: 12px 0 0 0;
-  color: #4a5568;
-  font-weight: 500;
-}
-
-.btn-como-llegar {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
-}
-
-.btn-como-llegar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+.mapa-pie__direccion app-icono {
+  color: var(--marca-400);
+  flex: none;
 }

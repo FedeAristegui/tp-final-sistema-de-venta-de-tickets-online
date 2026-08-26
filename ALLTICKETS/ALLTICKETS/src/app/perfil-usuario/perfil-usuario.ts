@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Autenticador } from '../servicios/autenticador';
 import { ModalConfirmacionService } from '../servicios/modal-confirmacion.service';
 import { usuario } from '../modelos/usuario';
+import { Icono } from '../ui/icono';
 
 // Validador: confirma que "nuevaContrasena" y "confirmarContrasena" coincidan
 function contrasenasIgualesValidator(control: AbstractControl): ValidationErrors | null {
@@ -23,7 +24,7 @@ function nuevaContrasenaIgualActualValidator(control: AbstractControl): Validati
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Icono],
   templateUrl: './perfil-usuario.html',
   styleUrls: ['./perfil-usuario.css']
 })

@@ -7,30 +7,39 @@
     <div class="mapa-estado">
       @switch (estado()) {
         @case ('cargando') {
-          <div class="spinner-mapa"></div>
-          <p>Cargando mapa...</p>
+          <div class="skeleton mapa-estado__esqueleto"></div>
+          <p>Cargando mapa…</p>
         }
         @case ('sin-key') {
-          <span class="icono-estado">🗺️</span>
+          <app-icono nombre="mapa" [tamano]="28" />
           <p>El mapa no está disponible en este momento.</p>
         }
         @default {
-          <span class="icono-estado">⚠️</span>
+          <app-icono nombre="alerta" [tamano]="28" />
           <p>No se pudo cargar el mapa.</p>
         }
       }
 
       @if (direccion()) {
-        <p class="direccion-alternativa">📍 {{ direccion() }}</p>
+        <p class="mapa-estado__direccion">
+          <app-icono nombre="pin" [tamano]="16" />
+          <span>{{ direccion() }}</span>
+        </p>
       }
     </div>
   }
 </div>
 
-@if (direccion() && estado() === 'listo') {
-  <p class="direccion-mapa">📍 {{ direccion() }}</p>
-}
+<div class="mapa-pie">
+  @if (direccion() && estado() === 'listo') {
+    <p class="mapa-pie__direccion">
+      <app-icono nombre="pin" [tamano]="16" />
+      <span>{{ direccion() }}</span>
+    </p>
+  }
 
-<a class="btn-como-llegar" [href]="urlComoLlegar()" target="_blank" rel="noopener">
-  Cómo llegar
-</a>
+  <a class="btn btn--secundario btn--sm" [href]="urlComoLlegar()" target="_blank" rel="noopener">
+    Cómo llegar
+    <app-icono nombre="flecha-der" [tamano]="16" />
+  </a>
+</div>

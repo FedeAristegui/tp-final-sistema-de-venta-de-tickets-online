@@ -1,0 +1,3 @@
+/* El armazón (alto disponible, landmark `main`) vive en styles.css: depende de
+   selectores sobre `app-root`, que es el host de este componente y no se puede
+   alcanzar desde una hoja encapsulada. */

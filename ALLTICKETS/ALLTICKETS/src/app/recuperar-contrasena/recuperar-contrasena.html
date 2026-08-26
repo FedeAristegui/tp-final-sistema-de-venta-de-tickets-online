@@ -1,67 +1,148 @@
-<div class="recuperar-container">
-  @if (paso() === 1) {
-    <h2>Recuperar Contraseña</h2>
-    <p class="subtexto">Ingresa tu email y te enviaremos un código para restablecer tu contraseña.</p>
+<div class="auth">
+  <span class="auth__logo" role="img" aria-label="ALLTICKETS"></span>
 
-    @if (mensaje) {
-      <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-        {{ mensaje }}
+  <div class="auth__panel">
+    @if (paso() === 1) {
+      <h1 class="auth__titulo">Recuperar contraseña</h1>
+      <p class="auth__bajada">
+        Ingresá tu email y te enviamos un código para restablecer la contraseña.
+      </p>
+
+      @if (mensaje) {
+        <div
+          class="alert"
+          [class.alert-error]="tipoMensaje === 'error'"
+          [class.alert-success]="tipoMensaje === 'success'"
+          role="status"
+        >
+          {{ mensaje }}
+        </div>
+      }
+
+      <form [formGroup]="formEmail" (ngSubmit)="solicitarCodigo()" class="auth__form">
+        <div class="campo">
+          <label class="campo__label" for="emailRecuperar">Email</label>
+          <input
+            type="email"
+            id="emailRecuperar"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="nombre@email.com"
+          />
+          @if (formEmail.get('email')?.invalid && formEmail.get('email')?.touched) {
+            <span class="campo__error">Ingresá un email válido</span>
+          }
+        </div>
+
+        <button
+          class="btn btn--primario btn--bloque"
+          type="submit"
+          [disabled]="formEmail.invalid || enviando()"
+        >
+          {{ enviando() ? 'Enviando…' : 'Enviar código' }}
+        </button>
+      </form>
+
+      <div class="auth__pie">
+        <a routerLink="/login">Volver a iniciar sesión</a>
+      </div>
+    } @else {
+      <h1 class="auth__titulo">Ingresar código</h1>
+      <p class="auth__bajada">
+        Revisá tu email y escribí el código de 6 dígitos junto a tu nueva contraseña.
+      </p>
+
+      @if (mensaje) {
+        <div
+          class="alert"
+          [class.alert-error]="tipoMensaje === 'error'"
+          [class.alert-success]="tipoMensaje === 'success'"
+          role="status"
+        >
+          {{ mensaje }}
+        </div>
+      }
+
+      <form [formGroup]="formCodigo" (ngSubmit)="confirmarNuevaContrasena()" class="auth__form">
+        <div class="campo">
+          <label class="campo__label" for="codigo">Código de 6 dígitos</label>
+          <input
+            type="text"
+            id="codigo"
+            formControlName="codigo"
+            maxlength="6"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            class="campo-codigo"
+            placeholder="000000"
+          />
+          @if (formCodigo.get('codigo')?.invalid && formCodigo.get('codigo')?.touched) {
+            <span class="campo__error">Ingresá el código de 6 dígitos</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label class="campo__label" for="nuevaContrasena">Nueva contraseña</label>
+          <div class="input-contrasena">
+            <input
+              [type]="mostrarNuevaContrasena ? 'text' : 'password'"
+              id="nuevaContrasena"
+              formControlName="nuevaContrasena"
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              class="btn-ver-contrasena"
+              (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena"
+              [attr.aria-label]="
+                mostrarNuevaContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
+            >
+              <app-icono [nombre]="mostrarNuevaContrasena ? 'ojo-off' : 'ojo'" [tamano]="18" />
+            </button>
+          </div>
+          @if (formCodigo.get('nuevaContrasena')?.invalid && formCodigo.get('nuevaContrasena')?.touched) {
+            <span class="campo__error">Mínimo 6 caracteres</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label class="campo__label" for="confirmarContrasena">Confirmar contraseña</label>
+          <div class="input-contrasena">
+            <input
+              [type]="mostrarConfirmarContrasena ? 'text' : 'password'"
+              id="confirmarContrasena"
+              formControlName="confirmarContrasena"
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              class="btn-ver-contrasena"
+              (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena"
+              [attr.aria-label]="
+                mostrarConfirmarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
+            >
+              <app-icono [nombre]="mostrarConfirmarContrasena ? 'ojo-off' : 'ojo'" [tamano]="18" />
+            </button>
+          </div>
+          @if (formCodigo.errors?.['contrasenasDistintas'] && formCodigo.get('confirmarContrasena')?.touched) {
+            <span class="campo__error">Las contraseñas no coinciden</span>
+          }
+        </div>
+
+        <button
+          class="btn btn--primario btn--bloque"
+          type="submit"
+          [disabled]="formCodigo.invalid || enviando()"
+        >
+          {{ enviando() ? 'Guardando…' : 'Restablecer contraseña' }}
+        </button>
+      </form>
+
+      <div class="auth__pie">
+        <a class="auth__enlace" (click)="volverAEmail()">Volver a ingresar el email</a>
       </div>
     }
-
-    <form [formGroup]="formEmail" (ngSubmit)="solicitarCodigo()">
-      <input type="email" placeholder="Email" formControlName="email" />
-      @if (formEmail.get('email')?.invalid && formEmail.get('email')?.touched) {
-        <div class="error">Email inválido</div>
-      }
-
-      <button class="btn-recuperar" type="submit" [disabled]="formEmail.invalid || enviando()">
-        {{ enviando() ? 'Enviando...' : 'Enviar código' }}
-      </button>
-    </form>
-
-    <a routerLink="/login" class="link-volver">Volver a Iniciar Sesión</a>
-  } @else {
-    <h2>Ingresar Código</h2>
-    <p class="subtexto">Revisa tu email y escribe el código de 6 dígitos junto a tu nueva contraseña.</p>
-
-    @if (mensaje) {
-      <div class="alert" [class.alert-error]="tipoMensaje === 'error'" [class.alert-success]="tipoMensaje === 'success'">
-        {{ mensaje }}
-      </div>
-    }
-
-    <form [formGroup]="formCodigo" (ngSubmit)="confirmarNuevaContrasena()">
-      <input type="text" placeholder="Código de 6 dígitos" formControlName="codigo" maxlength="6" />
-      @if (formCodigo.get('codigo')?.invalid && formCodigo.get('codigo')?.touched) {
-        <div class="error">Ingresa el código de 6 dígitos</div>
-      }
-
-      <div class="input-contrasena">
-        <input [type]="mostrarNuevaContrasena ? 'text' : 'password'" placeholder="Nueva contraseña" formControlName="nuevaContrasena" />
-        <button type="button" class="btn-ver-contrasena" (click)="mostrarNuevaContrasena = !mostrarNuevaContrasena">
-          {{ mostrarNuevaContrasena ? 'Ocultar' : 'Ver' }}
-        </button>
-      </div>
-      @if (formCodigo.get('nuevaContrasena')?.invalid && formCodigo.get('nuevaContrasena')?.touched) {
-        <div class="error">Mínimo 6 caracteres</div>
-      }
-
-      <div class="input-contrasena">
-        <input [type]="mostrarConfirmarContrasena ? 'text' : 'password'" placeholder="Confirmar contraseña" formControlName="confirmarContrasena" />
-        <button type="button" class="btn-ver-contrasena" (click)="mostrarConfirmarContrasena = !mostrarConfirmarContrasena">
-          {{ mostrarConfirmarContrasena ? 'Ocultar' : 'Ver' }}
-        </button>
-      </div>
-      @if (formCodigo.errors?.['contrasenasDistintas'] && formCodigo.get('confirmarContrasena')?.touched) {
-        <div class="error">Las contraseñas no coinciden</div>
-      }
-
-      <button class="btn-recuperar" type="submit" [disabled]="formCodigo.invalid || enviando()">
-        {{ enviando() ? 'Guardando...' : 'Restablecer contraseña' }}
-      </button>
-    </form>
-
-    <a class="link-volver" (click)="volverAEmail()">Volver a ingresar email</a>
-  }
+  </div>
 </div>
