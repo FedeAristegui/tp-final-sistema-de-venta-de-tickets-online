@@ -17,8 +17,6 @@ export class VentaServicio {
   }
 
   obtenerVentasPorEvento(eventoId: number): Observable<Venta[]> {
-    // Se filtra en el cliente (ver filtro-backend.ts): con `?eventoId=` la consulta
-    // devolvía vacío cuando el id era un string de dígitos.
     return this.obtenerVentas().pipe(
       map(ventas => (ventas ?? []).filter(v => coincideCon(v, { eventoId })))
     );
@@ -128,8 +126,6 @@ export class VentaServicio {
   }
 
   obtenerVentasPorUsuario(usuarioId: number | string): Observable<Venta[]>{
-    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` el historial
-    // de compras aparecía vacío aunque el usuario tuviera ventas registradas.
     return this.obtenerVentas().pipe(
       map(ventas => (ventas ?? []).filter(v => coincideCon(v, { usuarioId })))
     );

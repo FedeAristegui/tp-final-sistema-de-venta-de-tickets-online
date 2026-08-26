@@ -12,11 +12,6 @@ import localeEsAr from '@angular/common/locales/es-AR';
 
 import { routes } from './app.routes';
 
-/**
- * La app está íntegramente en español, pero sin registrar el locale Angular
- * formateaba con el de por defecto (en-US): los meses salían en inglés
- * ("12 Sep"), los miles con coma y los precios como "$1,234.56".
- */
 registerLocaleData(localeEsAr);
 
 export const appConfig: ApplicationConfig = {

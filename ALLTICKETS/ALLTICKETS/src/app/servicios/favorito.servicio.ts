@@ -17,8 +17,6 @@ export class FavoritoServicio {
   }
 
   obtenerFavoritosPorUsuario(usuarioId: string): Observable<Favorito[]> {
-    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` la lista de
-    // favoritos volvía vacía aunque el usuario tuviera eventos marcados.
     return this.obtenerFavoritos().pipe(
       map(favoritos => (favoritos ?? []).filter(f => coincideCon(f, { usuarioId })))
     );

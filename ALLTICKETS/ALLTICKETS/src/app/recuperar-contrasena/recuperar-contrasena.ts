@@ -27,7 +27,6 @@ export class RecuperarContrasena {
   private readonly emailService = inject(EmailService);
   private readonly router = inject(Router);
 
-  // paso 1: pedir email | paso 2: ingresar código + nueva contraseña
   paso = signal<1 | 2>(1);
   enviando = signal<boolean>(false);
   mensaje: string = '';
@@ -110,7 +109,6 @@ export class RecuperarContrasena {
     const codigo = this.formCodigo.get('codigo')?.value!;
     const nuevaContrasena = this.formCodigo.get('nuevaContrasena')?.value!;
 
-    // Se vuelve a pedir el usuario para validar contra el código más reciente guardado en el servidor
     this.enviando.set(true);
     this.mensaje = '';
 

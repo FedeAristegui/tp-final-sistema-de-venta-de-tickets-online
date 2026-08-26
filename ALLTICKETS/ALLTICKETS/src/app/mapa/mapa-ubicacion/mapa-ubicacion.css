@@ -42,7 +42,6 @@
   font-size: var(--t-sm);
 }
 
-/* Bloque estático en lugar del spinner giratorio: mismo mensaje, sin animación. */
 .mapa-estado__esqueleto {
   width: 3rem;
   height: 3rem;

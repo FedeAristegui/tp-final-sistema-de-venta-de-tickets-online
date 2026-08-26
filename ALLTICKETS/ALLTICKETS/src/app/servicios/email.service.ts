@@ -38,22 +38,15 @@ const formatearMoneda = (valor: number) => `$${valor.toFixed(2)}`;
 export class EmailService {
   private readonly SERVICE_ID = 'service_0m22ydp';
   private readonly PUBLIC_KEY = '9MBk0zUwOiBriG86_';
-  // Plantilla del resumen de compra
   private readonly TEMPLATE_ID = 'template_sr10ake';
-  // Plantilla separada para el código de recuperación de contraseña (crear en EmailJS)
   private readonly TEMPLATE_ID_RECUPERACION = 'template_co2ahee';
 
   constructor() {
-    // Inicializar EmailJS con la clave pública
     emailjs.init(this.PUBLIC_KEY);
   }
 
-  /**
-   * Envía un correo con el resumen de la compra al usuario
-   */
   async enviarResumenCompra(datos: DatosCompra): Promise<void> {
     try {
-      // Un bloque {{#eventos}} con su propia tabla anidada {{#entradas}}
       const eventos = datos.eventos.map(evento => {
         const cantidadTotal = evento.entradas.reduce((acc, e) => acc + e.cantidad, 0);
         const subtotalEvento = evento.entradas.reduce((acc, e) => acc + e.cantidad * e.precioUnitario, 0);
@@ -77,13 +70,10 @@ export class EmailService {
         };
       });
 
-      // El bloque {{#descuento}} solo se muestra si este objeto existe
       const descuento = datos.montoDescuento > 0
         ? { etiqueta: `Descuento (${datos.descuentoPorcentaje}%)`, monto: formatearMoneda(datos.montoDescuento) }
         : '';
 
-      // Los nombres deben coincidir con las variables de la plantilla en EmailJS
-      // (To Email = {{email_destinatario}}, Reply To = {{responder_a}})
       const templateParams = {
         preheader: `Tu compra fue confirmada. Total pagado: ${formatearMoneda(datos.total)}`,
         email_destinatario: datos.usuarioEmail,
@@ -98,7 +88,6 @@ export class EmailService {
         medio_pago: datos.tarjetaUsada || ''
       };
 
-      // Enviar el email
       const response = await emailjs.send(
         this.SERVICE_ID,
         this.TEMPLATE_ID,
@@ -112,12 +101,7 @@ export class EmailService {
     }
   }
 
-  /**
-   * Envía un correo con el código para restablecer la contraseña
-   */
   async enviarCodigoRecuperacion(email: string, nombre: string, codigo: string): Promise<void> {
-    // Los nombres deben coincidir con las variables de la plantilla en EmailJS
-    // (To Email = {{email_destinatario}}, Reply To = {{responder_a}})
     const templateParams = {
       preheader: `Tu código para restablecer la contraseña es ${codigo}`,
       email_destinatario: email,

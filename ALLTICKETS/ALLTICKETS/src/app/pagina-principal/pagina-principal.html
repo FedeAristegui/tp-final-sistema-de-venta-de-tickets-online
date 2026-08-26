@@ -50,8 +50,6 @@
   </section>
 
   @if (isLoading()) {
-    <!-- Esqueletos con la forma real de la tarjeta: al llegar los datos el
-         layout no salta, y no hace falta un spinner girando. -->
     <div class="eventos-grilla" aria-busy="true" aria-label="Cargando eventos">
       @for (marcador of [1, 2, 3, 4, 5, 6]; track marcador) {
         <article class="evento-card evento-card--esqueleto">
@@ -126,8 +124,6 @@
               </li>
             </ul>
 
-            <!-- El botón queda pegado abajo para que todas las tarjetas de la
-                 fila alineen su CTA aunque los títulos tengan distinto largo. -->
             <div class="evento-card__pie">
               @if (usuario() && usuario().rol === 'usuario') {
                 <span class="btn btn--primario btn--bloque btn--decorativo" aria-hidden="true">

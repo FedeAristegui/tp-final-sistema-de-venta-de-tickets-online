@@ -24,8 +24,6 @@
   font-weight: 600;
 }
 
-/* Cuatro datos cortos: en grilla se leen de un vistazo y las columnas se
-   alinean entre compras distintas. */
 .compra__datos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));

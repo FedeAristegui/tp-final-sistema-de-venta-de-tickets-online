@@ -1,11 +1,8 @@
-/* Los controles, el panel y el modal vienen del sistema (styles.css): este
-   componente ya no repite la copia local del modal que tenía antes. */
+
 :host {
   display: block;
 }
 
-/* Embebido en la ficha del descuento: el contenedor de página ya lo puso el
-   componente padre. */
 .pagina--embebida {
   max-width: none;
   padding: 0;

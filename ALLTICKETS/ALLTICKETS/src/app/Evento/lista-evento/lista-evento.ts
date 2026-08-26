@@ -28,7 +28,6 @@ export class ListaEvento {
   ordenActual: string | null = null;
   direccion: 'asc' | 'desc' = 'asc';
 
-  /** Columnas ordenables. Recorrerlas evita repetir cinco `<th>` idénticos. */
   protected readonly columnas = [
     { campo: 'titulo', etiqueta: 'Título' },
     { campo: 'fecha', etiqueta: 'Fecha' },
@@ -37,7 +36,6 @@ export class ListaEvento {
     { campo: 'modoVenta', etiqueta: 'Modo de venta' },
   ];
 
-  /** Valor de `aria-sort` que anuncian los lectores de pantalla. */
   protected estadoOrden(campo: string): 'ascending' | 'descending' | 'none' {
     if (this.ordenActual !== campo) return 'none';
     return this.direccion === 'asc' ? 'ascending' : 'descending';

@@ -18,10 +18,6 @@ export class ModalConfirmacionService {
   constructor() {}
 
   confirm(mensaje: string): Promise<boolean> {
-    // Si ya había una confirmación abierta se resuelve como cancelada antes de
-    // pisarla. Antes su `resolve` se perdía, así que quien la estaba esperando
-    // quedaba colgado para siempre y la navegación que venía después nunca
-    // llegaba a ejecutarse.
     this.resolveConfirm?.(false);
     this.resolveConfirm = null;
 
@@ -40,9 +36,6 @@ export class ModalConfirmacionService {
     this.cerrarConfirmacion(false);
   }
 
-  /* El modal se cierra siempre, haya o no alguien esperando la respuesta: si el
-     `resolve` ya no estaba, antes quedaba visible y su fondo seguía tapando la
-     cabecera. */
   private cerrarConfirmacion(valor: boolean): void {
     this.resolveConfirm?.(valor);
     this.resolveConfirm = null;
@@ -51,9 +44,6 @@ export class ModalConfirmacionService {
   }
 
   notify(mensaje: string): Promise<void> {
-    // Mismo cuidado que en `confirm`: dos avisos seguidos (por ejemplo, si
-    // fallan a la vez la carga de eventos y la de favoritos) dejaban la primera
-    // promesa sin resolver.
     this.resolveError?.();
     this.resolveError = null;
 
@@ -71,10 +61,6 @@ export class ModalConfirmacionService {
     this.errorMessage.set('');
   }
 
-  /**
-   * Cierre por gesto (click fuera del cuadro o tecla Escape). Una confirmación
-   * se descarta como "cancelar", que es la opción segura.
-   */
   descartar(): void {
     if (this.showConfirmModal()) {
       this.cancelAction();

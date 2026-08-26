@@ -1,6 +1,4 @@
 <div class="mapa-wrapper">
-  <!-- El contenedor se mantiene siempre en el DOM porque Google lo necesita
-       para dibujar; los estados se muestran superpuestos encima. -->
   <div #contenedorMapa class="mapa" [class.oculto]="estado() !== 'listo'"></div>
 
   @if (estado() !== 'listo') {

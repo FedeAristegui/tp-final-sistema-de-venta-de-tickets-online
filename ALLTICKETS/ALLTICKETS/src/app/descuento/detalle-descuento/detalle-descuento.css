@@ -2,8 +2,6 @@
   display: block;
 }
 
-/* Camino de vuelta explícito: la ficha se abre desde el listado y sin esto
-   queda como un callejón sin salida. */
 .volver {
   margin-bottom: var(--sp-4);
   margin-left: calc(var(--sp-3) * -1);

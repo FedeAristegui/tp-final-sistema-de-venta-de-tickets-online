@@ -1,4 +1,4 @@
-/* El panel, la tabla y los badges vienen del sistema (styles.css). */
+
 :host {
   display: block;
 }
@@ -7,8 +7,7 @@
   min-width: 40rem;
 }
 
-/* El código es un dato que se copia y se compara: en monoespaciada se
-   distingue el 0 de la O. */
+
 .celda-codigo {
   font-weight: 600;
   text-transform: uppercase;

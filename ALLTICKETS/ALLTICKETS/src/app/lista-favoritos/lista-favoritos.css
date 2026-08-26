@@ -1,5 +1,4 @@
-/* La grilla y la tarjeta de evento son compartidas con la cartelera y viven en
-   styles.css. */
+
 :host {
   display: block;
 }

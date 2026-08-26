@@ -76,7 +76,6 @@ export class MapaUbicacion implements AfterViewInit {
     }
   }
 
-  /** Link para abrir la ubicación en la app de Google Maps. */
   protected urlComoLlegar(): string {
     return `https://www.google.com/maps/search/?api=1&query=${this.lat()},${this.lng()}`;
   }

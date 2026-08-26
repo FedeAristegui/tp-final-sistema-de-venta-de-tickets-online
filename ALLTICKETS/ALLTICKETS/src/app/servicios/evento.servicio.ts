@@ -32,14 +32,6 @@ export class EventoServicio {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
-  /**
-   * Suma o resta capacidad a varios sectores del mismo evento en una sola
-   * lectura/escritura (delta negativo = se reservan entradas).
-   *
-   * Es el equivalente, para eventos por sector, de marcar una butaca como no
-   * disponible: permite que el stock se descuente apenas se agrega al carrito y
-   * que el resto de los usuarios lo vea al refrescar la ficha.
-   */
   ajustarCapacidadSectores(eventoId: number|string, cambios: { nombre: string; delta: number }[]): Observable<Evento> {
     return this.obtenerEvento(eventoId).pipe(
       switchMap(evento => {
@@ -55,7 +47,6 @@ export class EventoServicio {
     );
   }
 
-  // Actualiza varias butacas del mismo evento en una sola lectura/escritura, evitando pisar cambios al hacerlo en paralelo
   actualizarDisponibilidadButacas(eventoId: number|string, cambios: { fila: string; numero: number; disponible: boolean }[]): Observable<Evento> {
     return this.obtenerEvento(eventoId).pipe(
       switchMap(evento => {

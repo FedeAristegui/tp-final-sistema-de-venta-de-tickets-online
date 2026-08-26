@@ -2,7 +2,6 @@
 export interface Ubicacion {
   lat: number;
   lng: number;
-  /** Dirección legible que devuelve Google (ej: "Av. Pres. Figueroa Alcorta 7597, CABA"). */
   direccion: string;
 }
 
@@ -11,9 +10,7 @@ export interface Evento {
   titulo: string ;
   fecha: string ;
   hora: string ;
-  /** Nombre del lugar (ej: "Estadio Monumental"). Es lo que se busca y ordena en los listados. */
   lugar: string ;
-  /** Opcional: los eventos cargados antes de sumar el mapa no la tienen. */
   ubicacion?: Ubicacion ;
   imagen: string ;
   categoria: string ;

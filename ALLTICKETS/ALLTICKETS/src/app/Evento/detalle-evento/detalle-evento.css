@@ -2,7 +2,7 @@
   display: block;
 }
 
-/* Camino de vuelta explícito al listado o a la cartelera. */
+
 .volver {
   margin-bottom: var(--sp-4);
   margin-left: calc(var(--sp-3) * -1);
@@ -48,8 +48,6 @@
 
 .info-item app-icono {
   color: var(--marca-500);
-  /* Alineación óptica: el icono cae medio píxel alto respecto de la línea base
-     de la etiqueta. */
   margin-top: 0.0625rem;
 }
 
@@ -102,8 +100,6 @@
   background: var(--borde-fuerte);
 }
 
-/* El escenario es una referencia espacial, no un elemento decorativo: una
-   franja sobria alcanza (antes era un degradé dorado con sombra). */
 .escenario {
   padding: var(--sp-3);
   margin-bottom: var(--sp-8);
@@ -218,8 +214,6 @@
   border-color: var(--marca-300);
 }
 
-/* El sector elegido se marca con borde y fondo teñido, no invirtiendo la
-   tarjeta a violeta sólido: así el precio sigue siendo legible. */
 .sector-card--seleccionado {
   border-color: var(--marca-500);
   background: var(--marca-50);

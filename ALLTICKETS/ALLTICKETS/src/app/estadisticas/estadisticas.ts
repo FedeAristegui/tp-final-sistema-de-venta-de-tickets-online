@@ -73,11 +73,6 @@ export class Estadisticas implements OnInit {
     }
   }
 
-  /**
-   * Color de la barra de ocupación. Devuelve variables del sistema en vez de
-   * hexadecimales sueltos: antes eran cuatro colores saturados (#4caf50,
-   * #ffc107, #ff9800, #f44336) que no existían en ninguna otra pantalla.
-   */
   getColorPorcentaje(porcentaje: number): string {
     if (porcentaje >= 80) return 'var(--exito)';
     if (porcentaje >= 50) return 'var(--marca-500)';

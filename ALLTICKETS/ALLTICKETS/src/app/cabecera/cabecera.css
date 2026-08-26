@@ -1,5 +1,4 @@
-/* La cabecera queda fija en el flujo de la página (no `sticky`): así el menú no
-   acompaña al usuario al scrollear ni se superpone al contenido. */
+
 .cabecera {
   position: relative;
   z-index: var(--z-cabecera);
@@ -20,10 +19,7 @@
   min-height: 60px;
 }
 
-/* --- Lockup de marca ----------------------------------------------------
-   El logo original es vertical (estrella sobre el nombre) y a la altura de una
-   barra de app el nombre quedaría ilegible. Se recorta sólo la estrella del PNG
-   y el nombre se compone en Geist al lado. */
+
 .marca {
   display: inline-flex;
   align-items: center;
@@ -38,9 +34,6 @@
 }
 
 .marca__estrella {
-  /* Recorte medido sobre logo.png (1152x896): la estrella ocupa
-     x 303-846 (544px) e y 112-627 (516px). Los porcentajes derivan de ahí,
-     así el recorte se mantiene exacto a cualquier tamaño. */
   --lado: 28px;
   width: calc(var(--lado) * 1.054);
   height: var(--lado);
@@ -74,8 +67,7 @@
   flex-wrap: wrap;
 }
 
-/* Links de texto, no botones-pastilla: en una barra con seis destinos, seis
-   bloques de color sólido compiten entre sí y con la acción principal. */
+
 .nav__link {
   display: inline-block;
   padding: var(--sp-2) var(--sp-3);
@@ -93,7 +85,7 @@
   text-decoration: none;
 }
 
-/* Página actual: antes no había ninguna señal de dónde estaba parado el usuario. */
+
 .nav__link--activo {
   background: var(--marca-50);
   color: var(--marca-700);
@@ -116,14 +108,14 @@
   white-space: nowrap;
 }
 
-/* Un botón de la barra de acciones que además es la ruta actual. */
+
 .btn--activo {
   background: var(--marca-50);
   border-color: var(--marca-200);
   color: var(--marca-700);
 }
 
-/* --- Botón de menú (sólo móvil) ----------------------------------------- */
+/* --- Botón de menú  ----------------------------------------- */
 
 .cabecera__toggle {
   display: none;
@@ -161,9 +153,7 @@
   color: var(--peligro);
 }
 
-/* --- Responsive ---------------------------------------------------------
-   A 960px la nav de administrador (seis destinos) ya no entra junto al lockup,
-   así que toda la navegación pasa a un panel desplegable. */
+/* --- Responsive ---------------------------------------------------------*/
 @media (max-width: 960px) {
   .cabecera__barra {
     flex-wrap: wrap;
@@ -180,8 +170,6 @@
     flex-direction: column;
     align-items: stretch;
     gap: var(--sp-4);
-    /* `flex: 1` del layout de escritorio deja el basis en 0 y el panel no
-       bajaba de línea: se quedaba al lado del logo. */
     flex: 0 0 100%;
     width: 100%;
     padding-top: var(--sp-4);

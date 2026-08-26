@@ -4,11 +4,6 @@ import { clienteGuard } from './guards/cliente.guard';
 import { authGuard } from './guards/auth.guard';
 import { formIncompletoGuard } from './guards/form.incompleto.guard';
 
-/**
- * Las pantallas se cargan bajo demanda (`loadComponent`). Antes se importaban
- * todas acá arriba, así que un visitante que sólo mira la portada se bajaba
- * igual el panel de administración, el mapa y el carrito.
- */
 export const routes: Routes = [
   {
     path: '', redirectTo: 'menu-principal', pathMatch:'full'
@@ -107,5 +102,5 @@ export const routes: Routes = [
   },
   {
     path: '**', redirectTo: 'menu-principal'
-  }// redirección en caso de ruta no válida
+  }
 ];

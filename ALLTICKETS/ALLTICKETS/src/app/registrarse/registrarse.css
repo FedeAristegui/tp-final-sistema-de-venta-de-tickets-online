@@ -1,13 +1,9 @@
-/* La estructura de la pantalla (.auth*) es compartida con login y recuperación
-   y vive en styles.css. */
+
 :host {
-  /* Estira para que .auth pueda centrar la tarjeta en el alto libre. */
   display: flex;
   flex-direction: column;
 }
 
-/* Nombre y apellido son campos cortos: en una sola columna el formulario queda
-   innecesariamente largo. */
 .registro__fila {
   display: grid;
   grid-template-columns: 1fr 1fr;

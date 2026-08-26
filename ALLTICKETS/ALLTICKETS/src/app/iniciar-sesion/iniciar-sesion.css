@@ -1,7 +1,5 @@
-/* La estructura de la pantalla (.auth*) es compartida con registro y
-   recuperación y vive en styles.css. */
+
 :host {
-  /* Estira para que .auth pueda centrar la tarjeta en el alto libre. */
   display: flex;
   flex-direction: column;
 }

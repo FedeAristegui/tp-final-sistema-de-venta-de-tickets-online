@@ -1,10 +1,9 @@
-/* El panel, la tabla y el buscador vienen del sistema (styles.css). */
+
 :host {
   display: block;
 }
 
-/* Debajo de este ancho la tabla scrollea en horizontal dentro de su
-   contenedor: la página nunca scrollea de costado. */
+
 .tabla-eventos {
   min-width: 44rem;
 }

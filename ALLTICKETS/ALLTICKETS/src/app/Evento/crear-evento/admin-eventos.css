@@ -1,11 +1,8 @@
-/* Los controles, el panel, los botones y el modal vienen del sistema
-   (styles.css): este componente ya no repite su propia copia del modal. */
+
 :host {
   display: block;
 }
 
-/* Embebido en la ficha del evento: el contenedor de página ya lo puso el
-   componente padre. */
 .pagina--embebida {
   padding: 0;
 }
@@ -34,9 +31,6 @@
   gap: var(--sp-8);
 }
 
-/* --- Secciones ----------------------------------------------------------
-   El formulario es largo (datos + venta + sectores/butacas). Agruparlo en
-   fieldsets con leyenda da estructura y le da al lector puntos de descanso. */
 .seccion {
   display: flex;
   flex-direction: column;
@@ -99,8 +93,6 @@
   gap: var(--sp-3);
 }
 
-/* Tres campos más el botón de borrar. `align-items: start` mantiene los
-   inputs alineados aunque uno muestre un mensaje de error debajo. */
 .sector-item {
   display: grid;
   grid-template-columns: repeat(3, 1fr) auto;
@@ -111,7 +103,6 @@
   border-radius: var(--r-sm);
 }
 
-/* El botón se alinea con la caja del input, no con la etiqueta de arriba. */
 .sector-item__eliminar {
   margin-top: 1.6rem;
 }

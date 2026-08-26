@@ -2,9 +2,6 @@
   display: block;
 }
 
-/* --- Vista de lectura ---------------------------------------------------
-   Lista de definición en dos columnas: la etiqueta a ancho fijo hace que
-   todos los valores arranquen en la misma vertical. */
 .datos {
   display: flex;
   flex-direction: column;

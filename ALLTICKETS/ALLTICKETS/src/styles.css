@@ -1,20 +1,6 @@
-/* =========================================================================
-   ALLTICKETS — sistema de diseño
-   =========================================================================
-   Una sola fuente de verdad para color, tipografía, espaciado y superficies.
-   Los componentes NO declaran colores propios: consumen estas variables. Si
-   algo tiene que cambiar de tono, se cambia acá y se propaga a las 16 rutas.
-
-   Criterios:
-   - Fondo neutro en toda la app; el violeta de marca es acento, no relleno.
-   - Sin animaciones: los estados se comunican con color, borde y peso.
-   - Superficies con sombra teñida de violeta (nunca negro puro) y radio 10px.
-   ========================================================================= */
 
 :root {
-  /* --- Marca ------------------------------------------------------------
-     Violeta muestreado del logo (la estrella promedia #8D42DC ≈ hsl 269 69% 56%).
-     El gradiente #667eea→#764ba2 que había antes no era el color de la marca. */
+  /* --- Marca ------------------------------------------------------------ */
   --marca-50: #f4edfe;
   --marca-100: #ebe0fc;
   --marca-200: #ddc9f6;
@@ -26,11 +12,7 @@
   --marca-800: #4f1c80;
   --marca-900: #391259;
 
-  /* --- Neutros ---------------------------------------------------------
-     Una sola familia de grises, toda teñida con el matiz del violeta de marca
-     (269°). Un gris neutro al lado de un violeta se lee sucio; tintándolos, el
-     fondo, los bordes y el texto pertenecen visiblemente a la misma paleta y la
-     app deja de ser "blanco con un acento". */
+  /* --- Neutros --------------------------------------------------------- */
   --fondo: #f6f3fc;
   --superficie: #ffffff;
   --superficie-2: #f2edfa;
@@ -42,7 +24,7 @@
   --texto-suave: #685d7b;
   --texto-inverso: #ffffff;
 
-  /* --- Semánticos (desaturados para convivir con el violeta) ----------- */
+  /* --- Semánticos  ----------- */
   --exito: #146c43;
   --exito-fondo: #edf9f2;
   --exito-borde: #bfe3ce;
@@ -55,9 +37,7 @@
   --aviso-fondo: #fdf7ea;
   --aviso-borde: #eddfb8;
 
-  /* --- Tipografía ------------------------------------------------------
-     Geist se carga desde Google Fonts en index.html. Si no hay red, el stack
-     del sistema mantiene la métrica y la página no se rompe. */
+  /* --- Tipografía ------------------------------------------------------*/
   --fuente: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --fuente-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
 
@@ -70,7 +50,7 @@
   --t-2xl: clamp(1.5rem, 1.28rem + 1.1vw, 1.875rem);
   --t-3xl: clamp(1.75rem, 1.35rem + 2vw, 2.375rem);
 
-  /* --- Espaciado (escala de 4px) --------------------------------------- */
+  /* --- Espaciado --------------------------------------- */
   --sp-1: 0.25rem;
   --sp-2: 0.5rem;
   --sp-3: 0.75rem;
@@ -82,23 +62,19 @@
   --sp-12: 3rem;
   --sp-16: 4rem;
 
-  /* --- Radios ----------------------------------------------------------
-     Más ajustado hacia adentro (inputs, chips) que hacia afuera (paneles). */
+  /* --- Radios ---------------------------------------------------------- */
   --r-sm: 6px;
   --r-md: 10px;
   --r-lg: 14px;
   --r-full: 999px;
 
-  /* --- Sombras ---------------------------------------------------------
-     Teñidas con el violeta oscuro de marca, no con negro: sobre un fondo
-     cálido-neutro el negro puro se lee como suciedad. */
+  /* --- Sombras ---------------------------------------------------------*/
   --sombra-sm: 0 1px 2px rgba(57, 18, 89, 0.06);
   --sombra: 0 1px 3px rgba(57, 18, 89, 0.08), 0 1px 2px rgba(57, 18, 89, 0.04);
   --sombra-md: 0 4px 12px rgba(57, 18, 89, 0.09);
   --sombra-lg: 0 12px 32px rgba(57, 18, 89, 0.14);
 
-  /* --- Capas ------------------------------------------------------------
-     Escala explícita: se acabaron los z-index: 9999 sueltos. */
+  /* --- Capas ------------------------------------------------------------ */
   --z-base: 1;
   --z-flotante: 10;
   --z-cabecera: 50;
@@ -107,15 +83,8 @@
   /* --- Layout ----------------------------------------------------------- */
   --ancho-max: 1200px;
   --ancho-max-angosto: 640px;
-
-  /* Cambios de color al pasar el mouse. No hay movimiento ni escalado:
-     el requisito es "sin animaciones". */
   --transicion: 120ms ease;
 }
-
-/* =========================================================================
-   Reset
-   ========================================================================= */
 
 *,
 *::before,
@@ -129,11 +98,8 @@
 }
 
 html {
-  /* Scrollbar en la paleta de marca en vez del gris del sistema. */
   scrollbar-color: var(--marca-300) transparent;
   -webkit-text-size-adjust: 100%;
-  /* La app es sólo clara: sin esto, con el SO en modo oscuro Chrome tiñe los
-     inputs de fecha/hora y los componentes de terceros. */
   color-scheme: light;
 }
 
@@ -164,8 +130,6 @@ h2,
 h3,
 h4 {
   line-height: 1.2;
-  /* Tracking negativo en títulos: a tamaño grande el espaciado por defecto
-     se ve suelto. */
   letter-spacing: -0.02em;
   text-wrap: balance;
   font-weight: 600;
@@ -208,8 +172,6 @@ table {
   border-collapse: collapse;
 }
 
-/* Las cifras se alinean en columna: sin esto, los precios de una tabla
-   bailan de fila en fila porque el 1 es más angosto que el 8. */
 .tabular,
 td,
 th,
@@ -218,12 +180,6 @@ input[type='number'] {
   font-variant-numeric: tabular-nums;
 }
 
-/* =========================================================================
-   Accesibilidad
-   ========================================================================= */
-
-/* Un solo anillo de foco para toda la app. Visible siempre que se navegue
-   con teclado; nunca al hacer click. */
 :focus-visible {
   outline: 2px solid var(--marca-500);
   outline-offset: 2px;
@@ -242,7 +198,6 @@ input[type='number'] {
   border: 0;
 }
 
-/* Salto directo al contenido para quien navega con teclado. */
 .salto-contenido {
   position: fixed;
   left: var(--sp-4);
@@ -260,43 +215,27 @@ input[type='number'] {
   top: var(--sp-4);
 }
 
-/* =========================================================================
-   Armazón de la app
-   =========================================================================
-   La cabecera ocupa lo que necesita y la pantalla enrutada se queda con el
-   resto exacto de la ventana. Sin esto, cada pantalla se estiraba a 100vh sin
-   descontar la cabecera y sobraba scroll aunque el contenido entrara. */
-
 app-root {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
 }
 
-/* El landmark principal se queda con todo el alto libre bajo la cabecera. */
 app-root > main {
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  /* Lavado de marca que baja desde la cabecera y se funde con el fondo. Da
-     presencia de violeta arriba de cada pantalla sin cortes ni bloques. */
   background: linear-gradient(to bottom, var(--marca-100), transparent 380px);
 }
 
-/* `router-outlet` es sólo un ancla: el componente enrutado se inserta como
-   hermano, así que el outlet no debe ocupar lugar en el layout. */
 main > router-outlet {
   display: none;
 }
 
-/* La pantalla enrutada llena el alto libre, pero puede crecer si su contenido
-   es más largo (ahí sí corresponde que aparezca el scroll). */
 main > *:not(router-outlet) {
   flex: 1 0 auto;
 }
 
-/* `main` recibe foco al usar el salto de contenido, pero no debe dibujar un
-   anillo alrededor de toda la página. */
 main:focus {
   outline: none;
 }
@@ -307,8 +246,6 @@ main:focus {
   width: 100%;
   max-width: var(--ancho-max);
   margin-inline: auto;
-  /* El padding inferior es mayor que el superior a propósito: ópticamente,
-     un bloque centrado con padding simétrico se ve pegado al borde de abajo. */
   padding: var(--sp-8) var(--sp-6) var(--sp-12);
 }
 
@@ -330,9 +267,6 @@ main:focus {
   }
 }
 
-/* Encabezado de sección: título a la izquierda, acción opcional a la derecha.
-   Alineado a la izquierda en vez de centrado, que es lo que hace que un
-   listado se lea como una app y no como una landing. */
 .encabezado-pagina {
   display: flex;
   align-items: flex-end;
@@ -354,10 +288,6 @@ main:focus {
   max-width: 60ch;
 }
 
-/* =========================================================================
-   Superficies
-   ========================================================================= */
-
 .panel {
   background: var(--superficie);
   border-radius: var(--r-md);
@@ -377,12 +307,7 @@ main:focus {
   background: var(--superficie-2);
 }
 
-/* =========================================================================
-   Botones
-   =========================================================================
-   Tres niveles: primario (violeta sólido), secundario (superficie con borde)
-   y fantasma (sólo texto). Peligro es una variante del secundario, no un
-   cuarto color compitiendo con la marca. */
+/*  Botones  */
 
 .btn {
   display: inline-flex;
@@ -397,8 +322,6 @@ main:focus {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  /* La etiqueta no se parte: dentro de una celda angosta "Ver detalles"
-     caía en dos renglones y descuadraba el alto de la fila. */
   white-space: nowrap;
   cursor: pointer;
   transition: background-color var(--transicion), border-color var(--transicion),
@@ -454,8 +377,6 @@ main:focus {
   color: var(--marca-700);
 }
 
-/* Acción destructiva: se anuncia con color de texto y borde, no con un bloque
-   rojo sólido que compite en peso con la acción principal. */
 .btn--peligro {
   background: var(--superficie);
   border-color: var(--peligro-borde);
@@ -492,7 +413,6 @@ main:focus {
   width: 100%;
 }
 
-/* Botón que sólo contiene un icono: cuadrado y con `aria-label` obligatorio. */
 .btn-icono {
   display: inline-flex;
   align-items: center;
@@ -519,9 +439,7 @@ main:focus {
   color: var(--peligro);
 }
 
-/* =========================================================================
-   Formularios
-   ========================================================================= */
+/* Formularios */
 
 .campo {
   display: flex;
@@ -567,7 +485,6 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--marca-500);
-  /* Halo en vez de outline para que no se corte contra el borde redondeado. */
   box-shadow: 0 0 0 3px var(--marca-100);
 }
 
@@ -580,7 +497,6 @@ textarea:disabled {
 }
 
 select {
-  /* Flecha propia: la nativa cambia de forma en cada navegador. */
   appearance: none;
   padding-right: var(--sp-8);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237c7c86' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -614,7 +530,6 @@ input[type='file']::file-selector-button {
   cursor: pointer;
 }
 
-/* Campo inválido ya tocado por el usuario: nunca en la primera carga. */
 input.ng-invalid.ng-touched,
 select.ng-invalid.ng-touched,
 textarea.ng-invalid.ng-touched {
@@ -638,16 +553,11 @@ textarea.ng-invalid.ng-touched {
   font-size: var(--t-sm);
 }
 
-/* Algunos navegadores (Edge) dibujan su propio ícono de "mostrar contraseña"
-   que queda tapando el botón propio del formulario. */
 input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear {
   display: none;
 }
 
-/* Campo de contraseña con botón para mostrar u ocultar lo escrito.
-   Vive acá y no en cada componente para que login, registro, recuperación y
-   cambio de contraseña se vean y se comporten igual. */
 .input-contrasena {
   position: relative;
   display: flex;
@@ -681,12 +591,6 @@ input[type='password']::-ms-clear {
   color: var(--texto);
 }
 
-/* =========================================================================
-   Avisos en línea
-   =========================================================================
-   Antes esto era un toast `position: fixed` que tapaba la cabecera. Ahora se
-   inserta donde lo pone el template, junto a la acción que lo disparó. */
-
 .alert {
   display: flex;
   align-items: flex-start;
@@ -717,10 +621,6 @@ input[type='password']::-ms-clear {
   border-color: var(--aviso-borde);
   color: var(--aviso);
 }
-
-/* =========================================================================
-   Badges
-   ========================================================================= */
 
 .badge {
   display: inline-flex;
@@ -761,12 +661,6 @@ input[type='password']::-ms-clear {
   color: var(--aviso);
 }
 
-/* =========================================================================
-   Bloque con encabezado
-   =========================================================================
-   Panel con una franja de título/acciones arriba y contenido a sangre abajo.
-   Lo usan los listados de eventos y descuentos, y las estadísticas. */
-
 .bloque {
   margin-bottom: var(--sp-6);
   padding: 0;
@@ -793,7 +687,6 @@ input[type='password']::-ms-clear {
   padding: var(--sp-5);
 }
 
-/* Input con icono adosado. El icono es decorativo y no debe robar el click. */
 .campo-con-icono {
   position: relative;
   display: flex;
@@ -828,9 +721,6 @@ input[type='password']::-ms-clear {
   }
 }
 
-/* =========================================================================
-   Tablas
-   ========================================================================= */
 
 .tabla-scroll {
   width: 100%;
@@ -838,8 +728,6 @@ input[type='password']::-ms-clear {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Encabezado de columna ordenable: es un `button` real, no un `th` con
-   (click), para que se pueda accionar con teclado. */
 .th-orden {
   display: inline-flex;
   align-items: center;
@@ -868,7 +756,6 @@ input[type='password']::-ms-clear {
   color: var(--marca-500);
 }
 
-/* Grupo de acciones al final de una fila de tabla. */
 .acciones-fila {
   display: inline-flex;
   align-items: center;
@@ -888,8 +775,6 @@ input[type='password']::-ms-clear {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  /* Franja teñida en lugar de blanco sobre blanco: separa el encabezado de los
-     datos sin necesitar un borde grueso. */
   background: var(--marca-100);
   color: var(--marca-700);
   border-bottom: 1px solid var(--borde);
@@ -918,11 +803,7 @@ input[type='password']::-ms-clear {
   text-align: right;
 }
 
-/* =========================================================================
-   Modales
-   =========================================================================
-   Los tres componentes que tenían su propia copia de estos estilos ahora
-   comparten esta. */
+/* Modales */
 
 .modal-backdrop {
   position: fixed;
@@ -957,8 +838,6 @@ input[type='password']::-ms-clear {
   margin-top: var(--sp-6);
 }
 
-/* Nombres heredados de los templates: se mantienen para no tocar el HTML de
-   los modales, pero ahora apuntan al sistema de botones. */
 .confirm-btn {
   display: inline-flex;
   align-items: center;
@@ -999,13 +878,6 @@ input[type='password']::-ms-clear {
   border-color: var(--texto-suave);
 }
 
-/* =========================================================================
-   Carga y estados vacíos
-   =========================================================================
-   Los spinners giratorios se reemplazaron por esqueletos estáticos: cumplen
-   el requisito de "sin animaciones" y además anticipan la forma real del
-   contenido, así la página no salta cuando terminan de llegar los datos. */
-
 .skeleton {
   background: var(--marca-100);
   border-radius: var(--r-sm);
@@ -1039,7 +911,6 @@ input[type='password']::-ms-clear {
   text-align: center;
 }
 
-/* Cuando el estado vacío ya está dentro de un panel, no debe dibujar otro. */
 .estado-vacio--plano {
   background: transparent;
   box-shadow: none;
@@ -1072,16 +943,10 @@ input[type='password']::-ms-clear {
   margin-top: var(--sp-3);
 }
 
-/* =========================================================================
-   Tarjeta de evento
-   =========================================================================
-   La usan la cartelera y la lista de favoritos. Vive acá y no duplicada en
-   cada componente para que las dos vistas no se puedan desincronizar. */
+/* Tarjeta de evento */
 
 .eventos-grilla {
   display: grid;
-  /* `min()` evita que la columna mínima de 320px genere scroll horizontal en
-     pantallas de 360px. */
   grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: var(--sp-6);
 }
@@ -1129,7 +994,6 @@ input[type='password']::-ms-clear {
   font-size: var(--t-sm);
 }
 
-/* Botón flotante sobre la imagen (marcar o quitar favorito). */
 .evento-card__accion-medio {
   position: absolute;
   top: var(--sp-3);
@@ -1167,7 +1031,6 @@ input[type='password']::-ms-clear {
   padding: var(--sp-5);
 }
 
-/* Un badge suelto en la columna flex se estiraría a todo el ancho. */
 .evento-card__cuerpo > .badge {
   align-self: flex-start;
 }
@@ -1175,7 +1038,6 @@ input[type='password']::-ms-clear {
 .evento-card__titulo {
   font-size: var(--t-lg);
   font-weight: 600;
-  /* Dos líneas como máximo: sin esto, un título largo desalinea toda la fila. */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -1208,15 +1070,11 @@ input[type='password']::-ms-clear {
   white-space: nowrap;
 }
 
-/* `margin-top: auto` empuja el CTA al fondo: todas las tarjetas de la fila
-   terminan con el botón a la misma altura sin forzar altos iguales. */
 .evento-card__pie {
   margin-top: auto;
   padding-top: var(--sp-2);
 }
 
-/* Cuando la tarjeta entera ya es el objetivo clickeable, el CTA es decorativo:
-   anidar dos controles rompería la navegación por teclado. */
 .evento-card__pie .btn--decorativo {
   pointer-events: none;
 }
@@ -1227,12 +1085,6 @@ input[type='password']::-ms-clear {
   }
 }
 
-/* =========================================================================
-   Pantallas de acceso
-   =========================================================================
-   Login, registro y recuperación comparten estructura. Vive acá y no en cada
-   componente para que las tres se vean idénticas. */
-
 .auth {
   flex: 1;
   display: flex;
@@ -1242,18 +1094,7 @@ input[type='password']::-ms-clear {
   padding: var(--sp-10) var(--sp-4) var(--sp-12);
 }
 
-/* Acá sí entra el logo completo (estrella sobre el nombre): hay espacio
-   vertical, a diferencia de la barra de navegación. */
 .auth__logo {
-  /* Dos medidas combinadas contra el mismo problema: el PNG del logo trae
-     fondo blanco opaco, no transparencia.
-
-     1. Recorte al contenido real, medido sobre logo.png (1152x896): la marca
-        ocupa x 173-980 (808px) e y 112-721 (610px). Los porcentajes derivan de
-        esas medidas, así que el encuadre es exacto a cualquier tamaño.
-     2. `multiply` sobre el resto: el blanco (#fefefe) multiplicado contra el
-        fondo lo deja idéntico al fondo. El recorte solo no alcanza, porque el
-        blanco también está detrás y entre los trazos de la marca. */
   --ancho: 150px;
   width: var(--ancho);
   height: calc(var(--ancho) / 1.3246);
@@ -1271,8 +1112,6 @@ input[type='password']::-ms-clear {
   padding: var(--sp-8);
   background: var(--superficie);
   border: 1px solid var(--marca-100);
-  /* Franja de marca arriba de la tarjeta: es el único elemento de la pantalla,
-     y sin esto quedaba como una caja blanca sin identidad. */
   border-top: 3px solid var(--marca-500);
   border-radius: var(--r-md);
   box-shadow: var(--sombra-md);
@@ -1318,10 +1157,6 @@ input[type='password']::-ms-clear {
   }
 }
 
-/* =========================================================================
-   Utilidades
-   ========================================================================= */
-
 .texto-medio {
   color: var(--texto-medio);
 }
@@ -1341,7 +1176,6 @@ input[type='password']::-ms-clear {
   gap: var(--sp-2);
 }
 
-/* Respeta la preferencia del sistema aunque ya casi no haya transiciones. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1351,14 +1185,6 @@ input[type='password']::-ms-clear {
   }
 }
 
-/* =========================================================================
-   Componentes de terceros
-   ========================================================================= */
-
-/* El buscador de direcciones de Google Places declara `color-scheme: light dark`
-   por su cuenta, así que con el sistema en modo oscuro se dibujaba con fondo
-   negro en medio del formulario. Se inserta vía appendChild, sin el atributo de
-   encapsulación de Angular, por eso la regla vive acá y no en el componente. */
 gmp-place-autocomplete {
   color-scheme: light;
   display: block;

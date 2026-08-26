@@ -31,11 +31,7 @@ export const tarjetaNoVencidaValidator: ValidatorFn = (control: AbstractControl)
   return null;
 };
 
-/**
- * Titular válido: se admiten espacios entre las palabras (para separar nombre y
- * apellido) pero no al principio ni al final. Así deja de pasar un titular
- * cargado sólo con espacios, que con `minLength` solo se daba por bueno.
- */
+
 export const titularValidoValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const valor = control.value;
   if (typeof valor !== 'string' || valor === '') return null;
@@ -124,7 +120,6 @@ export class MisTarjetas implements OnInit {
 
     const formValue = this.tarjetaForm.value;
     
-    // Obtener solo los últimos 4 dígitos para guardar
     const ultimosDigitos = formValue.numeroTarjeta.slice(-4);
 
     const nuevaTarjeta: Tarjeta = {
@@ -191,8 +186,6 @@ export class MisTarjetas implements OnInit {
         : { ...t, esPrincipal: t.id === tarjetaPrincipalId }
     );
 
-    // Sólo se persisten las que realmente cambiaron de estado: antes se mandaba
-    // un PUT por cada tarjeta del usuario aunque ninguna otra se hubiera tocado.
     const cambiadas = siguientes.filter((t, i) => t !== actuales[i]);
 
     this.tarjetas.set(siguientes);

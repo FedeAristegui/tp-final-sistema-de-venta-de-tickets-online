@@ -15,14 +15,7 @@ import { CENTRO_POR_DEFECTO } from '../../config/google-maps.config';
 import { Icono } from '../../ui/icono';
 import { Ubicacion } from '../../modelos/evento';
 
-/**
- * Selector de ubicación para el panel de administración.
- *
- * El admin puede fijar el punto de tres formas, y las tres terminan en el mismo
- * lugar: buscando la dirección, haciendo click en el mapa, o arrastrando el pin.
- * Que el buscador no sea el único camino es a propósito: si la Places API no
- * está habilitada en la key, se puede seguir marcando el punto a mano.
- */
+
 @Component({
   selector: 'app-selector-ubicacion',
   standalone: true,
@@ -50,7 +43,6 @@ export class SelectorUbicacion implements AfterViewInit {
   private geocoder?: google.maps.Geocoder;
 
   constructor() {
-    // Cuando el formulario termina de cargar el evento a editar, refleja su ubicación.
     effect(() => {
       const inicial = this.valorInicial();
       if (!inicial) return;
@@ -77,7 +69,6 @@ export class SelectorUbicacion implements AfterViewInit {
         streetViewControl: false,
       });
 
-      // Click en cualquier punto del mapa: coloca (o mueve) el pin ahí.
       this.mapa.addListener('click', (evento: google.maps.MapMouseEvent) => {
         if (evento.latLng) this.fijarPunto(evento.latLng.toJSON());
       });
@@ -94,7 +85,6 @@ export class SelectorUbicacion implements AfterViewInit {
     }
   }
 
-  /** Monta el buscador de direcciones de Google dentro del formulario. */
   private async prepararBuscador(): Promise<void> {
     try {
       await this.loader.cargarLibreria('places');
@@ -120,7 +110,6 @@ export class SelectorUbicacion implements AfterViewInit {
     }
   }
 
-  /** Fija el punto elegido y avisa al formulario. */
   private fijarPunto(posicion: google.maps.LatLngLiteral, direccion?: string): void {
     const ubicacion: Ubicacion = {
       lat: posicion.lat,
@@ -132,11 +121,9 @@ export class SelectorUbicacion implements AfterViewInit {
     this.dibujarPin(ubicacion, true);
     this.ubicacionCambiada.emit(ubicacion);
 
-    // Si no vino una dirección (click o arrastre), se la pedimos a Google.
     if (direccion === undefined) this.completarDireccion(ubicacion);
   }
 
-  /** Traduce las coordenadas a una dirección legible. Si falla, quedan las coordenadas. */
   private async completarDireccion(ubicacion: Ubicacion): Promise<void> {
     try {
       await this.loader.cargarLibreria('geocoding');
@@ -152,11 +139,9 @@ export class SelectorUbicacion implements AfterViewInit {
       this.seleccion.set(actualizada);
       this.ubicacionCambiada.emit(actualizada);
     } catch {
-      // Sin Geocoding el punto igual queda guardado, sólo sin texto de dirección.
     }
   }
 
-  /** Dibuja o mueve el pin arrastrable. */
   private dibujarPin(ubicacion: Ubicacion, recentrar: boolean): void {
     if (!this.mapa) return;
     const posicion = { lat: ubicacion.lat, lng: ubicacion.lng };
@@ -177,7 +162,6 @@ export class SelectorUbicacion implements AfterViewInit {
     if (recentrar) this.mapa.panTo(posicion);
   }
 
-  /** Quita la ubicación del evento. */
   protected limpiar(): void {
     this.seleccion.set(null);
     this.marcador?.setMap(null);

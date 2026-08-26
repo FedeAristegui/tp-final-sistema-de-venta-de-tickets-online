@@ -17,8 +17,6 @@
   gap: var(--sp-1);
 }
 
-/* La etiqueta va arriba y chica, el número abajo y grande: al escanear la fila
-   se leen primero los valores, que es lo que importa. */
 .metrica__etiqueta {
   color: var(--marca-600);
   font-size: var(--t-xs);
@@ -35,9 +33,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* --- Tabla --------------------------------------------------------------
-   El panel con encabezado (.bloque*), el buscador con icono y la tabla base
-   vienen del sistema (styles.css). */
+/* --- Tabla --------------------------------------------------------------*/
 
 .tabla-scroll--alta {
   max-height: 32rem;
@@ -48,12 +44,11 @@
   min-width: 46rem;
 }
 
-/* El encabezado se queda visible al scrollear la lista de eventos. */
+
 .tabla-estadisticas thead th {
   position: sticky;
   top: 0;
   z-index: var(--z-base);
-  /* Opaco al scrollear; hereda el teñido de .tabla th del sistema. */
   background: var(--marca-50);
 }
 
@@ -66,9 +61,6 @@
   font-weight: 600;
 }
 
-/* El <td> se deja como celda de tabla: darle display flex lo saca del
-   algoritmo de tabla y la columna dejaba de alinearse con el resto de la fila.
-   El flex va en un envoltorio interno. */
 .celda-ocupacion {
   min-width: 11rem;
 }
@@ -79,8 +71,6 @@
   gap: var(--sp-3);
 }
 
-/* Barra fina en vez del bloque de 30px con el número encima: se lee mejor y no
-   compite con el resto de la fila. */
 .barra {
   flex: 1;
   height: 6px;
@@ -108,7 +98,7 @@
   color: var(--texto-suave);
 }
 
-/* --- Detalle desplegado por evento -------------------------------------- */
+/* --- Detalle por evento -------------------------------------- */
 
 .fila-detalle td {
   padding: 0;

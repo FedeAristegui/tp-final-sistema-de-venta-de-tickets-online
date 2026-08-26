@@ -27,13 +27,6 @@ export class CarritoServicio {
   private tiempoRestante = signal<number>(this.TIEMPO_EXPIRACION_MS);
   private carritoExpirado = signal<boolean>(false);
   private intervalId: ReturnType<typeof setInterval> | null = null;
-
-  /**
-   * Ancla del temporizador: el instante en que el carrito pasó de vacío a tener
-   * su primera entrada. Se guarda aparte de los ítems y NO se recalcula a partir
-   * de ellos, justamente para que el plazo no se pueda estirar.
-   * Es `null` cuando el carrito está vacío.
-   */
   private inicioReserva: number | null = null;
   private readonly CLAVE_INICIO_RESERVA = 'carritoInicioReserva';
 
@@ -58,14 +51,6 @@ export class CarritoServicio {
     this.carritoExpirado.set(false);
   }
 
-  /**
-   * Reemplaza el contenido local del carrito (se usa al recuperarlo del backend).
-   *
-   * `inicioReservaBackend` es el ancla que venía guardada en el servidor. Si no
-   * viene (carritos creados antes de esta versión) se reconstruye a partir de la
-   * entrada más vieja, para respetar el tiempo que ya pasó en vez de regalar
-   * 10 minutos nuevos.
-   */
   setItemsDirect(items: ItemCarrito[], inicioReservaBackend?: string) {
     const itemsConFecha = items.map(i => ({ ...i, addedAt: i.addedAt || new Date().toISOString() }));
     this.itemsCarrito.set(itemsConFecha);
@@ -96,10 +81,6 @@ export class CarritoServicio {
       if (item.tipoEntrada === 'butaca') {
         return;
       }
-      // Si es sector, incrementa la cantidad.
-      // Se reemplaza el ítem por una copia en vez de modificarlo: `[...items]` copia
-      // sólo el array, así que tocar `.cantidad` ahí adentro mutaría el mismo objeto
-      // que ya está publicado en el signal.
       this.itemsCarrito.set(
         items.map((i, idx) =>
           idx === indiceExistente ? { ...i, cantidad: i.cantidad + item.cantidad } : i
@@ -110,8 +91,6 @@ export class CarritoServicio {
       this.itemsCarrito.set([...items, itemConFecha]);
     }
 
-    // El reloj arranca sólo con la PRIMERA entrada del carrito. Si ya estaba
-    // corriendo se lo deja como está: agregar más entradas no estira el plazo.
     if (this.inicioReserva === null) {
       this.inicioReserva = Date.now();
     }
@@ -125,9 +104,6 @@ export class CarritoServicio {
     const restantes = items.filter((_, i) => i !== index);
     this.itemsCarrito.set(restantes);
 
-    // El ancla se borra sólo si el carrito quedó vacío (ahí el usuario ya no
-    // retiene ninguna reserva). Mientras quede algo, el reloj sigue donde estaba,
-    // incluso si lo que se borró era la entrada más antigua.
     if (restantes.length === 0) {
       this.inicioReserva = null;
       this.tiempoRestante.set(this.TIEMPO_EXPIRACION_MS);
@@ -149,16 +125,10 @@ export class CarritoServicio {
   }
 
   obtenerCarritosPorUsuario(usuarioId: string): Observable<Carrito[]> {
-    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` el backend
-    // no devolvía nada para ids de dígitos, así que el carrito nunca se recuperaba
-    // y cada sincronización creaba un carrito duplicado en lugar de actualizarlo.
     return this.obtenerCarritos().pipe(
       map(carritos =>
         (carritos ?? [])
           .filter(c => coincideCon(c, { usuarioId }))
-          // Los usuarios que ya venían usando la app pueden tener carritos
-          // duplicados por ese motivo: el más reciente va primero para que quien
-          // lea el primero se quede con el vigente y no con uno viejo o vacío.
           .sort((a, b) =>
             new Date(b.fechaActualizacion ?? 0).getTime() -
             new Date(a.fechaActualizacion ?? 0).getTime()
@@ -211,8 +181,6 @@ export class CarritoServicio {
       usuarioId,
       items: backendItems,
       fechaActualizacion: new Date().toISOString(),
-      // Se manda el ancla para que el plazo sobreviva incluso si se borra el
-      // localStorage o se entra desde otro navegador.
       ...(this.inicioReserva !== null
         ? { inicioReserva: new Date(this.inicioReserva).toISOString() }
         : {})
@@ -245,40 +213,28 @@ export class CarritoServicio {
     );
   }
 
-  // Método para marcar butacas como no disponibles cuando se agregan al carrito
-  marcarButacasComoNoDisponibles(eventoId: number|string, butacas: { fila: string; numero: number }[]): Observable<any> {
+   marcarButacasComoNoDisponibles(eventoId: number|string, butacas: { fila: string; numero: number }[]): Observable<any> {
     if (butacas.length === 0) {
       return of(null);
     }
 
-    // Se actualizan todas juntas en una sola lectura/escritura para evitar que se pisen entre sí
     return this.eventoServicio.actualizarDisponibilidadButacas(
       eventoId,
       butacas.map(b => ({ ...b, disponible: false }))
     );
   }
 
-  // Método para desmarcar butacas (marcarlas como disponibles) cuando se sacan del carrito
   desmarcarButacas(eventoId: number|string, butacas: { fila: string; numero: number }[]): Observable<any> {
     if (butacas.length === 0) {
       return of(null);
     }
 
-    // Se actualizan todas juntas en una sola lectura/escritura para evitar que se pisen entre sí
     return this.eventoServicio.actualizarDisponibilidadButacas(
       eventoId,
       butacas.map(b => ({ ...b, disponible: true }))
     );
   }
 
-  /**
-   * Descuenta del evento las entradas de sector que se acaban de poner en el
-   * carrito, para que el stock baje en el momento y no recién al pagar.
-   *
-   * Es el análogo de `marcarButacasComoNoDisponibles`: mientras las entradas
-   * estén en un carrito no las puede tomar nadie más, y si el carrito se vacía
-   * o vence se devuelven con `liberarSectores`.
-   */
   reservarSectores(eventoId: number|string, sectores: { nombre: string; cantidad: number }[]): Observable<any> {
     if (sectores.length === 0) {
       return of(null);
@@ -305,8 +261,6 @@ export class CarritoServicio {
   private guardarCarritoEnLocalStorage(): void {
     localStorage.setItem('carrito', JSON.stringify(this.itemsCarrito()));
 
-    // El ancla se guarda junto al carrito para que recargar la página no
-    // reinicie el plazo: al volver, el reloj sigue donde estaba.
     if (this.inicioReserva === null) {
       localStorage.removeItem(this.CLAVE_INICIO_RESERVA);
     } else {
@@ -349,8 +303,6 @@ export class CarritoServicio {
       return;
     }
 
-    // Red de seguridad: si hay entradas pero se perdió el ancla, se reconstruye
-    // desde la entrada más vieja en lugar de dar por arrancado un plazo nuevo.
     if (this.inicioReserva === null) {
       this.inicioReserva = this.deducirInicioDesdeItems(items);
       this.guardarCarritoEnLocalStorage();
@@ -365,7 +317,6 @@ export class CarritoServicio {
     }
   }
 
-  /** Momento de la entrada más antigua; se usa sólo como respaldo del ancla. */
   private deducirInicioDesdeItems(items: ItemCarrito[]): number {
     const marcas = items
       .map(i => (i.addedAt ? new Date(i.addedAt).getTime() : NaN))
@@ -378,7 +329,6 @@ export class CarritoServicio {
   private expirarCarrito(): void {
     const items = this.itemsCarrito();
 
-    // se agrupan por evento para liberar todo lo de un mismo evento en una sola petición
     const butacasPorEvento = new Map<string, { fila: string; numero: number }[]>();
     const sectoresPorEvento = new Map<string, { nombre: string; cantidad: number }[]>();
 
@@ -401,8 +351,6 @@ export class CarritoServicio {
 
     butacasPorEvento.forEach((butacas, eventoId) => {
       this.desmarcarButacas(eventoId, butacas).subscribe({
-        // Si esto falla, las butacas quedan bloqueadas sin estar en ningún carrito,
-        // así que conviene que quede rastro en la consola.
         error: err => console.error('No se pudieron liberar las butacas vencidas:', err)
       });
     });
@@ -423,7 +371,7 @@ export class CarritoServicio {
         if (usuario?.id) {
           this.sincronizarConServidor(String(usuario.id)).subscribe();
         }
-      } catch { /* ignorar */ }
+      } catch {  }
     }
   }
 }

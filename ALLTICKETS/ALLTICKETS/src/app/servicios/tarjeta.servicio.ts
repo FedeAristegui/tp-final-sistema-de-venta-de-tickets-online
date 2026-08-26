@@ -17,8 +17,6 @@ export class TarjetaServicio {
   }
 
   obtenerTarjetasPorUsuario(usuarioId: string): Observable<Tarjeta[]> {
-    // Se filtra en el cliente (ver filtro-backend.ts): con `?usuarioId=` el usuario
-    // veía "no tenés tarjetas" aunque las tuviera guardadas.
     return this.obtenerTarjetas().pipe(
       map(tarjetas => (tarjetas ?? []).filter(t => coincideCon(t, { usuarioId })))
     );

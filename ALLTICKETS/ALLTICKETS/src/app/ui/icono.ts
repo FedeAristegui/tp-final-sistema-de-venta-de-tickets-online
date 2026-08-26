@@ -1,9 +1,5 @@
 import { Component, input } from '@angular/core';
 
-/**
- * Nombres válidos de icono. Al ser una unión de literales, `strictTemplates`
- * marca en tiempo de compilación cualquier nombre mal escrito en un template.
- */
 export type NombreIcono =
   | 'alerta'
   | 'basura'
@@ -40,14 +36,10 @@ export type NombreIcono =
   | 'usuario';
 
 /**
- * Icono SVG de trazo, dibujado en línea (sin dependencias ni requests).
+ * Icono SVG (sin dependencias ni requests).
  *
- * Todos comparten grilla de 24x24 y grosor de trazo 1.5, y heredan el color del
- * texto (`currentColor`), así un mismo icono sirve sobre fondo claro, sobre el
- * violeta de marca o dentro de un botón sin necesidad de variantes.
- *
- * Es decorativo por defecto (`aria-hidden`): el significado siempre lo aporta el
- * texto que lo acompaña o el `aria-label` del botón que lo contiene.
+ * Todos comparten grilla 24x24 y grosor 1.5, heredan el color del
+ * texto, así sirve sobre fondo claro, sobre el violeta de marca o dentro de un botón.
  */
 @Component({
   selector: 'app-icono',
@@ -210,13 +202,11 @@ export type NombreIcono =
       align-items: center;
       justify-content: center;
       flex: none;
-      /* El trazo no debe engordar cuando el icono se escala dentro de un botón. */
       vector-effect: non-scaling-stroke;
     }
   `,
 })
 export class Icono {
   readonly nombre = input.required<NombreIcono>();
-  /** Lado del icono en píxeles. 18 acompaña al texto de 15px sin dominarlo. */
   readonly tamano = input<number>(18);
 }

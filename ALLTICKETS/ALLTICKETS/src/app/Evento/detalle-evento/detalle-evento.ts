@@ -12,10 +12,8 @@ import { Icono } from '../../ui/icono';
 import { of, Subscription, timer } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 
-/** Cada cuánto se relee el evento para detectar entradas que tomó otro usuario. */
 const INTERVALO_REFRESCO_MS = 2500;
 
-/** Cuánto queda a la vista un aviso antes de esconderse solo. */
 const DURACION_MENSAJE_MS = 4000;
 
 @Component({

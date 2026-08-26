@@ -14,9 +14,7 @@
   margin-bottom: var(--sp-5);
 }
 
-/* Grilla de 4 columnas: número y titular ocupan la fila entera, y vencimiento,
-   CVV y tipo entran los tres en la siguiente. Así el formulario reproduce la
-   forma física de la tarjeta. */
+
 .formulario-tarjeta__grilla {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -56,8 +54,6 @@
   gap: var(--sp-4);
 }
 
-/* La tarjeta ya no simula plástico negro con degradé: es una superficie más
-   del sistema, y la principal se distingue por el borde violeta. */
 .tarjeta {
   display: flex;
   flex-direction: column;
@@ -141,7 +137,7 @@
   border-top: 1px solid var(--borde);
 }
 
-/* El botón destructivo se separa del resto para que no se toque por error. */
+
 .tarjeta__eliminar {
   margin-left: auto;
 }

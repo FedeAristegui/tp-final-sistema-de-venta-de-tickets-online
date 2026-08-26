@@ -1,5 +1,4 @@
-/* Los controles, paneles, botones y el modal vienen del sistema (styles.css):
-   este componente ya no repite su propia copia del modal. */
+
 :host {
   display: block;
 }
@@ -23,8 +22,6 @@
   flex: none;
 }
 
-/* El estado crítico se comunica con color, no con un parpadeo: el original
-   animaba la opacidad en bucle. */
 .temporizador--critico {
   background: var(--peligro-fondo);
   border-color: var(--peligro-borde);
@@ -114,8 +111,6 @@
   font-size: var(--t-lg);
   font-weight: 600;
 }
-
-/* --- Layout ------------------------------------------------------------- */
 
 .carrito-contenido {
   display: grid;
@@ -406,7 +401,6 @@
   gap: var(--sp-2);
 }
 
-/* --- Acciones finales ---------------------------------------------------- */
 
 .resumen__acciones {
   display: flex;
@@ -416,7 +410,7 @@
   border-top: 1px solid var(--borde);
 }
 
-/* --- Responsive ---------------------------------------------------------- */
+
 
 @media (max-width: 980px) {
   .carrito-contenido {
@@ -425,8 +419,6 @@
 }
 
 @media (max-width: 700px) {
-  /* La fila de 5 columnas no entra: se reorganiza en dos, con la imagen y el
-     texto arriba y los importes debajo. */
   .item {
     grid-template-columns: 4rem 1fr auto;
     grid-template-areas:

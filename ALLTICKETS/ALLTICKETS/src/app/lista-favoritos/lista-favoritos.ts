@@ -21,10 +21,6 @@ export class ListaFavoritos implements OnInit {
   eventosFavoritos = signal<Evento[]>([]);
   isLoading = signal(true);
 
-  /**
-   * `eventoId -> id del favorito`, guardado al cargar la lista. Sin esto había
-   * que releer toda la colección de favoritos para poder borrar uno.
-   */
   private favoritosPorEvento = new Map<string, string>();
 
   private readonly favoritoService = inject(FavoritoServicio);
@@ -60,9 +56,6 @@ export class ListaFavoritos implements OnInit {
           return;
         }
 
-        // se cargan los detalles de cada evento favorito. Un favorito puede apuntar
-        // a un evento ya eliminado (404): se descarta ese solo, antes tiraba abajo
-        // la lista entera.
         const eventosObservables = favoritos.map(fav =>
           this.eventoService.obtenerEvento(fav.eventoId).pipe(catchError(() => of(null)))
         );

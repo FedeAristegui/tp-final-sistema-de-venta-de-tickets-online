@@ -34,8 +34,6 @@
 
 **AllTickets** es una aplicación web completa desarrollada con Angular 20 (standalone components y signals ) que permite la gestión integral de eventos y la venta de tickets online. El sistema incluye funcionalidades tanto para usuarios finales (compra de tickets, gestión de favoritos, historial) como para administradores (creación de eventos, gestión de descuentos, estadísticas).
 
-### ¿Por qué AllTickets?
-
 -  **Gestión completa de eventos**, con ubicación en Google Maps
 -  **Sistema de descuentos**
 -  **Carrito de compras** con reserva temporizada de entradas
@@ -129,6 +127,7 @@ cd tp-final-sistema-de-venta-de-tickets-online/ALLTICKETS/ALLTICKETS
 
 ```bash
 npm install
+npm install --save-dev @types/google.maps
 ```
 
 ### 3. Configurar la base de datos (JSON Server)

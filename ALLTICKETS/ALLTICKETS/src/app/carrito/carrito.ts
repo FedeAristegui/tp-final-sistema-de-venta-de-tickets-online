@@ -232,8 +232,6 @@ export class Carrito implements OnInit {
   }
 
   private confirmarVaciarCarrito() {
-    // Devolver todo el stock reservado antes de vaciar (agrupado por evento para
-    // no pisar las escrituras entre sí)
     const items = this.items();
     const butacasPorEvento = new Map<string | number, { fila: string; numero: number }[]>();
     const sectoresPorEvento = new Map<string | number, { nombre: string; cantidad: number }[]>();
@@ -301,10 +299,6 @@ export class Carrito implements OnInit {
           return;
         }
 
-        // Si un evento del carrito fue eliminado, su lectura devuelve 404. Antes eso
-        // hacía fallar el forkJoin completo y el carrito no se cargaba nunca: el
-        // usuario veía el carrito vacío aunque tuviera entradas guardadas. Ahora se
-        // descarta sólo la línea que quedó huérfana.
         const eventosObs = backend.items.map(i =>
           this.eventoServicio.obtenerEvento(String(i.eventoId)).pipe(catchError(() => of(null)))
         );
@@ -336,9 +330,6 @@ export class Carrito implements OnInit {
   }
 
   continuarComprando(){
-    // `/lista-eventos` es una ruta de administración: un cliente que venía de
-    // comprar era rebotado por `adminGuard` hasta la cartelera. Se va derecho al
-    // destino correcto en lugar de pasar por el rebote.
     this.router.navigate(['/menu-principal']);
   }
 
@@ -464,17 +455,6 @@ export class Carrito implements OnInit {
     });
   }
 
-  /**
-   * Confirma contra el evento las entradas que se están comprando.
-   *
-   * El stock ya se descontó cuando cada ítem entró al carrito (la butaca quedó
-   * marcada como no disponible y la capacidad del sector ya bajó), así que acá
-   * NO se vuelve a descontar: sólo se verifica que las entradas sigan
-   * existiendo y se dejan las butacas en estado vendido.
-   *
-   * Se lee una sola vez por evento y se valida todo antes de escribir nada, para
-   * no tocar un evento si otro del mismo carrito ya no es válido.
-   */
   private reservarEntradas(items: ItemCarrito[]): Observable<unknown> {
     const itemsPorEvento = new Map<string, ItemCarrito[]>();
     items.forEach(item => {
@@ -500,13 +480,6 @@ export class Carrito implements OnInit {
     );
   }
 
-  /**
-   * Copia del evento con las butacas compradas en estado vendido, o `null` si no
-   * hizo falta cambiar nada (por ejemplo una compra sólo de sectores, cuyo cupo
-   * ya se había descontado al agregarlo al carrito).
-   *
-   * Lanza `SinDisponibilidad` si alguna entrada del carrito ya no existe.
-   */
   private confirmarEntradas(evento: Evento, items: ItemCarrito[]): Evento | null {
     let butacas = evento.butacas;
     let huboCambios = false;
@@ -538,7 +511,6 @@ export class Carrito implements OnInit {
         if (!sector) {
           throw new SinDisponibilidad(`Sector ${item.detalleEntrada} no encontrado en ${evento.titulo}`);
         }
-        // Sin descuento: la capacidad ya se reservó al agregar la entrada al carrito.
       }
     }
 
@@ -605,7 +577,6 @@ export class Carrito implements OnInit {
     });
   }
 
-  /** Agrupa los ítems del carrito por evento para armar el resumen que espera la plantilla de email. */
   private armarEventosParaEmail(): EventoCompra[] {
     const eventos = new Map<string, EventoCompra>();
 
@@ -701,7 +672,6 @@ export class Carrito implements OnInit {
         tarjetaUsada: tarjeta ? `${tarjeta.tipo} ****${tarjeta.numeroTarjeta}` : undefined
       });
       
-      // Capturar datos antes de vaciar el carrito para enviar el email (compra parcial)
       const eventosParaEmail = this.armarEventosParaEmail();
 
       // Enviar email incluso si es compra parcial

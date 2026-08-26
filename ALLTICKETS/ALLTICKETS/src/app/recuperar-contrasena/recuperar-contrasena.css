@@ -1,13 +1,10 @@
-/* La estructura de la pantalla (.auth*) es compartida con login y registro y
-   vive en styles.css. */
+
 :host {
-  /* Estira para que .auth pueda centrar la tarjeta en el alto libre. */
   display: flex;
   flex-direction: column;
 }
 
-/* El código es una secuencia de dígitos: en monoespaciada y con tracking se
-   lee y se verifica mucho más rápido que en proporcional. */
+
 .campo-codigo {
   font-family: var(--fuente-mono);
   font-size: var(--t-lg);

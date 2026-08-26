@@ -21,12 +21,6 @@ export class PaginaPrincipal implements OnInit {
   eventos = signal<Evento[]>([]);
   eventosFiltrados = signal<Evento[]>([]);
   isLoading = signal(false);
-  /**
-   * Favoritos del usuario indexados por evento: `eventoId -> id del favorito`.
-   * Se guarda también el id del favorito (y no sólo el del evento) porque es lo
-   * que hace falta para borrarlo; antes había que pedir toda la colección de
-   * favoritos cada vez que se desmarcaba un corazón.
-   */
   favoritosUsuario = signal<Map<string, string>>(new Map());
   protected readonly categorias = ['Deportes', 'Música', 'Comedia', 'Teatro'];
 

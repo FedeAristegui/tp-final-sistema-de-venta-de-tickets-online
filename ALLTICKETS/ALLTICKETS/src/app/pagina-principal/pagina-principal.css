@@ -1,5 +1,4 @@
-/* El fondo, la tipografía y la tarjeta de evento vienen del sistema
-   (styles.css). Este componente sólo aporta el panel de filtros. */
+
 :host {
   display: block;
 }
@@ -43,8 +42,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  /* El buscador es el filtro principal: ocupa la fila completa antes de que
-     los tres campos se apilen. */
   .filtros__grilla .campo:first-child {
     grid-column: 1 / -1;
   }
@@ -60,8 +57,7 @@
     align-items: stretch;
   }
 
-  /* El contador es una pastilla, no una barra: sin esto el stretch del
-     contenedor lo estiraba de lado a lado. */
+
   .filtros__contador {
     align-self: center;
   }
